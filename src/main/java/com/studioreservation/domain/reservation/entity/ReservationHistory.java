@@ -38,7 +38,6 @@ public class ReservationHistory extends BaseEntity {
 	private String state;
 	private Timestamp strtDt;
 	private Timestamp endDt;
-	private Timestamp regDt;
 	private boolean useParking;
 	private boolean needTaxInvoce;
 	private String senderNm;
