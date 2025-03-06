@@ -20,18 +20,16 @@ public class RoomService {
 	private final RoomMapper roomMapper;
 
 	public List<RoomResponseDTO> getAllRoom() {
-		return roomRepository.findAll()
+		return roomRepository.findAllByUseYnTrue()
 			.stream().map(entity -> roomMapper.toRoomDTO(entity))
 			.toList();
 	}
 
 	public RoomResponseDTO getRoom(Long roomCd) {
-		roomRepository.findSingleEntity(roomCd);
-		return null;
+		return roomMapper.toRoomDTO(roomRepository.findSingleEntity(roomCd));
 	}
 
 	public RoomResponseDTO createRoom (RoomRequestDTO roomRequestDTO){
-		System.out.println(roomRequestDTO.toString());
 		roomRepository.save(roomMapper.toRoom(roomRequestDTO));
 		return null;
 	}
