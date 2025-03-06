@@ -10,7 +10,6 @@ import com.studioreservation.domain.room.entity.Room;
 @Mapper(componentModel = "spring")
 public interface RoomMapper {
 	RoomMapper INSTANCE = Mappers.getMapper(RoomMapper.class);
-
 	RoomResponseDTO toRoomDTO(Room room);
 	Room toRoom(RoomRequestDTO roomRequestDTO);
 }
