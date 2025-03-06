@@ -4,17 +4,17 @@ import java.sql.Timestamp;
 
 import com.studioreservation.domain.reservation.enums.PayTyp;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class ReservationRequestDTO {
-	private String date;
-	private int hr;
+	private String userNm;
 	private String phone;
 	private PayTyp payTyp;
-	private String purpose;
 	private int userCnt;
-	private String state;
+	@Builder.Default
+	private String state = "00";
 	private Timestamp strtDt;
 	private Timestamp endDt;
 	private Timestamp regDt;

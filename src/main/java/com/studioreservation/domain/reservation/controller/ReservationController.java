@@ -21,7 +21,7 @@ public class ReservationController {
 
 	@GetMapping
 	public ApiResponse<?> getAllReservation() {
-		return ApiResponse.ok(reservationService.getAllReservation());
+		return ApiResponse.success(reservationService.getAllReservation());
 	}
 
 	@PostMapping("/{roomCd}")

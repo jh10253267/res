@@ -2,6 +2,7 @@ package com.studioreservation.domain.reservation.dto;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.studioreservation.domain.reservation.enums.PayTyp;
 
 import lombok.AllArgsConstructor;
@@ -23,9 +24,10 @@ public class ReservationDTO {
 	private PayTyp payTyp;
 	private int userCnt;
 	private String state;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
 	private Timestamp strtDt;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
 	private Timestamp endDt;
-	private Timestamp regDt;
 	private boolean useParking;
 	private boolean needTaxInvoce;
 	private String senderNm;
