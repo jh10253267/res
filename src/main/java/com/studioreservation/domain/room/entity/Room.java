@@ -26,10 +26,11 @@ public class Room extends BaseEntity {
 	private String name;
 	private String hrPrice;
 	private String dayPrice;
-	private Timestamp minTm;
+	private int minTm;
 	private int capacity;
 	private String title;
 	private String description;
+	private boolean useYn;
 
 	public void updateEntity(RoomRequestDTO roomRequestDTO) {
 		if (roomRequestDTO.getName() != null) {
@@ -41,7 +42,7 @@ public class Room extends BaseEntity {
 		if (roomRequestDTO.getDayPrice() != null) {
 			this.dayPrice = roomRequestDTO.getDayPrice();
 		}
-		if (roomRequestDTO.getMinTm() != null) {
+		if (roomRequestDTO.getMinTm() != 0) {
 			this.minTm = roomRequestDTO.getMinTm();
 		}
 		if (roomRequestDTO.getCapacity() != this.capacity) {
