@@ -18,14 +18,18 @@ public class PageRequestDTO {
 	@Builder.Default
 	private int page = 1;
 	@Builder.Default
-	private int size = 10;
+	private int size = Integer.MAX_VALUE;
 	@Builder.Default
 	private boolean desc = true;
 	@Builder.Default
 	private String sortBy = "createdAt";
 
 	public Pageable getPageable(String props) {
-		Sort sort = desc ? Sort.by(props).descending() : Sort.by(props).ascending();
-		return PageRequest.of(this.page - 1, this.size, sort);
+		if(size != Integer.MAX_VALUE) {
+			Sort sort = desc ? Sort.by(props).descending() : Sort.by(props).ascending();
+			return PageRequest.of(this.page - 1, this.size, sort);
+		}
+
+		return Pageable.unpaged();
 	}
 }
