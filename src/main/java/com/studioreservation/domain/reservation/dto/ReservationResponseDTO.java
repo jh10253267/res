@@ -2,6 +2,7 @@ package com.studioreservation.domain.reservation.dto;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.studioreservation.domain.reservation.enums.PayTyp;
 
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ReservationDTO {
+public class ReservationResponseDTO {
 	private Long sn;
 	private Long roomCd;
 	private String userNm;
@@ -23,8 +24,11 @@ public class ReservationDTO {
 	private PayTyp payTyp;
 	private int userCnt;
 	private String state;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss")
 	private Timestamp strtDt;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss")
 	private Timestamp endDt;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss")
 	private Timestamp regDt;
 	private boolean useParking;
 	private boolean needTaxInvoce;

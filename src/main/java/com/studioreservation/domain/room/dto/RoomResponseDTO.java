@@ -14,7 +14,7 @@ public class RoomResponseDTO {
 	private String name;
 	private String hrPrice;
 	private String dayPrice;
-	private Timestamp minTm;
+	private int minTm;
 	private int capacity;
 	private String title;
 	private String description;
