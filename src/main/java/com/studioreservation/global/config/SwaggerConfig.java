@@ -11,7 +11,7 @@ public class SwaggerConfig {
 	public GroupedOpenApi publicOpenApi() {
 		return GroupedOpenApi.builder()
 			.group("Reservation")
-			.pathsToMatch("/api/**") // 어떤 경로들을 명세화 시킬지
+			.pathsToMatch("/api/**")
 			.build();
 	}
 }
