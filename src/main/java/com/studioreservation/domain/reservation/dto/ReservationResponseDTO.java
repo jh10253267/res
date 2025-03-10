@@ -24,10 +24,12 @@ public class ReservationResponseDTO {
 	private PayTyp payTyp;
 	private int userCnt;
 	private String state;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss")
 	private Timestamp strtDt;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss")
 	private Timestamp endDt;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss")
+	private Timestamp regDt;
 	private boolean useParking;
 	private boolean needTaxInvoce;
 	private String senderNm;
