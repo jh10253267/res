@@ -16,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ReservationDTO {
+public class ReservationResponseDTO {
 	private Long sn;
 	private Long roomCd;
 	private String userNm;
