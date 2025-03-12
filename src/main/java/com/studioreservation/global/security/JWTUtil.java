@@ -8,8 +8,10 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import lombok.extern.log4j.Log4j2;
 
 @Component
@@ -23,29 +25,25 @@ public class JWTUtil {
 		headers.put("typ", "JWT");
 		headers.put("alg", "HS256");
 
-		Map<String, Object> payloads = new HashMap<>();
-		payloads.putAll(valueMap);
+		Map<String, Object> payloads = new HashMap<>(valueMap);
 
 		int time = (60 * 24) * days;
 
-		String jwtStr = Jwts.builder()
+		return Jwts.builder()
 			.setHeader(headers)
 			.setClaims(payloads)
 			.setIssuedAt(Date.from(ZonedDateTime.now().toInstant()))
 			.setExpiration(Date.from(ZonedDateTime.now().plusMinutes(time).toInstant()))
 			.signWith(SignatureAlgorithm.HS256, key.getBytes())
 			.compact();
-
-		return jwtStr;
 	}
 	public Map<String, Object> validateToken(String token) {
-		Map<String, Object> claim = null;
-
-		claim = Jwts.parser()
-			.setSigningKey(key.getBytes())
+		Claims claims = Jwts.parserBuilder()
+			.setSigningKey(Keys.hmacShaKeyFor(key.getBytes()))
+			.build()
 			.parseClaimsJws(token)
 			.getBody();
 
-		return claim;
+		return claims;
 	}
 }
