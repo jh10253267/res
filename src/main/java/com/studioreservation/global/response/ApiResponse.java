@@ -3,22 +3,21 @@ package com.studioreservation.global.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-
 @Getter
 @AllArgsConstructor
-public class ApiResponse<T> {
+public class APIResponse<T> {
 	private String resultCode;
 	private T result;
 
-	public static <T> ApiResponse<T> success() {
-		return new ApiResponse<T>("SUCCESS", null);
+	public static <T> APIResponse<T> success() {
+		return new APIResponse<T>("SUCCESS", null);
 	}
 
-	public static <T> ApiResponse<T> success(T result) {
-		return new ApiResponse<T>("SUCCESS", result);
+	public static <T> APIResponse<T> success(T result) {
+		return new APIResponse<T>("SUCCESS", result);
 	}
 
-	public static ApiResponse<Void> error(String resultCode) {
-		return new ApiResponse<Void>(resultCode, null);
+	public static APIResponse<Void> error(String resultCode) {
+		return new APIResponse<Void>(resultCode, null);
 	}
 }
