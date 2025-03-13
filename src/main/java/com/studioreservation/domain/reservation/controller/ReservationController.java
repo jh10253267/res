@@ -10,32 +10,34 @@ import org.springframework.web.bind.annotation.RestController;
 import com.studioreservation.domain.reservation.dto.ReservationRequestDTO;
 import com.studioreservation.domain.reservation.service.ReservationService;
 import com.studioreservation.global.request.PageRequestDTO;
-import com.studioreservation.global.response.ApiResponse;
+import com.studioreservation.global.response.APIResponse;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/reservations")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "Bearer Authentication")
 public class ReservationController {
 	private final ReservationService reservationService;
 
 	// 모든 방에 대한 정보(모든 정보, 페이징된 정보)
 	@GetMapping
-	public ApiResponse<?> getAllReservation(PageRequestDTO pageRequestDTO) {
-		return ApiResponse.success(reservationService.getAllReservation(pageRequestDTO));
+	public APIResponse<?> getAllReservation(PageRequestDTO pageRequestDTO) {
+		return APIResponse.success(reservationService.getAllReservation(pageRequestDTO));
 	}
 
 	// 특정 방에 대한 정보(모든 정보, 페이징된 정보)
 	@GetMapping("/{roomCd}")
-	public ApiResponse<?> getReservationsByRoomCd(@PathVariable(value = "roomCd") Long roomCd,
+	public APIResponse<?> getReservationsByRoomCd(@PathVariable(value = "roomCd") Long roomCd,
 		PageRequestDTO pageRequestDTO) {
-		return ApiResponse.success(reservationService.getReservationsByRoomCd(roomCd, pageRequestDTO));
+		return APIResponse.success(reservationService.getReservationsByRoomCd(roomCd, pageRequestDTO));
 	}
 
 	@PostMapping("/{roomCd}")
-	public ApiResponse<?> reserve(@PathVariable("roomCd") Long roomCd,
+	public APIResponse<?> reserve(@PathVariable("roomCd") Long roomCd,
 		@RequestBody ReservationRequestDTO reservationRequestDTO) {
-		return ApiResponse.success(reservationService.reserve(roomCd, reservationRequestDTO));
+		return APIResponse.success(reservationService.reserve(roomCd, reservationRequestDTO));
 	}
 }
