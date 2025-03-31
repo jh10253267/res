@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 	private final UserService userService;
 
+	@Operation(summary = "회원가입", description = "사용자 회원가입 API")
 	@PostMapping("/api/signup")
 	public APIResponse<?> signup(@RequestBody SignupRequestDTO signupRequestDTO) {
 		userService.signup(signupRequestDTO);
