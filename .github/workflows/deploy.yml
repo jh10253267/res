@@ -28,7 +28,6 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
-          timeout: 180
           script: |
             cd ~/app
             git pull origin main
