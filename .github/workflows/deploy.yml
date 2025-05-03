@@ -18,6 +18,12 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Inject Secrets into application.yml
+        run: |
+          echo "spring.datasource.url=${{ secrets.DB_URL }}" > src/main/resources/application.yml
+          echo "spring.datasource.username=${{ secrets.DB_USER }}" >> src/main/resources/application.yml
+          echo "spring.datasource.password=${{ secrets.DB_PASSWORD }}" >> src/main/resources/application.yml
+
       - name: Build with Gradle
         run: ./gradlew clean build
 
@@ -33,4 +39,4 @@ jobs:
             git pull origin main
             ./gradlew bootJar
             pkill -f 'java -jar' || true
-            nohup java -jar build/libs/*.jar > app.log 2>&1 & disown
+            nohup java -jar build/libs/*.jar > app.log 2>&1 &
