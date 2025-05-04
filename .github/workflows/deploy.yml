@@ -50,5 +50,5 @@ jobs:
             mkdir -p ~/app/deploy
             cd ~/app
             pkill -f 'java -jar' || true
-            cd ~/app/deploy
+            cd ~/app/deploy/build/libs
             nohup java -jar *.jar > ~/app/app.log 2>&1 &
