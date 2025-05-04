@@ -1,9 +1,9 @@
-name: Deploy to NCP VM
+name: Docker CI/CD to NCP
+
 on:
   push:
     branches: [ main ]
-env:
-  RESOURCE_PATH: ./src/main/resources/application.yml
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -11,33 +11,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-      - name: Set yml file
-        uses: microsoft/variable-substitution@v1
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
         with:
-          files: ${{ env.RESOURCE_PATH }}
-        env:
-          spring.datasource.url: ${{ secrets.DB_URL }}
-          spring.datasource.username: ${{ secrets.DB_USER }}
-          spring.datasource.password: ${{ secrets.DB_PASSWORD }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build with Gradle
-        run: ./gradlew clean bootJar
-
-      - name: Transfer JAR to the server
-        uses: appleboy/scp-action@master
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.PRIVATE_KEY }}
-          port: ${{ secrets.PORT }}
-          source: "build/libs/*.jar"
-          target: "~/app/deploy/"
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_APP }}:latest
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v0.1.7
@@ -47,8 +35,12 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            mkdir -p ~/app/deploy
-            cd ~/app
-            pkill -f 'java -jar' || true
-            cd ~/app/deploy/build/libs
-            nohup java -jar *.jar > ~/app/app.log 2>&1 &
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_APP }}:latest
+            docker stop ${{ secrets.DOCKERHUB_APP }} || true
+            docker rm ${{ secrets.DOCKERHUB_APP }} || true
+            docker run -d \
+              --name ${{ secrets.DOCKERHUB_APP }} \
+              --env-file /root/app/.env \
+              -p 8080:8080 \
+              ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_APP }}:latest
+          
