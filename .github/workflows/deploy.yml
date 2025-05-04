@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 env:
-  RESOURCE_PATH: /src/main/resources/application.yml
+  RESOURCE_PATH: ./src/main/resources/application.yml
 
 jobs:
   build-and-deploy:
@@ -26,7 +26,7 @@ jobs:
         with:
           files: ${{ env.RESOURCE_PATH }}
         env:
-          spring.datasource.url: ${{ secrets.TEST }}
+          spring.datasource.url: ${{ secrets.DB_URL }}
           spring.datasource.username: ${{ secrets.DB_USER }}
           spring.datasource.password: ${{ secrets.DB_PASSWORD }}
 
