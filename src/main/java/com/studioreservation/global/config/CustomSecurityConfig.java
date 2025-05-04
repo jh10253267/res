@@ -61,20 +61,20 @@ public class CustomSecurityConfig {
 			.sessionManagement((sessionManagement) ->
 				sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-		AuthenticationManager authenticationManager =
-			authenticationManager(apiUserDetailsService, passwordEncoder());
-
-		http.authenticationManager(authenticationManager);
-
-		APILoginFilter apiLoginFilter = new APILoginFilter("/login");
-		apiLoginFilter.setAuthenticationManager(authenticationManager);
-
-		APILoginSuccessHandler apiLoginSuccessHandler = new APILoginSuccessHandler(jwtUtil);
-		apiLoginFilter.setAuthenticationSuccessHandler(apiLoginSuccessHandler);
-
-		http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class);
-		http.addFilterBefore(tokenCheckFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-		http.addFilterBefore(refreshTokenFilter(jwtUtil), TokenCheckFilter.class);
+		// AuthenticationManager authenticationManager =
+		// 	authenticationManager(apiUserDetailsService, passwordEncoder());
+		//
+		// http.authenticationManager(authenticationManager);
+		//
+		// APILoginFilter apiLoginFilter = new APILoginFilter("/login");
+		// apiLoginFilter.setAuthenticationManager(authenticationManager);
+		//
+		// APILoginSuccessHandler apiLoginSuccessHandler = new APILoginSuccessHandler(jwtUtil);
+		// apiLoginFilter.setAuthenticationSuccessHandler(apiLoginSuccessHandler);
+		//
+		// http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class);
+		// http.addFilterBefore(tokenCheckFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+		// http.addFilterBefore(refreshTokenFilter(jwtUtil), TokenCheckFilter.class);
 
 		return http.build();
 	}
