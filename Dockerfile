@@ -15,4 +15,4 @@ VOLUME /tmp
 
 COPY --from=build /workspace/app/build/libs/*.jar app.jar
 
-ENTRYPOINT ["java","-Dspring.profiles.active=prod","app.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
