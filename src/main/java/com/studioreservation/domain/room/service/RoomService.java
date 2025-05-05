@@ -35,7 +35,7 @@ public class RoomService {
 	}
 
 	@Transactional
-	public void editRoom(Long roomCd, RoomRequestDTO roomRequestDTO) {
+	public void editRoomInfo(Long roomCd, RoomRequestDTO roomRequestDTO) {
 		Room room = roomRepository.findById(roomCd).orElseThrow();
 		room.updateEntity(roomRequestDTO);
 	}

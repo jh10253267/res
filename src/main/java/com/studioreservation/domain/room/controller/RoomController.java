@@ -14,6 +14,7 @@ import com.studioreservation.global.response.APIResponse;
 import com.studioreservation.domain.room.dto.RoomRequestDTO;
 import com.studioreservation.domain.room.service.RoomService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 
@@ -24,30 +25,31 @@ public class RoomController {
 	private final RoomService roomService;
 
 	@GetMapping
+	@Operation(summary = "예약 가능한 방 조회", description = "예약 가능한 모든 방 조회")
 	public APIResponse<?> getAllRoom() {
 		return APIResponse.success(roomService.getAllRoom());
 	}
 
 	@GetMapping("/{roomCd}")
+	@Operation(summary = "방 정보 상세조회", description = "야직 ymd 데이터를 처리하지 않고있음 아무값이나 넣어도 됨")
 	public APIResponse<?> getRoom(@PathVariable("roomCd") Long roomCd,
 		@RequestParam(required = true) int ymd) {
-		System.out.println(ymd);
 		return APIResponse.success(roomService.getRoom(roomCd));
 	}
 
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PostMapping
-	public void makeRoom(@RequestBody RoomRequestDTO roomRequestDTO, Authentication authentication) {
-		// 이런식으로 유저의 이름과 권한을 뽑아내기
-		System.out.println(authentication.getPrincipal().toString());
+	@Operation(summary = "방 생성", description = "추후 관리자 전용 api로 변경할 예정")
+	public void makeRoom(@RequestBody RoomRequestDTO roomRequestDTO) {
 		roomService.createRoom(roomRequestDTO);
 	}
 
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PatchMapping("/{roomCd}")
-	public APIResponse<?> editRoom(@PathVariable("roomCd") Long roomCd,
+	@Operation(summary = "방 정보 수정", description = "방 정보 수정")
+	public APIResponse<?> editRoomInfo(@PathVariable("roomCd") Long roomCd,
 		@RequestBody RoomRequestDTO roomRequestDTO) {
-		roomService.editRoom(roomCd, roomRequestDTO);
+		roomService.editRoomInfo(roomCd, roomRequestDTO);
 		return null;
 	}
 }
