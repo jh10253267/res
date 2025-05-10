@@ -9,9 +9,11 @@ public class RoomRequestDTO {
 	private String name;
 	private String hrPrice;
 	private String dayPrice;
-	private int minTm;
-	private int capacity;
+	private Integer minTm;
+	private Integer capacity;
 	private String title;
 	private String description;
+	private Boolean useYn;
+
 }
 

@@ -1,7 +1,5 @@
 package com.studioreservation.domain.room.entity;
 
-import java.sql.Timestamp;
-
 import com.studioreservation.domain.room.dto.RoomRequestDTO;
 import com.studioreservation.global.BaseEntity;
 
@@ -9,7 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,10 +40,10 @@ public class Room extends BaseEntity {
 		if (roomRequestDTO.getDayPrice() != null) {
 			this.dayPrice = roomRequestDTO.getDayPrice();
 		}
-		if (roomRequestDTO.getMinTm() != 0) {
+		if (roomRequestDTO.getMinTm() != null) {
 			this.minTm = roomRequestDTO.getMinTm();
 		}
-		if (roomRequestDTO.getCapacity() != this.capacity) {
+		if (roomRequestDTO.getCapacity() != null) {
 			this.capacity = roomRequestDTO.getCapacity();
 		}
 		if (roomRequestDTO.getTitle() != null) {
@@ -54,6 +51,9 @@ public class Room extends BaseEntity {
 		}
 		if (roomRequestDTO.getDescription() != null) {
 			this.description = roomRequestDTO.getDescription();
+		}
+		if(roomRequestDTO.getUseYn() != null) {
+			this.useYn = roomRequestDTO.getUseYn();
 		}
 	}
 }
