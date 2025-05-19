@@ -1,5 +1,9 @@
 package com.studioreservation.domain.reservation.service;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -16,6 +20,8 @@ import com.studioreservation.global.response.PageResponseDTO;
 
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -26,8 +32,27 @@ public class ReservationService {
 	private final ReservationMapper reservationMapper;
 
 	public PageResponseDTO<ReservationResponseDTO> getAllReservation(PageRequestDTO pageRequestDTO) {
+		Specification<ReservationHistory> spec = Specification.where(null);
+
+		if (pageRequestDTO.getStrtDt() != null || pageRequestDTO.getEndDt() != null) {
+			spec = spec.and((root, query, cb) -> {
+				Path<Timestamp> strtDt = root.get("strtDt");
+				Path<Timestamp> endDt = root.get("endDt");
+
+				Predicate p = cb.conjunction();
+
+				if (pageRequestDTO.getEndDt() != null) {
+					p = cb.and(p, cb.greaterThanOrEqualTo(endDt, pageRequestDTO.getStrtDt()));
+				}
+				if (pageRequestDTO.getStrtDt() != null) {
+					p = cb.and(p, cb.lessThanOrEqualTo(strtDt, pageRequestDTO.getEndDt()));
+				}
+				return p;
+			});
+		}
+
 		Page<ReservationResponseDTO> result = reservationRepository
-			.findAll(pageRequestDTO.getPageable(pageRequestDTO.getSortBy()))
+			.findAll(spec, pageRequestDTO.getPageable(pageRequestDTO.getSortBy()))
 			.map(entity -> reservationMapper.toDTO(entity));
 
 		return PageResponseDTO.<ReservationResponseDTO>withAll()
@@ -44,6 +69,23 @@ public class ReservationService {
 			Join<ReservationHistory, Room> roomJoin = root.join("room", JoinType.LEFT);
 			return cb.equal(roomJoin.get("cd"), roomCd);
 		});
+
+		if (pageRequestDTO.getStrtDt() != null || pageRequestDTO.getEndDt() != null) {
+			spec = spec.and((root, query, cb) -> {
+				Path<Timestamp> strtDt = root.get("strtDt");
+				Path<Timestamp> endDt = root.get("endDt");
+
+				Predicate p = cb.conjunction();
+
+				if (pageRequestDTO.getEndDt() != null) {
+					p = cb.and(p, cb.greaterThanOrEqualTo(endDt, pageRequestDTO.getStrtDt()));
+				}
+				if (pageRequestDTO.getStrtDt() != null) {
+					p = cb.and(p, cb.lessThanOrEqualTo(strtDt, pageRequestDTO.getEndDt()));
+				}
+				return p;
+			});
+		}
 
 		Page<ReservationResponseDTO> result = reservationRepository
 			.findAll(spec, pageRequestDTO.getPageable(pageRequestDTO.getSortBy()))
