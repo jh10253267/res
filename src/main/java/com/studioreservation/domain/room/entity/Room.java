@@ -22,8 +22,8 @@ public class Room extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long cd;
 	private String name;
-	private String hrPrice;
-	private String dayPrice;
+	private int hrPrice;
+	private int dayPrice;
 	private int minTm;
 	private int capacity;
 	private String title;

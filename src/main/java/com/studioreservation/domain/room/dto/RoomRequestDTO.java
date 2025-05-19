@@ -7,8 +7,8 @@ import lombok.Getter;
 @Builder
 public class RoomRequestDTO {
 	private String name;
-	private String hrPrice;
-	private String dayPrice;
+	private Integer hrPrice;
+	private Integer dayPrice;
 	private Integer minTm;
 	private Integer capacity;
 	private String title;
