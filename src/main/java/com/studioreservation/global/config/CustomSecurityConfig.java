@@ -1,5 +1,9 @@
 package com.studioreservation.global.config;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +20,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import com.studioreservation.global.security.JWTUtil;
 import com.studioreservation.global.security.filter.APILoginFilter;
@@ -30,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class CustomSecurityConfig {
+	private static final long CORS_MAX_AGE_SEC = 86400;
 	private final APIUserDetailsService apiUserDetailsService;
 	private final JWTUtil jwtUtil;
 
@@ -45,6 +52,21 @@ public class CustomSecurityConfig {
 				PathRequest.toStaticResources().atCommonLocations());
 	}
 
+	private CorsConfigurationSource configurationSource() {
+		return request -> {
+			CorsConfiguration config = new CorsConfiguration();
+			config.setAllowedHeaders(Collections.singletonList("*"));
+			config.setAllowedMethods(Collections.singletonList("*"));
+			config.setAllowedOriginPatterns(Arrays.asList(
+				"http://localhost:3000" // local
+			));
+			config.setAllowCredentials(true);
+			config.setMaxAge(CORS_MAX_AGE_SEC);
+			config.setExposedHeaders(List.of("*"));
+			return config;
+		};
+	}
+
 	@Bean
 	public AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
 		PasswordEncoder passwordEncoder) {
@@ -58,6 +80,7 @@ public class CustomSecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable)
+			.cors(cors -> cors.configurationSource(configurationSource()))
 			.sessionManagement((sessionManagement) ->
 				sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
