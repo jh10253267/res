@@ -22,18 +22,28 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PageRequestDTO {
+	@Schema(description = "요청 페이지", example = "요청 페이지")
 	@Builder.Default
 	private int page = 1;
+
+	@Schema(description = "한번에 요청할 데이터 개수", example = "한번에 요청할 데이터 개수")
 	@Builder.Default
 	private int size = Integer.MAX_VALUE;
+
+	@Schema(description = "내림차순 여부", example = "내림차순 여부")
 	@Builder.Default
 	private boolean desc = true;
+
+	@Schema(description = "정렬 기준", example = "정렬 기준")
 	@Builder.Default
 	private String sortBy = "createdAt";
-	@Schema(type = "string", example = "20230519123045", description = "yyyyMMddHHmmss 형식의 날짜시간 문자열")
+
+	@Schema(type = "string", example = "예약 시작 시각", description = "예약 시작 시각")
 	private Timestamp strtDt;
-	@Schema(type = "string", example = "20230519123045", description = "yyyyMMddHHmmss 형식의 날짜시간 문자열")
+
+	@Schema(type = "string", example = "예약 종료 시각", description = "예약 종료 시각")
 	private Timestamp endDt;
+
 
 
 	public Pageable getPageable(String props) {
