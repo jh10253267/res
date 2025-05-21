@@ -36,4 +36,6 @@ public class ReservationResponseDTO {
 	private String proposal;
 	private String requestCont;
 	private boolean policyConfirmed;
+	private String resvCd;
+
 }

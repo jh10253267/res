@@ -43,6 +43,8 @@ public class ReservationHistory extends BaseEntity {
 	private String proposal;
 	private String requestCont;
 	private boolean policyConfirmed;
+	@Setter
+	private String resvCd;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@Setter
 	private Room room;

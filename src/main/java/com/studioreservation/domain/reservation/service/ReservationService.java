@@ -3,6 +3,7 @@ package com.studioreservation.domain.reservation.service;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
@@ -101,6 +102,9 @@ public class ReservationService {
 	public ReservationResponseDTO reserve(Long roomCd, ReservationRequestDTO reservationRequestDTO) {
 		ReservationHistory reservationHistory = reservationMapper.toEntity(reservationRequestDTO);
 		Room room = roomRepository.findSingleEntity(roomCd);
+		String resvCd = UUID.randomUUID().toString();
+
+		reservationHistory.setResvCd(resvCd);
 		reservationHistory.setRoom(room);
 
 		return reservationMapper.toDTO(reservationRepository.save(reservationHistory));
