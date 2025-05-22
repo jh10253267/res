@@ -35,6 +35,13 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
+            cat <<EOF > /root/app/.env
+            DB_USER = ${{ secrets.DB_USERNAME }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            DB_URL = ${{ secrets.DB_URL }}
+            SCHEMA_NAME = ${{ secrets.SCHEMA_NAME }}
+            BASE_62 = ${{ secrets.BASE_62}}
+  
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_APP }}:latest
             docker stop ${{ secrets.DOCKERHUB_APP }} || true
             docker rm ${{ secrets.DOCKERHUB_APP }} || true
@@ -43,4 +50,3 @@ jobs:
               --env-file /root/app/.env \
               -p 8080:8080 \
               ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_APP }}:latest
-          
