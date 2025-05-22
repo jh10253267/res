@@ -36,11 +36,12 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cat <<EOF > /root/app/.env
-            DB_USER = ${{ secrets.DB_USERNAME }}
+            DB_USER=${{ secrets.DB_USER }}
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-            DB_URL = ${{ secrets.DB_URL }}
-            SCHEMA_NAME = ${{ secrets.SCHEMA_NAME }}
-            BASE_62 = ${{ secrets.BASE_62}}
+            DB_URL=${{ secrets.DB_URL }}
+            SCHEMA_NAME=${{ secrets.SCHEMA_NAME }}
+            BASE_62=${{ secrets.BASE_62 }}
+            EOF
   
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_APP }}:latest
             docker stop ${{ secrets.DOCKERHUB_APP }} || true
