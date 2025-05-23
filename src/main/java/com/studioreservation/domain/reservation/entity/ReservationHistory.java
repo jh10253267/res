@@ -6,6 +6,7 @@ import com.studioreservation.domain.reservation.enums.PayTyp;
 import com.studioreservation.domain.room.entity.Room;
 import com.studioreservation.global.BaseEntity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -34,7 +35,8 @@ public class ReservationHistory extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private PayTyp payTyp;
 	private int userCnt;
-	private String state;
+	@Builder.Default
+	private String state = "00";
 	private Timestamp strtDt;
 	private Timestamp endDt;
 	private boolean useParking;
@@ -44,8 +46,13 @@ public class ReservationHistory extends BaseEntity {
 	private String requestCont;
 	private boolean policyConfirmed;
 	@Setter
+	@Column(unique = true)
 	private String resvCd;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@Setter
 	private Room room;
+
+	public void changeState(String state) {
+		this.state = state;
+	}
 }

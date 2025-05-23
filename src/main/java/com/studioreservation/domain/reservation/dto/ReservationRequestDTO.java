@@ -26,10 +26,6 @@ public class ReservationRequestDTO {
 	@Schema(description = "예약 인원수", example = "예약 인원수")
 	private int userCnt;
 
-	@Schema(description = "상태", example = "상태")
-	@Builder.Default
-	private String state = "00";
-
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss")
 	@JsonDeserialize(using = TimestampDeserializer.class)
 	@Schema(type = "string", example = "예약 시작 시각", description = "예약 시작 시각")
