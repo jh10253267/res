@@ -1,4 +1,4 @@
-package com.studioreservation.domain.user.dto;
+package com.studioreservation.domain.apiuser.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

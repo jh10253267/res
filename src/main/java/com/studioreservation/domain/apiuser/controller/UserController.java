@@ -1,17 +1,14 @@
-package com.studioreservation.domain.user.controller;
+package com.studioreservation.domain.apiuser.controller;
 
 import org.springframework.http.ResponseEntity;
 
-import com.studioreservation.domain.user.dto.SignupRequestDTO;
-import com.studioreservation.domain.user.service.UserService;
+import com.studioreservation.domain.apiuser.dto.SignupRequestDTO;
+import com.studioreservation.domain.apiuser.service.UserService;
 import com.studioreservation.global.response.APIResponse;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.studioreservation.domain.user.dto.LoginRequestDTO;
+import com.studioreservation.domain.apiuser.dto.LoginRequestDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,11 +17,12 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/users")
 public class UserController {
 	private final UserService userService;
 
 	@Operation(summary = "회원가입", description = "사용자 회원가입 API")
-	@PostMapping("/api/signup")
+	@PostMapping("/signup")
 	public APIResponse<?> signup(@RequestBody SignupRequestDTO signupRequestDTO) {
 		userService.signup(signupRequestDTO);
 

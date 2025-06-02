@@ -24,10 +24,19 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 @Configuration
 public class SwaggerConfig {
 	@Bean
-	public GroupedOpenApi publicOpenApi() {
+	public GroupedOpenApi publicApi() {
 		return GroupedOpenApi.builder()
-			.group("Reservation")
-			.pathsToMatch("/**")
-			.build();
+				.group("public-api")
+				.pathsToMatch("/api/**")
+				.pathsToExclude("/api/admin/**")
+				.build();
+	}
+
+	@Bean
+	public GroupedOpenApi adminApi() {
+		return GroupedOpenApi.builder()
+				.group("admin-api")
+				.pathsToMatch("/api/admin/**")
+				.build();
 	}
 }

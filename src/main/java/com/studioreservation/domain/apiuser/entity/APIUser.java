@@ -1,8 +1,6 @@
-package com.studioreservation.domain.user.entity;
+package com.studioreservation.domain.apiuser.entity;
 
-import org.springframework.security.core.userdetails.User;
-
-import com.studioreservation.domain.user.enums.UserRoleEnum;
+import com.studioreservation.domain.apiuser.enums.UserRoleEnum;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
