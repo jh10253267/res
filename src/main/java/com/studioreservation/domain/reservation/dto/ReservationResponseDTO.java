@@ -14,9 +14,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class ReservationResponseDTO {
 	@Schema(description = "DB상 예약 식별 번호", example = "DB상 예약 식별 번호")
 	private Long sn;
@@ -71,5 +69,4 @@ public class ReservationResponseDTO {
 
 	@Schema(description = "예약 코드", example = "예약 코드")
 	private String resvCd;
-
 }

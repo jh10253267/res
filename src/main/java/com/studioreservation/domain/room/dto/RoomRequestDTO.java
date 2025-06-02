@@ -3,9 +3,12 @@ package com.studioreservation.domain.room.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@Builder
+@Setter
+@NoArgsConstructor
 public class RoomRequestDTO {
 	@Schema(description = "방 이름", example = "방 이름")
 	private String name;
