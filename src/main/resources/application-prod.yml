@@ -15,6 +15,11 @@ spring:
     show-sql: true
 base62:
   charset: ${BASE_62}
+
+aws:
+  access_key: ${USERNAME}
+  private_key: ${PRIVATE_KEY}
+
 jwt:
   secret:
     key: 33b~OExIB6Td><!*LKHyqB5[kK:L9_Z&Ytx8#sWi2^PD7":RnprWA.3I`W-cw]K
