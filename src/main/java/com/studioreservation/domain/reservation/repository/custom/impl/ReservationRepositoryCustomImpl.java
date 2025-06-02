@@ -77,16 +77,20 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
 	}
 
 	private BooleanExpression betweenStrtDtAndEndDt(Timestamp strtDt, Timestamp endDt) {
-		if (strtDt == null || endDt == null) {
+		if (strtDt != null && endDt != null) {
+			if (endDt.before(strtDt)) {
+				return null;
+			}
+			return reservationHistory.strtDt.between(strtDt, endDt);
+		} else if (strtDt != null) {
+			return reservationHistory.strtDt.goe(strtDt);
+		} else if (endDt != null) {
+			return reservationHistory.strtDt.loe(endDt);
+		} else {
 			return null;
 		}
-
-		if (endDt.before(strtDt)) {
-			return null;
-		}
-
-		return reservationHistory.strtDt.between(strtDt, endDt);
 	}
+
 
 	private OrderSpecifier<?> createOrderSpecifier(Pageable pageable) {
 		if(!pageable.getSort().isSorted()) {
