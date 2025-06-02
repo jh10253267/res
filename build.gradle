@@ -1,3 +1,9 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.2'
@@ -28,6 +34,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok'
@@ -58,9 +65,28 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // AWS
+    implementation 'software.amazon.awssdk:s3:2.25.28'
+
+    // Querydsl
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
+
+    annotationProcessor(
+            "jakarta.persistence:jakarta.persistence-api",
+            "jakarta.annotation:jakarta.annotation-api",
+            "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta")
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+        }
+    }
+}
+
+compileJava.dependsOn('clean')
