@@ -21,13 +21,21 @@ public class Room extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long cd;
+
 	private String name;
+
 	private int hrPrice;
+
 	private int dayPrice;
+
 	private int minTm;
+
 	private int capacity;
+
 	private String title;
+
 	private String description;
+
 	private boolean useYn;
 
 	public void updateEntity(RoomRequestDTO roomRequestDTO) {

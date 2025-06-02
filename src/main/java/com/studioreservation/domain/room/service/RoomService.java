@@ -16,27 +16,27 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class RoomService {
-	private final RoomRepository roomRepository;
+	private final RoomRepository repository;
 	private final RoomMapper roomMapper;
 
 	public List<RoomResponseDTO> getAllRoom() {
-		return roomRepository.findAllByUseYnTrue()
-			.stream().map(entity -> roomMapper.toRoomDTO(entity))
+		return repository.findAllByUseYnTrueOOrderByCdDesc()
+			.stream().map(entity -> roomMapper.toDTO(entity))
 			.toList();
 	}
 
 	public RoomResponseDTO getRoom(Long roomCd) {
-		return roomMapper.toRoomDTO(roomRepository.findSingleEntity(roomCd));
+		return roomMapper.toDTO(repository.findSingleEntity(roomCd));
 	}
 
 	public RoomResponseDTO createRoom (RoomRequestDTO roomRequestDTO){
-		roomRepository.save(roomMapper.toRoom(roomRequestDTO));
+		repository.save(roomMapper.toEntity(roomRequestDTO));
 		return null;
 	}
 
 	@Transactional
 	public void editRoomInfo(Long roomCd, RoomRequestDTO roomRequestDTO) {
-		Room room = roomRepository.findById(roomCd).orElseThrow();
+		Room room = repository.findById(roomCd).orElseThrow();
 		room.updateEntity(roomRequestDTO);
 	}
 }
