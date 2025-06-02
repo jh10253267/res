@@ -14,7 +14,7 @@ spring:
     show-sql: true
 
 base62:
-  charset: ${BASE_62}
+  charset: 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
 
 jwt:
   secret:
