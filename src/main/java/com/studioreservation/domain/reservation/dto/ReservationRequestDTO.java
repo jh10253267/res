@@ -8,11 +8,11 @@ import com.studioreservation.domain.reservation.enums.PayTyp;
 import com.studioreservation.global.formatter.TimestampDeserializer;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
-@Builder
+@Setter
+@NoArgsConstructor
 public class ReservationRequestDTO {
 	@Schema(description = "예약자 명", example = "예약자 명")
 	private String userNm;
@@ -36,10 +36,10 @@ public class ReservationRequestDTO {
 	@Schema(type = "string", example = "예약 종료 시각", description = "예약 종료 시각")
 	private Timestamp endDt;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss")
-	@JsonDeserialize(using = TimestampDeserializer.class)
-	@Schema(type = "string", example = "yyyyMMddHHmmss 형식의 날짜시간 문자열", description = "yyyyMMddHHmmss 형식의 날짜시간 문자열")
-	private Timestamp regDt;
+//	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss")
+//	@JsonDeserialize(using = TimestampDeserializer.class)
+//	@Schema(type = "string", example = "yyyyMMddHHmmss 형식의 날짜시간 문자열", description = "yyyyMMddHHmmss 형식의 날짜시간 문자열")
+//	private Timestamp regDt;
 
 	@Schema(description = "주차권 필요 여부", example = "주차권 필요 여부")
 	private boolean useParking;

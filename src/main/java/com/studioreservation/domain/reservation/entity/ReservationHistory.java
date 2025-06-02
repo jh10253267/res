@@ -30,24 +30,39 @@ public class ReservationHistory extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long sn;
+
 	private String userNm;
+
 	private String phone;
+
 	@Enumerated(EnumType.STRING)
 	private PayTyp payTyp;
+
 	private int userCnt;
+
 	@Builder.Default
 	private String state = "00";
+
 	private Timestamp strtDt;
+
 	private Timestamp endDt;
+
 	private boolean useParking;
+
 	private boolean needTaxInvoce;
+
 	private String senderNm;
+
 	private String proposal;
+
 	private String requestCont;
+
 	private boolean policyConfirmed;
+
 	@Setter
 	@Column(unique = true)
 	private String resvCd;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@Setter
 	private Room room;

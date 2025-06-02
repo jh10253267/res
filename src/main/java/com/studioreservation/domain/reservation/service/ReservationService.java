@@ -20,114 +20,62 @@ import com.studioreservation.domain.room.repository.RoomRepository;
 import com.studioreservation.global.request.PageRequestDTO;
 import com.studioreservation.global.response.PageResponseDTO;
 
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Path;
-import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class ReservationService {
-	private final ReservationRepository reservationRepository;
+	private final ReservationRepository repository;
 	private final RoomRepository roomRepository;
-	private final ReservationMapper reservationMapper;
+	private final ReservationMapper mapper;
 	@Value("${base62.charset}")
 	private String BASE62;
 	private static final int MAX_RETRY = 5;
 
 
-	public PageResponseDTO<ReservationResponseDTO> getAllReservation(PageRequestDTO pageRequestDTO) {
-		Specification<ReservationHistory> spec = Specification.where(null);
-
-		if (pageRequestDTO.getStrtDt() != null || pageRequestDTO.getEndDt() != null) {
-			spec = spec.and((root, query, cb) -> {
-				Path<Timestamp> strtDt = root.get("strtDt");
-				Path<Timestamp> endDt = root.get("endDt");
-
-				Predicate p = cb.conjunction();
-
-				if (pageRequestDTO.getEndDt() != null) {
-					p = cb.and(p, cb.greaterThanOrEqualTo(endDt, pageRequestDTO.getStrtDt()));
-				}
-				if (pageRequestDTO.getStrtDt() != null) {
-					p = cb.and(p, cb.lessThanOrEqualTo(strtDt, pageRequestDTO.getEndDt()));
-				}
-				return p;
-			});
-		}
-
-		Page<ReservationResponseDTO> result = reservationRepository
-			.findAll(spec, pageRequestDTO.getPageable(pageRequestDTO.getSortBy()))
-			.map(reservationMapper::toDTO);
+	public PageResponseDTO<ReservationResponseDTO> getAllReservation(PageRequestDTO requestDTO) {
+		Page<ReservationResponseDTO> result = repository.findPagedEntities(requestDTO, null);
 
 		return PageResponseDTO.<ReservationResponseDTO>withAll()
 			.data(result.getContent())
-			.pageRequestDTO(pageRequestDTO)
+			.pageRequestDTO(requestDTO)
 			.total(result.getTotalElements())
 			.build();
 	}
 
-	public PageResponseDTO<ReservationResponseDTO> getReservationsByRoomCd(Long roomCd, PageRequestDTO pageRequestDTO) {
-		Specification<ReservationHistory> spec = Specification.where(null);
-
-		spec = spec.and((root, query, cb) -> {
-			Join<ReservationHistory, Room> roomJoin = root.join("room", JoinType.LEFT);
-			return cb.equal(roomJoin.get("cd"), roomCd);
-		});
-
-		if (pageRequestDTO.getStrtDt() != null || pageRequestDTO.getEndDt() != null) {
-			spec = spec.and((root, query, cb) -> {
-				Path<Timestamp> strtDt = root.get("strtDt");
-				Path<Timestamp> endDt = root.get("endDt");
-
-				Predicate p = cb.conjunction();
-
-				if (pageRequestDTO.getEndDt() != null) {
-					p = cb.and(p, cb.greaterThanOrEqualTo(endDt, pageRequestDTO.getStrtDt()));
-				}
-				if (pageRequestDTO.getStrtDt() != null) {
-					p = cb.and(p, cb.lessThanOrEqualTo(strtDt, pageRequestDTO.getEndDt()));
-				}
-				return p;
-			});
-		}
-
-		Page<ReservationResponseDTO> result = reservationRepository
-			.findAll(spec, pageRequestDTO.getPageable(pageRequestDTO.getSortBy()))
-			.map(reservationMapper::toDTO);
+	public PageResponseDTO<ReservationResponseDTO> getReservationsByRoomCd(PageRequestDTO requestDTO, Long roomCd) {
+		Page<ReservationResponseDTO> result = repository.findPagedEntities(requestDTO, roomCd);
 
 		return PageResponseDTO.<ReservationResponseDTO>withAll()
 			.data(result.getContent())
-			.pageRequestDTO(pageRequestDTO)
+			.pageRequestDTO(requestDTO)
 			.total(result.getTotalElements())
 			.build();
 	}
 
 	public ReservationResponseDTO getReservation(String phone, String resvCd) {
-		return reservationMapper.toDTO(reservationRepository.findReservationHistory(phone, resvCd));
+		return mapper.toDTO(repository.findReservationHistory(phone, resvCd));
 	}
 	@Transactional
 	public ReservationResponseDTO reserve(Long roomCd, ReservationRequestDTO reservationRequestDTO) {
-		ReservationHistory reservationHistory = reservationMapper.toEntity(reservationRequestDTO);
-		System.out.println(reservationHistory.getState());
+		ReservationHistory reservationHistory = mapper.toEntity(reservationRequestDTO);
 		Room room = roomRepository.findSingleEntity(roomCd);
 		reservationHistory.setRoom(room);
 
-		ReservationHistory savedReservationHistory = reservationRepository.save(reservationHistory);
+		ReservationHistory savedReservationHistory = repository.save(reservationHistory);
 		String resvCd = generateUniqueReservationCode(savedReservationHistory.getSn());
 		reservationHistory.setResvCd(resvCd);
 
-		return reservationMapper.toDTO(savedReservationHistory);
+		return mapper.toDTO(savedReservationHistory);
 	}
 
 	@Transactional
 	public ReservationResponseDTO changeState(StateChangeRequestDTO stateChangeRequestDTO) {
-		ReservationHistory reservationHistory = reservationRepository
+		ReservationHistory reservationHistory = repository
 			.findReservationHistory(stateChangeRequestDTO.getPhone(), stateChangeRequestDTO.getResvCd());
 		reservationHistory.changeState(stateChangeRequestDTO.getState());
 
-		return reservationMapper.toDTO(reservationHistory);
+		return mapper.toDTO(reservationHistory);
 	}
 
 	private String encodeBase62(long baseSn) {
@@ -167,7 +115,7 @@ public class ReservationService {
 			if (attempts > MAX_RETRY) {
 				throw new RuntimeException("예약 코드 중복으로 인해 생성 실패: 재시도 초과");
 			}
-		} while (reservationRepository.existsByResvCd(code));
+		} while (repository.existsByResvCd(code));
 
 		return code;
 	}

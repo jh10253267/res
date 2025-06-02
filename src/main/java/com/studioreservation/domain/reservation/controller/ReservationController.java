@@ -43,9 +43,9 @@ public class ReservationController {
 
 	@GetMapping("/{roomCd}")
 	@Operation(summary = "특정 방 예약 조회", description = "특정 방 예약 조회")
-	public APIResponse<?> getReservationsByRoomCd(@PathVariable(value = "roomCd") Long roomCd,
-		PageRequestDTO pageRequestDTO) {
-		return APIResponse.success(reservationService.getReservationsByRoomCd(roomCd, pageRequestDTO));
+	public APIResponse<?> getReservationsByRoomCd(PageRequestDTO pageRequestDTO,
+		@PathVariable(value = "roomCd") Long roomCd) {
+		return APIResponse.success(reservationService.getReservationsByRoomCd(pageRequestDTO, roomCd));
 	}
 
 	@PostMapping("/{roomCd}")
