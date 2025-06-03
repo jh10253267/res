@@ -1,11 +1,11 @@
-package com.studioreservation.domain.user.service;
+package com.studioreservation.domain.apiuser.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.studioreservation.domain.user.dto.SignupRequestDTO;
-import com.studioreservation.domain.user.entity.APIUser;
-import com.studioreservation.domain.user.repository.APIUserRepository;
+import com.studioreservation.domain.apiuser.dto.SignupRequestDTO;
+import com.studioreservation.domain.apiuser.entity.APIUser;
+import com.studioreservation.domain.apiuser.repository.APIUserRepository;
 import com.studioreservation.global.exception.ErrorCode;
 import com.studioreservation.global.exception.StudioreservationApplicationException;
 

@@ -1,4 +1,4 @@
-package com.studioreservation.domain.user.enums;
+package com.studioreservation.domain.apiuser.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

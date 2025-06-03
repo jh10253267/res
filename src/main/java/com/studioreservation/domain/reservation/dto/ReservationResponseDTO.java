@@ -14,8 +14,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class ReservationResponseDTO {
 	@Schema(description = "DB상 예약 식별 번호", example = "DB상 예약 식별 번호")
@@ -30,7 +30,7 @@ public class ReservationResponseDTO {
 	@Schema(description = "연락처", example = "연락처")
 	private String phone;
 
-	@Schema(description = "결재 수단", example = "결재 수단")
+	@Schema(description = "결제 수단", example = "결재 수단")
 	private PayTyp payTyp;
 
 	@Schema(description = "예약 인원", example = "예약 인원")
@@ -71,5 +71,4 @@ public class ReservationResponseDTO {
 
 	@Schema(description = "예약 코드", example = "예약 코드")
 	private String resvCd;
-
 }

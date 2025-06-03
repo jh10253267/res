@@ -10,5 +10,5 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 	default Room findSingleEntity(Long cd) {
 		return findById(cd).orElseThrow();
 	}
-	List<Room> findAllByUseYnTrueOOrderByCdDesc();
+	List<Room> findAllByUseYnTrueOrderByCdDesc();
 }

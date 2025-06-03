@@ -3,9 +3,11 @@ package com.studioreservation.global.security.filter;
 import java.io.IOException;
 import java.util.Map;
 
+import com.studioreservation.global.security.APIUserDetailsService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.studioreservation.global.security.JWTUtil;
@@ -24,22 +26,27 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class TokenCheckFilter extends OncePerRequestFilter {
+	private final APIUserDetailsService apiUserDetailsService;
 	private final JWTUtil jwtUtil;
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-		FilterChain filterChain) throws ServletException, IOException {
+	protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response,
+									@NotNull FilterChain filterChain) throws ServletException, IOException {
 		String path = request.getRequestURI();
 
-		if (!path.startsWith("/api/")) {
+		if (!path.startsWith("/api/admin")) {
 			filterChain.doFilter(request, response);
 			return;
 		}
 
 		try {
 			Map<String, Object> value = validateAccessToken(request);
-			Authentication authentication = new UsernamePasswordAuthenticationToken(value.get("username"),
-				null, null);
+			String username = value.get("username").toString();
+			UserDetails userDetails = apiUserDetailsService.loadUserByUsername(username);
+
+			UsernamePasswordAuthenticationToken authentication =
+					new UsernamePasswordAuthenticationToken(
+							userDetails, null, userDetails.getAuthorities());
 
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -59,13 +66,12 @@ public class TokenCheckFilter extends OncePerRequestFilter {
 		String tokenType = headerStr.substring(0, 6);
 		String tokenStr = headerStr.substring(7);
 
-		if (tokenType.equalsIgnoreCase("Bearer") == false) {
+		if (!tokenType.equalsIgnoreCase("Bearer")) {
 			throw new AccessTokenException(AccessTokenException.TOKEN_ERROR.BADTYPE);
 		}
 
 		try {
-			Map<String, Object> values = jwtUtil.validateToken(tokenStr);
-			return values;
+			return jwtUtil.validateToken(tokenStr);
 		} catch (MalformedJwtException malformedJwtException) {
 			log.error("MalformedJwtException");
 			throw new AccessTokenException(AccessTokenException.TOKEN_ERROR.MALFORM);
