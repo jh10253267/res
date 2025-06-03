@@ -1,13 +1,5 @@
 package com.studioreservation.domain.shootingrequest.service;
 
-import java.sql.Timestamp;
-import java.util.List;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-
-import com.studioreservation.domain.reservation.entity.ReservationHistory;
 import com.studioreservation.domain.shootingrequest.dto.ShootingReqResponseDTO;
 import com.studioreservation.domain.shootingrequest.dto.ShootingRequestDTO;
 import com.studioreservation.domain.shootingrequest.entity.ShootingRequest;
@@ -15,10 +7,14 @@ import com.studioreservation.domain.shootingrequest.mapper.ShootingRequestMapper
 import com.studioreservation.domain.shootingrequest.repository.ShootingRequestRepository;
 import com.studioreservation.global.request.PageRequestDTO;
 import com.studioreservation.global.response.PageResponseDTO;
-
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
+import java.sql.Timestamp;
 
 @Service
 @RequiredArgsConstructor
@@ -71,8 +67,6 @@ public class ShootingRequestService {
 	}
 
 	public ShootingReqResponseDTO getShootingRequest(Long sn) {
-		ShootingRequest shootingRequest = repository.findById(sn).orElseThrow();
-
-		return mapper.toDTO(shootingRequest);
+		return mapper.toDTO(repository.findById(sn).orElseThrow());
 	}
 }
