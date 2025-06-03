@@ -43,7 +43,7 @@ jobs:
             BASE_62=${{ secrets.BASE_62 }}
             SMS_KEY=${{ secrets.SMS_KEY }}
             SMS_SECRET=${{ secrets.SMS_SECRET }}
-            SMS_SENDER=${[ secrets.SMS_SENDER ]}
+            SMS_SENDER=${{ secrets.SMS_SENDER }}
             EOF
   
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_APP }}:latest
