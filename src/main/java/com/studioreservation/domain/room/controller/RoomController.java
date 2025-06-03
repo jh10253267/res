@@ -1,5 +1,6 @@
 package com.studioreservation.domain.room.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,21 +35,5 @@ public class RoomController {
 	public APIResponse<?> getRoom(@PathVariable("roomCd") Long roomCd,
 		@RequestParam(required = true) int ymd) {
 		return APIResponse.success(service.getRoom(roomCd));
-	}
-
-	@SecurityRequirement(name = "Bearer Authentication")
-	@PostMapping
-	@Operation(summary = "방 생성", description = "추후 관리자 전용 api로 변경할 예정")
-	public void makeRoom(@RequestBody RoomRequestDTO roomRequestDTO) {
-		service.createRoom(roomRequestDTO);
-	}
-
-	@SecurityRequirement(name = "Bearer Authentication")
-	@PatchMapping("/{roomCd}")
-	@Operation(summary = "방 정보 수정", description = "방 정보 수정")
-	public APIResponse<?> editRoomInfo(@PathVariable("roomCd") Long roomCd,
-		@RequestBody RoomRequestDTO roomRequestDTO) {
-		service.editRoomInfo(roomCd, roomRequestDTO);
-		return null;
 	}
 }

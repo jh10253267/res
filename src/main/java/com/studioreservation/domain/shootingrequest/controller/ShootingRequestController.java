@@ -28,21 +28,5 @@ public class ShootingRequestController {
 		return APIResponse.success(service.shootingRequest(shootingRequestDTO));
 	}
 
-	@GetMapping
-	@Operation(description = "여러건 조회")
-	public APIResponse<?>getAllShootingRequests(PageRequestDTO requestDTO) {
-		return APIResponse.success(service.getAllShootingRequests(requestDTO));
-	}
 
-	@GetMapping("/{strtDt}")
-	@Operation(description = "여러건 조회 + strtDt보다 큰 데이터")
-	public APIResponse<?> getAllShootingRequestsByStrtDt(PageRequestDTO requestDTO) {
-		return APIResponse.success(service.getAllShootingRequestsByStrtDt(requestDTO));
-	}
-
-	@GetMapping("/{sn}")
-	@Operation(description = "단건 조회")
-	public APIResponse<?> getShootingRequest(@RequestParam("sn") Long sn) {
-		return APIResponse.success(service.getShootingRequest(sn));
-	}
 }
