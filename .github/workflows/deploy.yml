@@ -41,7 +41,7 @@ jobs:
             DB_URL=${{ secrets.DB_URL }}
             SCHEMA_NAME=${{ secrets.SCHEMA_NAME }}
             BASE_62=${{ secrets.BASE_62 }}
-            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            JWT_SECRET="${{ secrets.JWT_SECRET }}"
             SMS_KEY=${{ secrets.SMS_KEY }}
             SMS_SECRET=${{ secrets.SMS_SECRET }}
             SMS_SENDER=${{ secrets.SMS_SENDER }}
