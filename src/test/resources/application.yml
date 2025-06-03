@@ -16,6 +16,12 @@ spring:
 base62:
   charset: 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
 
+sms:
+  api:
+    key: TESTKEYTESTKEYTE
+    secret: TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+  sender: 01011111111
+
 jwt:
   secret:
     key: 33b~OExIB6Td><!*LKHyqB5[kK:L9_Z&Ytx8#sWi2^PD7":RnprWA.3I`W-cw]K
