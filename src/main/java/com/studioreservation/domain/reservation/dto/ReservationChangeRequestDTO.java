@@ -1,19 +1,21 @@
 package com.studioreservation.domain.reservation.dto;
 
-import java.sql.Timestamp;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.studioreservation.domain.reservation.enums.PayTyp;
 import com.studioreservation.global.formatter.TimestampDeserializer;
-
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.sql.Timestamp;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class ReservationRequestDTO {
+public class ReservationChangeRequestDTO {
 	@Schema(description = "예약자 명", example = "예약자 명")
 	private String userNm;
 
@@ -24,7 +26,10 @@ public class ReservationRequestDTO {
 	private PayTyp payTyp;
 
 	@Schema(description = "예약 인원수", example = "예약 인원수")
-	private int userCnt;
+	private Integer userCnt;
+
+	@Schema(description = "예약 상태", example = "예약 상태")
+	private String state;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss")
 	@JsonDeserialize(using = TimestampDeserializer.class)
@@ -37,10 +42,10 @@ public class ReservationRequestDTO {
 	private Timestamp endDt;
 
 	@Schema(description = "주차권 필요 여부", example = "주차권 필요 여부")
-	private boolean useParking;
+	private Boolean useParking;
 
 	@Schema(description = "세금 계산서 필요 여부", example = "세금 계산서 필요 여부")
-	private boolean needTaxInvoce;
+	private Boolean needTaxInvoce;
 
 	@Schema(description = "잘 모르겠음...", example = "잘 모르겠음...")
 	private String senderNm;
@@ -52,6 +57,8 @@ public class ReservationRequestDTO {
 	private String requestCont;
 
 	@Schema(description = "약관 동의 여부", example = "약관 동의 여부")
-	private boolean policyConfirmed;
+	private Boolean policyConfirmed;
 
+	@Schema(description = "관리자 메모", example = "관리자 메모")
+	private String memo;
 }
