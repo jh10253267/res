@@ -30,10 +30,10 @@ public class ReservationAdminController {
         }
     }
 
-    @GetMapping("/{sn}")
-    public APIResponse<?> getAllReservationsBySn(@PathVariable("sn") Long sn,
+    @GetMapping("/{roomCd}")
+    public APIResponse<?> getAllReservationsBySn(@PathVariable("roomCd") Long roomCd,
                                                  PageRequestDTO requestDTO) {
-        return APIResponse.success(service.getReservationsByRoomCd(requestDTO, sn));
+        return APIResponse.success(service.getReservationsByRoomCd(requestDTO, roomCd));
     }
 
     @PutMapping
