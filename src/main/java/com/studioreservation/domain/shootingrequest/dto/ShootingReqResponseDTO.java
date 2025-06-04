@@ -9,8 +9,11 @@ import lombok.Data;
 
 @Data
 public class ShootingReqResponseDTO {
-	@Schema(description = "대여 목적", example = "대여 목적")
+	@Schema(description = "영상/사진", example = "영상/사진")
 	private ShootingTyp shootingTyp;
+
+	@Schema(description = "목적 id", example = "목적 아이디")
+	private Long purposeCd;
 
 	@Schema(description = "대여 목적", example = "대여 목적")
 	private String purpose;
@@ -32,5 +35,4 @@ public class ShootingReqResponseDTO {
 	private Timestamp createdAt;
 
 	private Timestamp modifiedAt;
-
 }

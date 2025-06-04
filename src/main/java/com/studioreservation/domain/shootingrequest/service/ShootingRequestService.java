@@ -1,5 +1,7 @@
 package com.studioreservation.domain.shootingrequest.service;
 
+import com.studioreservation.domain.purpose.entity.Purpose;
+import com.studioreservation.domain.purpose.repository.PurposeRepository;
 import com.studioreservation.domain.shootingrequest.dto.ShootingReqResponseDTO;
 import com.studioreservation.domain.shootingrequest.dto.ShootingRequestDTO;
 import com.studioreservation.domain.shootingrequest.entity.ShootingRequest;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 
@@ -20,10 +23,15 @@ import java.sql.Timestamp;
 @RequiredArgsConstructor
 public class ShootingRequestService {
 	private final ShootingRequestRepository repository;
+	private final PurposeRepository purposeRepository;
 	private final ShootingRequestMapper mapper;
 
+	@Transactional
 	public ShootingReqResponseDTO shootingRequest(ShootingRequestDTO shootingRequestDTO) {
 		ShootingRequest shootingRequest = mapper.toEntity(shootingRequestDTO);
+		Purpose purpose =
+				purposeRepository.findById(shootingRequestDTO.getPurposeCd()).orElseThrow();
+		shootingRequest.setPurpose(purpose);
 		ShootingRequest savedShootingRequest = repository.save(shootingRequest);
 
 		return mapper.toDTO(savedShootingRequest);
@@ -31,39 +39,40 @@ public class ShootingRequestService {
 
 	public PageResponseDTO<ShootingReqResponseDTO> getAllShootingRequests(PageRequestDTO requestDTO) {
 		Page<ShootingReqResponseDTO> result = repository
-			.findAll(requestDTO.getPageable(requestDTO.getSortBy()))
-			.map(mapper::toDTO);
+				.findAll(requestDTO.getPageable(requestDTO.getSortBy()))
+				.map(mapper::toDTO);
 
 		return PageResponseDTO.<ShootingReqResponseDTO>withAll()
-			.data(result.getContent())
-			.pageRequestDTO(requestDTO)
-			.total(result.getTotalElements())
-			.build();
+				.data(result.getContent())
+				.pageRequestDTO(requestDTO)
+				.total(result.getTotalElements())
+				.build();
 	}
+
 	public PageResponseDTO<ShootingReqResponseDTO> getAllShootingRequestsByStrtDt(PageRequestDTO requestDTO) {
 		Specification<ShootingRequest> spec = Specification.where(null);
 
 		if (requestDTO.getStrtDt() != null) {
 			spec = spec.and((root, query, cb) -> {
-					Path<Timestamp> strtDt = root.get("strtDt");
+				Path<Timestamp> strtDt = root.get("strtDt");
 
-					Predicate p = cb.conjunction();
-					if (requestDTO.getStrtDt() != null) {
-						p = cb.and(p, cb.lessThanOrEqualTo(strtDt, requestDTO.getEndDt()));
-					}
-					return p;
+				Predicate p = cb.conjunction();
+				if (requestDTO.getStrtDt() != null) {
+					p = cb.and(p, cb.lessThanOrEqualTo(strtDt, requestDTO.getEndDt()));
+				}
+				return p;
 			});
 		}
 
 		Page<ShootingReqResponseDTO> result = repository
-			.findAll(spec, requestDTO.getPageable(requestDTO.getSortBy()))
-			.map(mapper::toDTO);
+				.findAll(spec, requestDTO.getPageable(requestDTO.getSortBy()))
+				.map(mapper::toDTO);
 
 		return PageResponseDTO.<ShootingReqResponseDTO>withAll()
-			.data(result.getContent())
-			.pageRequestDTO(requestDTO)
-			.total(result.getTotalElements())
-			.build();
+				.data(result.getContent())
+				.pageRequestDTO(requestDTO)
+				.total(result.getTotalElements())
+				.build();
 	}
 
 	public ShootingReqResponseDTO getShootingRequest(Long sn) {
