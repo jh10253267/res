@@ -38,30 +38,30 @@ public class Room extends BaseEntity {
 
 	private boolean useYn;
 
-	public void updateEntity(RoomRequestDTO roomRequestDTO) {
-		if (roomRequestDTO.getName() != null) {
-			this.name = roomRequestDTO.getName();
+	public void updateEntity(RoomRequestDTO requestDTO) {
+		if (requestDTO.getName() != null) {
+			this.name = requestDTO.getName();
 		}
-		if (roomRequestDTO.getHrPrice() != null) {
-			this.hrPrice = roomRequestDTO.getHrPrice();
+		if (requestDTO.getHrPrice() != null) {
+			this.hrPrice = requestDTO.getHrPrice();
 		}
-		if (roomRequestDTO.getDayPrice() != null) {
-			this.dayPrice = roomRequestDTO.getDayPrice();
+		if (requestDTO.getDayPrice() != null) {
+			this.dayPrice = requestDTO.getDayPrice();
 		}
-		if (roomRequestDTO.getMinTm() != null) {
-			this.minTm = roomRequestDTO.getMinTm();
+		if (requestDTO.getMinTm() != null) {
+			this.minTm = requestDTO.getMinTm();
 		}
-		if (roomRequestDTO.getCapacity() != null) {
-			this.capacity = roomRequestDTO.getCapacity();
+		if (requestDTO.getCapacity() != null) {
+			this.capacity = requestDTO.getCapacity();
 		}
-		if (roomRequestDTO.getTitle() != null) {
-			this.title = roomRequestDTO.getTitle();
+		if (requestDTO.getTitle() != null) {
+			this.title = requestDTO.getTitle();
 		}
-		if (roomRequestDTO.getDescription() != null) {
-			this.description = roomRequestDTO.getDescription();
+		if (requestDTO.getDescription() != null) {
+			this.description = requestDTO.getDescription();
 		}
-		if(roomRequestDTO.getUseYn() != null) {
-			this.useYn = roomRequestDTO.getUseYn();
+		if(requestDTO.getUseYn() != null) {
+			this.useYn = requestDTO.getUseYn();
 		}
 	}
 }
