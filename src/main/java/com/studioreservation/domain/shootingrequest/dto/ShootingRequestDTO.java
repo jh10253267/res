@@ -19,9 +19,6 @@ public class ShootingRequestDTO {
 	@Schema(example = "PHOTO or VIDEO", description = "촬영 유형")
 	private ShootingTyp shootingTyp;
 
-	@Schema(example = "목적", description = "목적")
-	private String purpose;
-
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss")
 	@JsonDeserialize(using = TimestampDeserializer.class)
 	@Schema(type = "string", example = "희망 착수일", description = "희망 착수일")
@@ -41,4 +38,7 @@ public class ShootingRequestDTO {
 
 	@Schema(example = "회사소개서 받아보기", description = "회사소개서 받아보기")
 	private boolean newsConfirmed;
+
+	@Schema(example = "카테고리 아이디", description = "카테고리 아이디")
+	private Long purposeCd;
 }

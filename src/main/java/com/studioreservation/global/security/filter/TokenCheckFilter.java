@@ -6,8 +6,10 @@ import java.util.Map;
 import com.studioreservation.global.security.APIUserDetailsService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.studioreservation.global.security.JWTUtil;
@@ -41,8 +43,11 @@ public class TokenCheckFilter extends OncePerRequestFilter {
 
 		try {
 			Map<String, Object> value = validateAccessToken(request);
+			log.info("!");
 			String username = value.get("username").toString();
+			log.info("!!");
 			UserDetails userDetails = apiUserDetailsService.loadUserByUsername(username);
+			log.info("!!!");
 
 			UsernamePasswordAuthenticationToken authentication =
 					new UsernamePasswordAuthenticationToken(
@@ -52,7 +57,18 @@ public class TokenCheckFilter extends OncePerRequestFilter {
 
 			filterChain.doFilter(request, response);
 		} catch (AccessTokenException e) {
+			log.info("invalid token");
 			e.sendResponseError(response);
+		}catch (AuthenticationException e) {
+			log.info("AuthenticationException caught");
+			// 인증 실패 시 적절한 응답 처리
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			response.setContentType("application/json;charset=UTF-8");
+			response.getWriter().write("{\"error\":\"Unauthorized\", \"message\":\"" + e.getMessage() + "\"}");
+		} catch (Exception e) {
+			log.error("Unexpected exception", e);
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().write("{\"error\":\"Internal Server Error\"}");
 		}
 	}
 

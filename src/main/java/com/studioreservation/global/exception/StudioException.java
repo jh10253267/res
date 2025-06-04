@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class StudioreservationApplicationException extends RuntimeException {
+public class StudioException extends RuntimeException {
 	private ErrorCode errorCode;
 	private String message;
 
-	public StudioreservationApplicationException(ErrorCode errorCode) {
+	public StudioException(ErrorCode errorCode) {
 		this.errorCode = errorCode;
 		this.message = null;
 	}

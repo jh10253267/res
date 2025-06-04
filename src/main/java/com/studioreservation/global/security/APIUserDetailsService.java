@@ -2,6 +2,8 @@ package com.studioreservation.global.security;
 
 import java.util.List;
 
+import com.studioreservation.global.exception.ErrorCode;
+import com.studioreservation.global.exception.StudioException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,7 +23,8 @@ public class APIUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		APIUser apiUser = repository.findById(username).orElseThrow();
+		APIUser apiUser = repository.findById(username)
+				.orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
 		return new APIUserDTO(
 				apiUser.getUsername(),

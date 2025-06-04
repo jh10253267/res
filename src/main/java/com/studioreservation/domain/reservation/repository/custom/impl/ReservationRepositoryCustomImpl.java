@@ -59,14 +59,15 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
 			.orderBy(createOrderSpecifier(pageable))
 			.fetch();
 
-		long totalCount = jpaQueryFactory
+		Long totalCount = jpaQueryFactory
 			.select(reservationHistory.count())
 			.from(reservationHistory)
 			.where(betweenStrtDtAndEndDt(requestDTO.getStrtDt(),
 				requestDTO.getEndDt()), eqRoomCd(roomCd))
 			.fetchOne();
+		long safeCount = totalCount != null ? totalCount : 0L;
 
-		return new PageImpl<>(content, pageable, totalCount);
+		return new PageImpl<>(content, pageable, safeCount);
 	}
 
 	private BooleanExpression eqRoomCd(Long roomCd) {

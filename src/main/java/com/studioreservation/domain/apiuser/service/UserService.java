@@ -7,7 +7,7 @@ import com.studioreservation.domain.apiuser.dto.SignupRequestDTO;
 import com.studioreservation.domain.apiuser.entity.APIUser;
 import com.studioreservation.domain.apiuser.repository.APIUserRepository;
 import com.studioreservation.global.exception.ErrorCode;
-import com.studioreservation.global.exception.StudioreservationApplicationException;
+import com.studioreservation.global.exception.StudioException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +19,7 @@ public class UserService {
 
 	public void signup(SignupRequestDTO signupRequestDTO) {
 		if(apiUserRepository.existsById(signupRequestDTO.getUsername())) {
-			throw new StudioreservationApplicationException(ErrorCode.USER_NOT_FOUND);
+			throw new StudioException(ErrorCode.ALREADY_EXIST_USERNAME);
 		}
 
 		APIUser apiUser = APIUser.builder()
