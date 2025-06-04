@@ -13,8 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestControllerAdvice
 public class GlobalControllerAdvice {
-	@ExceptionHandler(StudioreservationApplicationException.class)
-	public ResponseEntity<?> errorHandler(StudioreservationApplicationException e) {
+	@ExceptionHandler(StudioException.class)
+	public ResponseEntity<?> errorHandler(StudioException e) {
 		log.error("Error occurs {}", e.toString());
 		return ResponseEntity.status(e.getErrorCode().getStatus())
 			.body(APIResponse.error(e.getErrorCode().name()));
