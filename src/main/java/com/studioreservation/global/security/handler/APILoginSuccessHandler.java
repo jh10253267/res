@@ -38,7 +38,6 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
 				"refreshToken", refreshToken);
 
 		String jsonStr = gson.toJson(keyMap);
-		System.out.println(jsonStr);
 
 		response.getWriter().println(jsonStr);
 	}
