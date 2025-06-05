@@ -22,6 +22,14 @@ sms:
     secret: ${SMS_SECRET}
   sender: ${SMS_SENDER}
 
+ncp:
+  object-storage:
+    endpoint: ${END_POINT}
+    region: ${OBJECT_REGION}
+    access-key: ${OBJECT_ACCESS}
+    secret-key: ${OBJECT_SECRET}
+    bucket-name: ${BUCKET_NAME}
+
 jwt:
   secret:
     key: ${JWT_SECRET}
