@@ -15,7 +15,7 @@ spring:
 
 ncp:
   object-storage:
-    endpoint: testtest
+    endpoint: http://www.example.com
     region: testtest
     access-key: testestest
     secret-key: testtestestesttest

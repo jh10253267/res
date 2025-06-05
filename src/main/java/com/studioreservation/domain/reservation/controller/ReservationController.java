@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class ReservationController {
 	private final ReservationService reservationService;
 	private final DefaultMessageService messageService;
-	private final SmsProperties smsProperties;
+//	private final SmsProperties smsProperties;
 
 	@PostMapping("/{roomCd}")
 	@Operation(summary = "예약하기", description = "예약하기")
