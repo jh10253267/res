@@ -13,6 +13,14 @@ spring:
         format_sql: true
     show-sql: true
 
+ncp:
+  object-storage:
+    endpoint: testtest
+    region: testtest
+    access-key: testestest
+    secret-key: testtestestesttest
+    bucket-name: testestestest
+
 base62:
   charset: 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
 
