@@ -23,7 +23,7 @@ public class ShootingRequestController {
 	private final ShootingRequestService service;
 
 	@PostMapping
-	@Operation(description = "의뢰하기")
+	@Operation(summary = "촬영 의뢰", description = "촬영 의뢰")
 	public APIResponse<?> shootingRequest(@RequestBody ShootingRequestDTO shootingRequestDTO) {
 		return APIResponse.success(service.shootingRequest(shootingRequestDTO));
 	}
