@@ -45,6 +45,11 @@ jobs:
             SMS_KEY=${{ secrets.SMS_KEY }}
             SMS_SECRET=${{ secrets.SMS_SECRET }}
             SMS_SENDER=${{ secrets.SMS_SENDER }}
+            BUCKET_NAME=${{ secrets.BUCKET_NAME }}
+            END_POINT=${{ secrets.END_POINT }}
+            OBJECT_ACCESS=${{ secrets.OBJECT_ACCESS }}
+            OBJECT_REGION=${{ secrets.OBJECT_REGION }}
+            OBJECT_SECRET=${{ secrets.OBJECT_SECRET }}
             EOF
   
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_APP }}:latest
