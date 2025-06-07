@@ -1,9 +1,11 @@
 package com.studioreservation.domain.reservation.entity;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import com.studioreservation.domain.reservation.dto.ReservationChangeRequestDTO;
 import com.studioreservation.domain.reservation.enums.PayTyp;
+import com.studioreservation.domain.reservation.util.Calculator;
 import com.studioreservation.domain.room.entity.Room;
 import com.studioreservation.global.BaseEntity;
 
@@ -59,8 +61,11 @@ public class ReservationHistory extends BaseEntity {
 	private String requestCont;
 
 	private boolean policyConfirmed;
+
 	private String memo;
-	private String totalAmount;
+
+	@Setter
+	private Integer totalAmount;
 
 	@Setter
 	@Column(unique = true)
@@ -69,10 +74,6 @@ public class ReservationHistory extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@Setter
 	private Room room;
-
-	public void changeState(String state) {
-		this.state = state;
-	}
 
 	public void updateReservation(ReservationChangeRequestDTO dto) {
 		if (dto.getUserNm() != null) this.userNm = dto.getUserNm();
@@ -88,6 +89,30 @@ public class ReservationHistory extends BaseEntity {
 		if (dto.getProposal() != null) this.proposal = dto.getProposal();
 		if (dto.getRequestCont() != null) this.requestCont = dto.getRequestCont();
 		if (dto.getPolicyConfirmed() != null) this.policyConfirmed = dto.getPolicyConfirmed();
+		if (dto.getMemo() != null) this.memo = dto.getMemo();
 	}
 
+	public void calculateTotalAmount(Room room, Calculator calculator) {
+		this.room = room;
+		int duration = calculator.calculate(strtDt, endDt);
+		double discountRate = 0.0;
+
+		if(isEvening(this.strtDt)) {
+			discountRate += 0.2;
+		}
+		if(duration >= 8) {
+			discountRate += 0.1;
+		}
+
+		this.totalAmount = applyDiscount(room.getHrPrice(), discountRate);
+	}
+
+	private boolean isEvening(Timestamp resvDuration) {
+		LocalDateTime time = resvDuration.toLocalDateTime();
+		return time.getHour() >= 18;
+	}
+
+	private int applyDiscount(int price, double discountRate) {
+		return (int) (price * (1 - discountRate));
+	}
 }

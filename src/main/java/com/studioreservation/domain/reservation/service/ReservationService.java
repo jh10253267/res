@@ -1,24 +1,21 @@
 package com.studioreservation.domain.reservation.service;
 
-import java.security.SecureRandom;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.studioreservation.domain.reservation.dto.ReservationResponseDTO;
-import com.studioreservation.domain.reservation.dto.ReservationRequestDTO;
 import com.studioreservation.domain.reservation.dto.ReservationChangeRequestDTO;
+import com.studioreservation.domain.reservation.dto.ReservationRequestDTO;
+import com.studioreservation.domain.reservation.dto.ReservationResponseDTO;
 import com.studioreservation.domain.reservation.entity.ReservationHistory;
 import com.studioreservation.domain.reservation.mapper.ReservationMapper;
 import com.studioreservation.domain.reservation.repository.ReservationRepository;
+import com.studioreservation.domain.reservation.util.Calculator;
+import com.studioreservation.domain.reservation.util.ReservationCodeGenerator;
 import com.studioreservation.domain.room.entity.Room;
 import com.studioreservation.domain.room.repository.RoomRepository;
 import com.studioreservation.global.request.PageRequestDTO;
 import com.studioreservation.global.response.PageResponseDTO;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,8 +23,8 @@ public class ReservationService {
 	private final ReservationRepository repository;
 	private final RoomRepository roomRepository;
 	private final ReservationMapper mapper;
-	@Value("${base62.charset}")
-	private String BASE62;
+	private final ReservationCodeGenerator codeGenerator;
+	private final Calculator calculator;
 	private static final int MAX_RETRY = 5;
 
 
@@ -60,12 +57,13 @@ public class ReservationService {
 		ReservationHistory reservationHistory = mapper.toEntity(reservationRequestDTO);
 		Room room = roomRepository.findSingleEntity(roomCd);
 		reservationHistory.setRoom(room);
+		repository.save(reservationHistory);
 
-		ReservationHistory savedReservationHistory = repository.save(reservationHistory);
-		String resvCd = generateUniqueReservationCode(savedReservationHistory.getSn());
+		String resvCd = generateUniqueReservationCode(reservationHistory.getSn());
+		reservationHistory.calculateTotalAmount(room, calculator);
 		reservationHistory.setResvCd(resvCd);
 
-		return mapper.toDTO(savedReservationHistory);
+		return mapper.toDTO(reservationHistory);
 	}
 
 	@Transactional
@@ -79,41 +77,12 @@ public class ReservationService {
 		return mapper.toDTO(reservationHistory);
 	}
 
-	private String encodeBase62(long baseSn) {
-		StringBuilder sb = new StringBuilder();
-		while (baseSn > 0) {
-			sb.append(BASE62.charAt((int)(baseSn % 62)));
-			baseSn /= 62;
-		}
-		return sb.reverse().toString();
-	}
-
-	private String generateReservationCode(long id) {
-		long OFFSET = 1_000_000L;
-		String code = encodeBase62(OFFSET + id);
-		return padWithRandomChars(code, 6, BASE62);
-	}
-
-	private static String padWithRandomChars(String base62Code, int totalLength, String base62Charset) {
-		int padLength = totalLength - base62Code.length();
-		if (padLength <= 0) return base62Code;
-
-		SecureRandom random = new SecureRandom();
-		StringBuilder padding = new StringBuilder();
-		for (int i = 0; i < padLength; i++) {
-			int index = random.nextInt(62);
-			padding.append(base62Charset.charAt(index));
-		}
-
-		return padding + base62Code;
-	}
-
-	public String generateUniqueReservationCode(long id) {
+	private String generateUniqueReservationCode(Long sn) {
 		int attempts = 0;
 		String code;
 
 		do {
-			code = generateReservationCode(id);
+			code = codeGenerator.generateReservationCode(sn);
 			attempts++;
 			if (attempts > MAX_RETRY) {
 				throw new RuntimeException("예약 코드 중복으로 인해 생성 실패: 재시도 초과");

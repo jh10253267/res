@@ -71,4 +71,8 @@ public class ReservationResponseDTO {
 
 	@Schema(description = "예약 코드", example = "예약 코드")
 	private String resvCd;
+
+	@Schema(description = "총 금액", example = "총 금액")
+	private Integer totalAmount;
+
 }
