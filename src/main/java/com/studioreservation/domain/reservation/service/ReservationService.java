@@ -30,7 +30,7 @@ public class ReservationService {
 
 	public PageResponseDTO<ReservationResponseDTO> getAllReservation(PageRequestDTO requestDTO) {
 		Page<ReservationResponseDTO> result = repository.findPagedEntities(requestDTO, null);
-		System.out.println(result);
+
 		return PageResponseDTO.<ReservationResponseDTO>withAll()
 				.data(result.getContent())
 				.pageRequestDTO(requestDTO)
