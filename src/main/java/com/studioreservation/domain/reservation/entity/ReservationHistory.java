@@ -75,6 +75,10 @@ public class ReservationHistory extends BaseEntity {
 	@Setter
 	private Room room;
 
+	private static final double DEFAULT_DISCOUNT_RATE = 0.2;
+	private static final int EXTRA_PAY_PER_PERSON = 5000;
+	private static final int EVENING_HOUR = 18;
+
 	public void updateReservation(ReservationChangeRequestDTO dto) {
 		if (dto.getUserNm() != null) this.userNm = dto.getUserNm();
 		if (dto.getPhone() != null) this.phone = dto.getPhone();
@@ -92,27 +96,44 @@ public class ReservationHistory extends BaseEntity {
 		if (dto.getMemo() != null) this.memo = dto.getMemo();
 	}
 
+
 	public void calculateTotalAmount(Room room, Calculator calculator) {
-		this.room = room;
 		int duration = calculator.calculate(strtDt, endDt);
+		int extraPay = applyExtraPay(room, this.userCnt);
 		double discountRate = 0.0;
 
 		if(isEvening(this.strtDt)) {
-			discountRate += 0.2;
-		}
-		if(duration >= 8) {
-			discountRate += 0.1;
+			discountRate += DEFAULT_DISCOUNT_RATE;
+		} else if(duration >= 8) {
+			discountRate += DEFAULT_DISCOUNT_RATE;
 		}
 
-		this.totalAmount = applyDiscount(room.getHrPrice(), discountRate);
+		this.totalAmount = calculateTotal(room.getHrPrice(),
+				duration,
+				extraPay,
+				discountRate);
 	}
 
 	private boolean isEvening(Timestamp resvDuration) {
 		LocalDateTime time = resvDuration.toLocalDateTime();
-		return time.getHour() >= 18;
+		return time.getHour() >= EVENING_HOUR;
 	}
 
-	private int applyDiscount(int price, double discountRate) {
-		return (int) (price * (1 - discountRate));
+	private double calculateDiscount(double discountRate) {
+		return (1 - discountRate);
+	}
+
+	private int calculateTotal(int hrPrice, int duration, int extraPay, double discountRate) {
+		return (int) (((hrPrice * duration) + extraPay) * calculateDiscount(discountRate));
+	}
+
+	private int applyExtraPay(Room room, int userCnt) {
+		int extraPay = 0;
+		// 만약 방의 수용 가능 인원보다 예약 희망 인원이 많다면
+		if(room.getCapacity() < userCnt) {
+			extraPay = (userCnt - room.getCapacity()) * EXTRA_PAY_PER_PERSON;
+		}
+
+		return extraPay;
 	}
 }

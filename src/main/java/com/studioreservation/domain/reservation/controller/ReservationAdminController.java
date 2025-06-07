@@ -31,6 +31,7 @@ public class ReservationAdminController {
     }
 
     @GetMapping("/{roomCd}")
+    @Operation(summary = "방별 예약 조회", description = "페이징 관련 파라미터를 넣지 않고 쿼리 스트링을 넣으면 단건 조회")
     public APIResponse<?> getAllReservationsBySn(@PathVariable("roomCd") Long roomCd,
                                                  PageRequestDTO requestDTO) {
         return APIResponse.success(service.getReservationsByRoomCd(requestDTO, roomCd));

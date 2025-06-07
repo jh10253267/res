@@ -23,7 +23,7 @@ public class TimestampDeserializer extends JsonDeserializer<Timestamp> {
 	@Override
 	public Timestamp deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
 		String text = p.getText().trim();
-		System.out.println("!!");
+
 		try {
 			ZoneId seoulZone = ZoneId.of("Asia/Seoul");
 
