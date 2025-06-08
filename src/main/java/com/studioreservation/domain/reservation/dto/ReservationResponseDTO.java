@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.studioreservation.domain.reservation.enums.PayTyp;
 
+import com.studioreservation.domain.reservation.enums.ReservationState;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,7 +38,7 @@ public class ReservationResponseDTO {
 	private int userCnt;
 
 	@Schema(description = "상태", example = "상태")
-	private String state;
+	private ReservationState state;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss")
 	@Schema(type = "string", example = "대여 시작 시각", description = "대여 시작 시각")

@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 import com.studioreservation.domain.reservation.dto.ReservationChangeRequestDTO;
 import com.studioreservation.domain.reservation.enums.PayTyp;
-import com.studioreservation.domain.reservation.util.Calculator;
+import com.studioreservation.domain.reservation.enums.ReservationState;
 import com.studioreservation.domain.room.entity.Room;
 import com.studioreservation.global.BaseEntity;
 
@@ -44,7 +44,8 @@ public class ReservationHistory extends BaseEntity {
 	private int userCnt;
 
 	@Builder.Default
-	private String state = "00";
+	@Enumerated(EnumType.STRING)
+	ReservationState state = ReservationState.WAITING;
 
 	private Timestamp strtDt;
 
@@ -96,9 +97,16 @@ public class ReservationHistory extends BaseEntity {
 		if (dto.getMemo() != null) this.memo = dto.getMemo();
 	}
 
+	private int calculateDurationHours() {
+		long durationMillis = endDt.getTime() - strtDt.getTime(); // 밀리초 차이
+		long durationHours = (long) Math.ceil(durationMillis / (1000.0 * 60 * 60)); // 올림 처리
 
-	public void calculateTotalAmount(Room room, Calculator calculator) {
-		int duration = calculator.calculate(strtDt, endDt);
+		return (int) (durationHours);
+	}
+
+
+	public void calculateTotalAmount(Room room) {
+		int duration = calculateDurationHours();
 		int extraPay = applyExtraPay(room, this.userCnt);
 		double discountRate = 0.0;
 
