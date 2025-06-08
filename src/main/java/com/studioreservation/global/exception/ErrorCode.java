@@ -15,6 +15,10 @@ public enum ErrorCode {
 	INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "User has invalid permission"),
 	DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Database error occurs"),
 	NOTIFICATION_CONNECT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Connect to notification occurs error"),
+	// 예약 관련
+	NO_SUCH_RESERVATION(HttpStatus.NOT_FOUND, "일치하는 예약 내역이 없습니다."),
+	// 방 관련
+	NO_SUCH_ROOM(HttpStatus.NOT_FOUND, "해당하는 방이 없습니다.")
 	;
 
 	private final HttpStatus status;

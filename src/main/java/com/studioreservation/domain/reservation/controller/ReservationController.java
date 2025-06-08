@@ -3,21 +3,17 @@ package com.studioreservation.domain.reservation.controller;
 import com.studioreservation.domain.reservation.dto.ReservationRequestDTO;
 import com.studioreservation.domain.reservation.dto.ReservationResponseDTO;
 import com.studioreservation.domain.reservation.service.ReservationService;
-import com.studioreservation.global.config.SmsProperties;
 import com.studioreservation.global.response.APIResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import net.nurigo.sdk.message.model.Message;
-import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.service.DefaultMessageService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/reservations")
 @RequiredArgsConstructor
 public class ReservationController {
-	private final ReservationService reservationService;
+	private final ReservationService service;
 	private final DefaultMessageService messageService;
 //	private final SmsProperties smsProperties;
 
@@ -25,7 +21,7 @@ public class ReservationController {
 	@Operation(summary = "예약하기", description = "예약하기")
 	public APIResponse<?> reserve(@PathVariable("roomCd") Long roomCd,
 								  @RequestBody ReservationRequestDTO reservationRequestDTO) {
-		ReservationResponseDTO responseDTO = reservationService.reserve(roomCd, reservationRequestDTO);
+		ReservationResponseDTO responseDTO = service.reserve(roomCd, reservationRequestDTO);
 //		Message message = new Message();
 //		message.setFrom(smsProperties.getSender());
 //		message.setTo(responseDTO.getPhone());
@@ -34,5 +30,13 @@ public class ReservationController {
 //		messageService.sendOne(new SingleMessageSendingRequest(message));
 
 		return APIResponse.success(responseDTO);
+	}
+
+	@GetMapping
+	@Operation(summary = "내 예약 조회", description = "내 예약 조회")
+	public APIResponse<?> getMyReserve(@RequestParam String phone,
+									   @RequestParam String resvCd) {
+		return APIResponse.success(service.getReservation(phone, resvCd));
+
 	}
 }

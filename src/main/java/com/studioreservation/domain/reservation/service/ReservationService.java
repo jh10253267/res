@@ -6,7 +6,6 @@ import com.studioreservation.domain.reservation.dto.ReservationResponseDTO;
 import com.studioreservation.domain.reservation.entity.ReservationHistory;
 import com.studioreservation.domain.reservation.mapper.ReservationMapper;
 import com.studioreservation.domain.reservation.repository.ReservationRepository;
-import com.studioreservation.domain.reservation.util.Calculator;
 import com.studioreservation.domain.reservation.util.ReservationCodeGenerator;
 import com.studioreservation.domain.room.entity.Room;
 import com.studioreservation.domain.room.repository.RoomRepository;
@@ -24,22 +23,11 @@ public class ReservationService {
 	private final RoomRepository roomRepository;
 	private final ReservationMapper mapper;
 	private final ReservationCodeGenerator codeGenerator;
-	private final Calculator calculator;
 	private static final int MAX_RETRY = 5;
 
 
 	public PageResponseDTO<ReservationResponseDTO> getAllReservation(PageRequestDTO requestDTO) {
-		Page<ReservationResponseDTO> result = repository.findPagedEntities(requestDTO, null);
-
-		return PageResponseDTO.<ReservationResponseDTO>withAll()
-				.data(result.getContent())
-				.pageRequestDTO(requestDTO)
-				.total(result.getTotalElements())
-				.build();
-	}
-
-	public PageResponseDTO<ReservationResponseDTO> getReservationsByRoomCd(PageRequestDTO requestDTO, Long roomCd) {
-		Page<ReservationResponseDTO> result = repository.findPagedEntities(requestDTO, roomCd);
+		Page<ReservationResponseDTO> result = repository.findPagedEntities(requestDTO);
 
 		return PageResponseDTO.<ReservationResponseDTO>withAll()
 				.data(result.getContent())
@@ -60,7 +48,7 @@ public class ReservationService {
 		repository.save(reservationHistory);
 
 		String resvCd = generateUniqueReservationCode(reservationHistory.getSn());
-		reservationHistory.calculateTotalAmount(room, calculator);
+		reservationHistory.calculateTotalAmount(room);
 		reservationHistory.setResvCd(resvCd);
 
 		return mapper.toDTO(reservationHistory);

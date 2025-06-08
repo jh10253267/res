@@ -3,9 +3,9 @@ package com.studioreservation.domain.reservation.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.studioreservation.domain.reservation.enums.PayTyp;
+import com.studioreservation.domain.reservation.enums.ReservationState;
 import com.studioreservation.global.formatter.TimestampDeserializer;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,7 +29,7 @@ public class ReservationChangeRequestDTO {
 	private Integer userCnt;
 
 	@Schema(description = "예약 상태", example = "예약 상태")
-	private String state;
+	private ReservationState state;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss")
 	@JsonDeserialize(using = TimestampDeserializer.class)

@@ -9,7 +9,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.studioreservation.global.security.JWTUtil;
@@ -43,11 +42,8 @@ public class TokenCheckFilter extends OncePerRequestFilter {
 
 		try {
 			Map<String, Object> value = validateAccessToken(request);
-			log.info("!");
 			String username = value.get("username").toString();
-			log.info("!!");
 			UserDetails userDetails = apiUserDetailsService.loadUserByUsername(username);
-			log.info("!!!");
 
 			UsernamePasswordAuthenticationToken authentication =
 					new UsernamePasswordAuthenticationToken(

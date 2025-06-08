@@ -44,7 +44,11 @@ public class PageRequestDTO {
 	@Schema(type = "string", example = "예약 종료 시각", description = "예약 종료 시각")
 	private Timestamp endDt;
 
+	@Schema(type = "long", example = "방별 조회", description = "방별 조회")
+	private Long roomCd;
 
+	@Schema(type = "string", example = "핸드폰 번호로 조회", description = "핸드폰 번호로 조회")
+	private String phone;
 
 	public Pageable getPageable(String props) {
 		if(size != Integer.MAX_VALUE) {
