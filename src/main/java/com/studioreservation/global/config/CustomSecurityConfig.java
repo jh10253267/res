@@ -98,6 +98,6 @@ public class CustomSecurityConfig {
     }
 
     private RefreshTokenFilter refreshTokenFilter(JWTUtil jwtUtil) {
-        return new RefreshTokenFilter("/refreshToken", jwtUtil);
+        return new RefreshTokenFilter("/api/users/refreshToken", jwtUtil);
     }
 }

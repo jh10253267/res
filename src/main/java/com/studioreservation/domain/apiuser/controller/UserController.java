@@ -1,5 +1,6 @@
 package com.studioreservation.domain.apiuser.controller;
 
+import com.studioreservation.domain.apiuser.dto.RefreshTokenDTO;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 
@@ -41,9 +42,8 @@ public class UserController {
 	}
 
 	@Operation(summary = "토큰 리프레싱", description = "토큰 리프레싱 API")
-	@SecurityRequirement(name = "Bearer Authentication")
-	@GetMapping("/refreshToken")
-	public ResponseEntity<String> refreshToken() {
+	@PostMapping("/refreshToken")
+	public ResponseEntity<String> refreshToken(@RequestBody RefreshTokenDTO refreshTokenDTO) {
 		return ResponseEntity.ok("리프레싱은 필터에서 처리됩니다.");
 	}
 }

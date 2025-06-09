@@ -43,7 +43,7 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
 
 		String accessToken = tokens.get("accessToken");
 		String refreshToken = tokens.get("refreshToken");
-
+		
 		try {
 			checkAccessToken(accessToken);
 		} catch (RefreshTokenException refreshTokenException) {
