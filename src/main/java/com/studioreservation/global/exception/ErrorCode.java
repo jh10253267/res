@@ -18,7 +18,9 @@ public enum ErrorCode {
 	// 예약 관련
 	NO_SUCH_RESERVATION(HttpStatus.NOT_FOUND, "일치하는 예약 내역이 없습니다."),
 	// 방 관련
-	NO_SUCH_ROOM(HttpStatus.NOT_FOUND, "해당하는 방이 없습니다.")
+	NO_SUCH_ROOM(HttpStatus.NOT_FOUND, "해당하는 방이 없습니다."),
+	// 카테고리 관련
+	NO_SUCH_PURPOSE(HttpStatus.NOT_FOUND, "해당하는 촬영목적이 없습니다.")
 	;
 
 	private final HttpStatus status;

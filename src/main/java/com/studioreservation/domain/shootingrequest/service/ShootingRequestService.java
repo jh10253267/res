@@ -7,6 +7,8 @@ import com.studioreservation.domain.shootingrequest.dto.ShootingRequestDTO;
 import com.studioreservation.domain.shootingrequest.entity.ShootingRequest;
 import com.studioreservation.domain.shootingrequest.mapper.ShootingRequestMapper;
 import com.studioreservation.domain.shootingrequest.repository.ShootingRequestRepository;
+import com.studioreservation.global.exception.ErrorCode;
+import com.studioreservation.global.exception.StudioException;
 import com.studioreservation.global.request.PageRequestDTO;
 import com.studioreservation.global.response.PageResponseDTO;
 import jakarta.persistence.criteria.Path;
@@ -22,60 +24,61 @@ import java.sql.Timestamp;
 @Service
 @RequiredArgsConstructor
 public class ShootingRequestService {
-	private final ShootingRequestRepository repository;
-	private final PurposeRepository purposeRepository;
-	private final ShootingRequestMapper mapper;
+    private final ShootingRequestRepository repository;
+    private final PurposeRepository purposeRepository;
+    private final ShootingRequestMapper mapper;
 
-	@Transactional
-	public ShootingReqResponseDTO shootingRequest(ShootingRequestDTO shootingRequestDTO) {
-		ShootingRequest shootingRequest = mapper.toEntity(shootingRequestDTO);
-		Purpose purpose =
-				purposeRepository.findById(shootingRequestDTO.getPurposeCd()).orElseThrow();
-		shootingRequest.setPurpose(purpose);
-		ShootingRequest savedShootingRequest = repository.save(shootingRequest);
+    @Transactional
+    public ShootingReqResponseDTO shootingRequest(ShootingRequestDTO requestDTO) {
+        Purpose purpose = purposeRepository
+                .findById(requestDTO.getPurposeCd()).orElseThrow(() ->
+                        new StudioException(ErrorCode.NO_SUCH_PURPOSE));
 
-		return mapper.toDTO(savedShootingRequest);
-	}
+        ShootingRequest shootingRequest = ShootingRequest.buildStudioRequest(requestDTO, purpose);
+        repository.save(shootingRequest);
 
-	public PageResponseDTO<ShootingReqResponseDTO> getAllShootingRequests(PageRequestDTO requestDTO) {
-		Page<ShootingReqResponseDTO> result = repository
-				.findAll(requestDTO.getPageable(requestDTO.getSortBy()))
-				.map(mapper::toDTO);
+        return mapper.toDTO(shootingRequest);
+    }
 
-		return PageResponseDTO.<ShootingReqResponseDTO>withAll()
-				.data(result.getContent())
-				.pageRequestDTO(requestDTO)
-				.total(result.getTotalElements())
-				.build();
-	}
+    public PageResponseDTO<ShootingReqResponseDTO> getAllShootingRequests(PageRequestDTO requestDTO) {
+        Page<ShootingReqResponseDTO> result = repository
+                .findAll(requestDTO.getPageable(requestDTO.getSortBy()))
+                .map(mapper::toDTO);
 
-	public PageResponseDTO<ShootingReqResponseDTO> getAllShootingRequestsByStrtDt(PageRequestDTO requestDTO) {
-		Specification<ShootingRequest> spec = Specification.where(null);
+        return PageResponseDTO.<ShootingReqResponseDTO>withAll()
+                .data(result.getContent())
+                .pageRequestDTO(requestDTO)
+                .total(result.getTotalElements())
+                .build();
+    }
 
-		if (requestDTO.getStrtDt() != null) {
-			spec = spec.and((root, query, cb) -> {
-				Path<Timestamp> strtDt = root.get("strtDt");
+    public PageResponseDTO<ShootingReqResponseDTO> getAllShootingRequestsByStrtDt(PageRequestDTO requestDTO) {
+        Specification<ShootingRequest> spec = Specification.where(null);
 
-				Predicate p = cb.conjunction();
-				if (requestDTO.getStrtDt() != null) {
-					p = cb.and(p, cb.lessThanOrEqualTo(strtDt, requestDTO.getEndDt()));
-				}
-				return p;
-			});
-		}
+        if (requestDTO.getStrtDt() != null) {
+            spec = spec.and((root, query, cb) -> {
+                Path<Timestamp> strtDt = root.get("strtDt");
 
-		Page<ShootingReqResponseDTO> result = repository
-				.findAll(spec, requestDTO.getPageable(requestDTO.getSortBy()))
-				.map(mapper::toDTO);
+                Predicate p = cb.conjunction();
+                if (requestDTO.getStrtDt() != null) {
+                    p = cb.and(p, cb.lessThanOrEqualTo(strtDt, requestDTO.getEndDt()));
+                }
+                return p;
+            });
+        }
 
-		return PageResponseDTO.<ShootingReqResponseDTO>withAll()
-				.data(result.getContent())
-				.pageRequestDTO(requestDTO)
-				.total(result.getTotalElements())
-				.build();
-	}
+        Page<ShootingReqResponseDTO> result = repository
+                .findAll(spec, requestDTO.getPageable(requestDTO.getSortBy()))
+                .map(mapper::toDTO);
 
-	public ShootingReqResponseDTO getShootingRequest(Long sn) {
-		return mapper.toDTO(repository.findById(sn).orElseThrow());
-	}
+        return PageResponseDTO.<ShootingReqResponseDTO>withAll()
+                .data(result.getContent())
+                .pageRequestDTO(requestDTO)
+                .total(result.getTotalElements())
+                .build();
+    }
+
+    public ShootingReqResponseDTO getShootingRequest(Long sn) {
+        return mapper.toDTO(repository.findById(sn).orElseThrow());
+    }
 }
