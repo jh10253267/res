@@ -1,10 +1,12 @@
 package com.studioreservation.domain.shootingrequest.dto;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.studioreservation.domain.shootingrequest.enums.ShootingTyp;
+import com.studioreservation.domain.studiofile.dto.StudioFileDTO;
 import com.studioreservation.global.formatter.TimestampDeserializer;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -41,4 +43,7 @@ public class ShootingRequestDTO {
 
 	@Schema(example = "카테고리 아이디", description = "카테고리 아이디")
 	private Long purposeCd;
+
+	@Schema(example = "파일 이름")
+	private List<StudioFileDTO> fileNames;
 }

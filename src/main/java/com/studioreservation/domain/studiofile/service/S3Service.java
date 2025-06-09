@@ -1,5 +1,6 @@
 package com.studioreservation.domain.studiofile.service;
 
+import com.studioreservation.domain.studiofile.dto.StudioFileDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class S3Service {
     @Value("${ncp.object-storage.bucket-name}")
     private String bucketName;
 
-    public String saveFile(MultipartFile multipartFile) throws IOException {
+    public StudioFileDTO saveFile(MultipartFile multipartFile) throws IOException {
         String originalFilename = Optional.ofNullable(multipartFile.getOriginalFilename())
                 .orElse("unnamed.file");
         String savedFilename = UUID.randomUUID() + "_" + originalFilename;
@@ -31,7 +32,6 @@ public class S3Service {
                 .key(savedFilename)
                 .contentType(multipartFile.getContentType())
                 .contentLength(multipartFile.getSize())
-                // 메타데이터를 추가하고 싶으면 아래처럼 Map<String, String> 형태로 넣을 수 있음
                 .metadata(Collections.singletonMap("custom-meta-key", "custom-meta-value"))
                 .build();
 
@@ -39,7 +39,6 @@ public class S3Service {
 
         // 업로드된 파일의 URL 생성 (엔드포인트 + 버킷 + 키 형태)
         String url = String.format("https://kr.object.ncloudstorage.com/%s/%s", bucketName, savedFilename);
-
-        return url;
+        return new StudioFileDTO(originalFilename, savedFilename, url);
     }
 }

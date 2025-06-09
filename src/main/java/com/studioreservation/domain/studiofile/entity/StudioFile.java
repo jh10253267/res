@@ -34,4 +34,5 @@ public class StudioFile extends BaseEntity {
 	public void changeRequest(ShootingRequest shootingRequest) {
 		this.shootingRequest = shootingRequest;
 	}
+
 }

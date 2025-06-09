@@ -3,6 +3,7 @@ package com.studioreservation.domain.reservation.controller;
 import com.studioreservation.domain.reservation.dto.ReservationRequestDTO;
 import com.studioreservation.domain.reservation.dto.ReservationResponseDTO;
 import com.studioreservation.domain.reservation.service.ReservationService;
+import com.studioreservation.global.request.PageRequestDTO;
 import com.studioreservation.global.response.APIResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +33,16 @@ public class ReservationController {
 		return APIResponse.success(responseDTO);
 	}
 
-	@GetMapping
+	@GetMapping("/my")
 	@Operation(summary = "내 예약 조회", description = "내 예약 조회")
-	public APIResponse<?> getMyReserve(@RequestParam String phone,
+	public APIResponse<?> getMyReservation(@RequestParam String phone,
 									   @RequestParam String resvCd) {
 		return APIResponse.success(service.getReservation(phone, resvCd));
+	}
 
+	@GetMapping
+	@Operation(summary = "시간 단위 예약 조회", description = "시간 단위 예약 조회")
+	public APIResponse<?> getAllReservations(PageRequestDTO requestDTO) {
+		return APIResponse.success(service.getAllReservation(requestDTO));
 	}
 }
