@@ -1,8 +1,6 @@
 package com.studioreservation.domain.reservation.service;
 
-import com.studioreservation.domain.reservation.dto.ReservationChangeRequestDTO;
-import com.studioreservation.domain.reservation.dto.ReservationRequestDTO;
-import com.studioreservation.domain.reservation.dto.ReservationResponseDTO;
+import com.studioreservation.domain.reservation.dto.*;
 import com.studioreservation.domain.reservation.entity.ReservationHistory;
 import com.studioreservation.domain.reservation.mapper.ReservationMapper;
 import com.studioreservation.domain.reservation.repository.ReservationRepository;
@@ -15,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +34,10 @@ public class ReservationService {
 				.pageRequestDTO(requestDTO)
 				.total(result.getTotalElements())
 				.build();
+	}
+
+	public List<ReservedTimeResDTO> getReservedTimes(ReservedTimeReqDTO reservedTimeReqDTO) {
+		return repository.findReservedTime(reservedTimeReqDTO.getStrtDt(), reservedTimeReqDTO.getEndDt());
 	}
 
 	public ReservationResponseDTO getReservation(String phone, String resvCd) {
