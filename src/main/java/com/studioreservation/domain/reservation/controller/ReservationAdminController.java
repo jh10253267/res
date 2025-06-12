@@ -1,5 +1,6 @@
 package com.studioreservation.domain.reservation.controller;
 
+import com.studioreservation.domain.reservation.dto.ReservationAmoutDTO;
 import com.studioreservation.domain.reservation.dto.ReservationChangeRequestDTO;
 import com.studioreservation.domain.reservation.service.ReservationService;
 import com.studioreservation.global.request.PageRequestDTO;
@@ -27,5 +28,11 @@ public class ReservationAdminController {
                                       @RequestParam("phone") String phone,
                                       @RequestParam("resvCd") String resvCd) {
         return APIResponse.success(service.updateReservation(reservationChangeRequestDTO, phone, resvCd));
+    }
+
+    @GetMapping("/amounts")
+    @Operation(summary = "수입", description = "수입")
+    public APIResponse<?> getAllAmount(ReservationAmoutDTO amountDTO) {
+        return APIResponse.success(service.getTotalAmount(amountDTO));
     }
 }
