@@ -17,13 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class PurposeAdminController {
     private final PurposeService service;
 
-    @GetMapping
-    @Operation(summary = "모든 촬영 목적 가져오기", description = "모든 촬영 목적 가져오기")
-    public APIResponse<?> getAllPurposes() {
-        return APIResponse.success(service.getAllPurposes());
-
-    }
-
     @PostMapping
     @Operation(summary = "촬영 목적 생성", description = "촬영 목적 생성")
     public APIResponse<?> createPurpose(PurposeRequestDTO requestDTO) {
