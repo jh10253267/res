@@ -14,4 +14,6 @@ public interface ReservationRepositoryCustom {
 	Page<ReservationResponseDTO> findPagedEntities(PageRequestDTO requestDTO);
 
 	List<ReservedTimeResDTO> findReservedTime(Timestamp strtDt, Timestamp endDt);
+
+	Integer sumTotalAmount(Timestamp strtDt, Timestamp endDt);
 }

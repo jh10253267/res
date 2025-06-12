@@ -9,7 +9,6 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
-import com.studioreservation.domain.reservation.dto.ReservedTimeReqDTO;
 import com.studioreservation.domain.reservation.dto.ReservedTimeResDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -101,6 +100,15 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
                 .where(betweenStrtDtAndEndDt(strtDt, endDt))
                 .orderBy(reservationHistory.strtDt.asc())
                 .fetch();
+    }
+
+    @Override
+    public Integer sumTotalAmount(Timestamp strtDt, Timestamp endDt) {
+        return jpaQueryFactory
+                .select(reservationHistory.totalAmount.sum())
+                .from(reservationHistory)
+                .where(betweenStrtDtAndEndDt(strtDt, endDt))
+                .fetchOne();
     }
 
     private BooleanExpression eqRoomCd(Long roomCd) {

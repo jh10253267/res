@@ -69,6 +69,11 @@ public class ReservationService {
 		return mapper.toDTO(reservationHistory);
 	}
 
+	public Integer getTotalAmount(ReservationAmoutDTO amountDTO) {
+		return repository.sumTotalAmount(amountDTO.getStrtDt(),
+				amountDTO.getEndDt());
+	}
+
 	private String generateUniqueReservationCode(Long sn) {
 		int attempts = 0;
 		String code;
