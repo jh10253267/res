@@ -20,7 +20,7 @@ public class ReservationRequestDTO {
 	@Schema(description = "연락처", example = "연락처")
 	private String phone;
 
-	@Schema(description = "결제 수단", example = "결재 수단")
+	@Schema(description = "결제 수단", example = "결제 수단")
 	private PayTyp payTyp;
 
 	@Schema(description = "예약 인원수", example = "예약 인원수")
@@ -45,7 +45,7 @@ public class ReservationRequestDTO {
 	@Schema(description = "잘 모르겠음...", example = "잘 모르겠음...")
 	private String senderNm;
 
-	@Schema(description = "사용 목적", example = "사용 목적")
+	@Schema(description = "요처사항", example = "요청사항")
 	private String proposal;
 
 	@Schema(description = "잘 모르겠음...", example = "잘 모르겠음...")

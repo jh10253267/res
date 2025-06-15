@@ -10,6 +10,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.studioreservation.domain.reservation.dto.ReservedTimeResDTO;
+import com.studioreservation.domain.reservation.enums.ReservationState;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -97,7 +98,8 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
                                 reservationHistory.strtDt,
                                 reservationHistory.endDt
                         )).from(reservationHistory)
-                .where(betweenStrtDtAndEndDt(strtDt, endDt))
+                .where(betweenStrtDtAndEndDt(strtDt, endDt),
+                        reservationHistory.state.eq(ReservationState.CONFIRMED))
                 .orderBy(reservationHistory.strtDt.asc())
                 .fetch();
     }
