@@ -4,7 +4,7 @@ import com.studioreservation.domain.reservation.dto.*;
 import com.studioreservation.domain.reservation.entity.ReservationHistory;
 import com.studioreservation.domain.reservation.mapper.ReservationMapper;
 import com.studioreservation.domain.reservation.repository.ReservationRepository;
-import com.studioreservation.domain.reservation.util.ReservationCodeGenerator;
+import com.studioreservation.domain.reservation.util.Base32CodeGenerator;
 import com.studioreservation.domain.room.entity.Room;
 import com.studioreservation.domain.room.repository.RoomRepository;
 import com.studioreservation.global.request.PageRequestDTO;
@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -22,7 +23,7 @@ public class ReservationService {
 	private final ReservationRepository repository;
 	private final RoomRepository roomRepository;
 	private final ReservationMapper mapper;
-	private final ReservationCodeGenerator codeGenerator;
+	private final Base32CodeGenerator codeGenerator;
 	private static final int MAX_RETRY = 5;
 
 
@@ -51,7 +52,7 @@ public class ReservationService {
 		reservationHistory.setRoom(room);
 		repository.save(reservationHistory);
 
-		String resvCd = generateUniqueReservationCode(reservationHistory.getSn());
+		String resvCd = generateUniqueReservationCode(reservationHistory.getCreatedAt());
 		reservationHistory.calculateTotalAmount(room);
 		reservationHistory.setResvCd(resvCd);
 
@@ -74,12 +75,12 @@ public class ReservationService {
 				amountDTO.getEndDt());
 	}
 
-	private String generateUniqueReservationCode(Long sn) {
+	private String generateUniqueReservationCode(Timestamp date) {
 		int attempts = 0;
 		String code;
 
 		do {
-			code = codeGenerator.generateReservationCode(sn);
+			code = codeGenerator.generateCodeWithDate(date);
 			attempts++;
 			if (attempts > MAX_RETRY) {
 				throw new RuntimeException("예약 코드 중복으로 인해 생성 실패: 재시도 초과");
