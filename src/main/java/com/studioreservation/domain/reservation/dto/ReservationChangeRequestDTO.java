@@ -3,6 +3,7 @@ package com.studioreservation.domain.reservation.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.studioreservation.domain.reservation.enums.PayTyp;
+import com.studioreservation.domain.reservation.enums.Platform;
 import com.studioreservation.domain.reservation.enums.ReservationState;
 import com.studioreservation.global.formatter.TimestampDeserializer;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -53,7 +54,7 @@ public class ReservationChangeRequestDTO {
 	@Schema(description = "사용 목적", example = "사용 목적")
 	private String proposal;
 
-	@Schema(description = "잘 모르겠음...", example = "잘 모르겠음...")
+	@Schema(description = "요청 사항", example = "요청 사항")
 	private String requestCont;
 
 	@Schema(description = "약관 동의 여부", example = "약관 동의 여부")
@@ -61,4 +62,7 @@ public class ReservationChangeRequestDTO {
 
 	@Schema(description = "관리자 메모", example = "관리자 메모")
 	private String memo;
+
+	@Schema(description = "플랫폼", example = "NAVER")
+	private Platform platform;
 }

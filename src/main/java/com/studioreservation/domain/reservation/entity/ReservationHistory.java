@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import com.studioreservation.domain.reservation.dto.ReservationChangeRequestDTO;
 import com.studioreservation.domain.reservation.enums.PayTyp;
+import com.studioreservation.domain.reservation.enums.Platform;
 import com.studioreservation.domain.reservation.enums.ReservationState;
 import com.studioreservation.domain.room.entity.Room;
 import com.studioreservation.global.BaseEntity;
@@ -75,6 +76,10 @@ public class ReservationHistory extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@Setter
 	private Room room;
+
+	@Enumerated(EnumType.STRING)
+	@Builder.Default
+	private Platform platform = Platform.HOMEPAGE;
 
 	private static final double DEFAULT_DISCOUNT_RATE = 0.2;
 	private static final int EXTRA_PAY_PER_PERSON = 5000;
