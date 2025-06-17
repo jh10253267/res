@@ -3,6 +3,7 @@ package com.studioreservation.domain.reservation.entity;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+import com.studioreservation.domain.platform.entity.Platform;
 import com.studioreservation.domain.reservation.dto.ReservationChangeRequestDTO;
 import com.studioreservation.domain.reservation.enums.PayTyp;
 import com.studioreservation.domain.reservation.enums.ReservationState;
@@ -75,6 +76,9 @@ public class ReservationHistory extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@Setter
 	private Room room;
+
+	@ManyToOne
+	private Platform platform;
 
 	private static final double DEFAULT_DISCOUNT_RATE = 0.2;
 	private static final int EXTRA_PAY_PER_PERSON = 5000;

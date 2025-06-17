@@ -75,6 +75,11 @@ public class ReservationService {
 				amountDTO.getEndDt());
 	}
 
+	public ReservationStateResponse getCountOfReservations(ReservedTimeReqDTO reservedTimeReqDTO) {
+		return repository.findCountByState(reservedTimeReqDTO.getStrtDt(),
+				reservedTimeReqDTO.getEndDt());
+	}
+
 	private String generateUniqueReservationCode(Timestamp date) {
 		int attempts = 0;
 		String code;
