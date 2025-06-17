@@ -9,7 +9,9 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
+import com.studioreservation.domain.reservation.dto.ReservationStateResponse;
 import com.studioreservation.domain.reservation.dto.ReservedTimeResDTO;
+import com.studioreservation.domain.reservation.dto.StateCountDTO;
 import com.studioreservation.domain.reservation.enums.ReservationState;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -111,6 +113,26 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
                 .from(reservationHistory)
                 .where(betweenStrtDtAndEndDt(strtDt, endDt))
                 .fetchOne();
+    }
+
+    @Override
+    public ReservationStateResponse findCountByState(Timestamp strtDt,
+                                                Timestamp endDt) {
+        List<StateCountDTO> result = jpaQueryFactory
+                .select(Projections.constructor(StateCountDTO.class,
+                        reservationHistory.state,
+                        reservationHistory.count()
+                ))
+                .from(reservationHistory)
+                .groupBy(reservationHistory.state)
+                .fetch();
+
+        long total = jpaQueryFactory
+                .select(reservationHistory.count())
+                .from(reservationHistory)
+                .fetchOne();
+
+        return new ReservationStateResponse(total, result);
     }
 
     private BooleanExpression eqRoomCd(Long roomCd) {
