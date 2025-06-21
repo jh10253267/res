@@ -35,7 +35,7 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cat <<EOF > /home/{{ secrets.USERNAME }}/app/.env
+            cat <<EOF > /{{ secrets.USERNAME }}/app/.env
             DB_USER=${{ secrets.DB_USER }}
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
             DB_URL=${{ secrets.DB_URL }}
