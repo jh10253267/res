@@ -66,7 +66,7 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
     // AWS
-    implementation 'software.amazon.awssdk:s3:2.31.55'
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.600'
 
     // Querydsl
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
