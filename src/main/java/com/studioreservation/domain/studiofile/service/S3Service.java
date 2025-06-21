@@ -1,44 +1,36 @@
 package com.studioreservation.domain.studiofile.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.studioreservation.domain.studiofile.dto.StudioFileDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.core.exception.SdkClientException;
-import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class S3Service {
-    private final S3Client s3Client;
-    @Value("${ncp.object-storage.bucket-name}")
+    private final AmazonS3 amazonS3;
+    @Value(value = "${cloud.aws.s3.bucket}")
     private String bucketName;
 
-    public StudioFileDTO saveFile(MultipartFile multipartFile) throws IOException {
-        String originalFilename = Optional.ofNullable(multipartFile.getOriginalFilename())
+    public StudioFileDTO saveFile(MultipartFile file) throws IOException {
+        String originalFilename = Optional.of(file.getOriginalFilename())
                 .orElse("unnamed.file");
         String savedFilename = UUID.randomUUID() + "_" + originalFilename;
 
-        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(bucketName)
-                .key(savedFilename)
-                .contentType(multipartFile.getContentType())
-                .contentLength(multipartFile.getSize())
-                .metadata(Collections.singletonMap("custom-meta-key", "custom-meta-value"))
-                .build();
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(file.getSize());
+        metadata.setContentType(file.getContentType());
 
-        s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(multipartFile.getInputStream(), multipartFile.getSize()));
+        amazonS3.putObject(bucketName, savedFilename, file.getInputStream(), metadata);
+        String url = amazonS3.getUrl(bucketName, savedFilename).toString();
 
-        // 업로드된 파일의 URL 생성 (엔드포인트 + 버킷 + 키 형태)
-        String url = String.format("https://kr.object.ncloudstorage.com/%s/%s", bucketName, savedFilename);
         return new StudioFileDTO(originalFilename, savedFilename, url);
     }
 }
