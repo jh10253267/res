@@ -54,6 +54,6 @@ jobs:
             docker rm ${{ secrets.DOCKERHUB_APP }} || true
             docker run -d \
               --name ${{ secrets.DOCKERHUB_APP }} \
-              --env-file /{{ secrets.username }}/app/.env \
+              --env-file /{{ secrets.USERNAME }}/app/.env \
               -p 8080:8080 \
               ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_APP }}:latest
