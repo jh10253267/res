@@ -23,6 +23,11 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 	private final UserService userService;
 
+	@GetMapping("/healthCheck")
+	public String healthCheck() {
+		return "OK";
+	}
+
 	@Operation(summary = "회원가입", description = "사용자 회원가입 API")
 	@PostMapping("/signup")
 	public APIResponse<?> signup(@RequestBody SignupRequestDTO signupRequestDTO) {

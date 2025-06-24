@@ -103,9 +103,10 @@ public class ReservationHistory extends BaseEntity {
 
 	private int calculateDurationHours() {
 		long durationMillis = endDt.getTime() - strtDt.getTime(); // 밀리초 차이
-		long durationHours = (long) Math.ceil(durationMillis / (1000.0 * 60 * 60)); // 올림 처리
+		long unitMillis = 30 * 60 * 1000;
+		long durationHalfHours = (long) Math.ceil((double) durationMillis / unitMillis);
 
-		return (int) (durationHours);
+		return (int) (durationHalfHours);
 	}
 
 
@@ -120,7 +121,9 @@ public class ReservationHistory extends BaseEntity {
 			discountRate += DEFAULT_DISCOUNT_RATE;
 		}
 
-		this.totalAmount = calculateTotal(room.getHrPrice(),
+		double halfPrice = room.getHrPrice() * 0.5;
+
+		this.totalAmount = calculateTotal(halfPrice,
 				duration,
 				extraPay,
 				discountRate);
@@ -135,8 +138,8 @@ public class ReservationHistory extends BaseEntity {
 		return (1 - discountRate);
 	}
 
-	private int calculateTotal(int hrPrice, int duration, int extraPay, double discountRate) {
-		return (int) (((hrPrice * duration) + extraPay) * calculateDiscount(discountRate));
+	private int calculateTotal(double halfPrice, int duration, int extraPay, double discountRate) {
+		return (int) (((halfPrice * duration) + extraPay) * calculateDiscount(discountRate));
 	}
 
 	private int applyExtraPay(Room room, int userCnt) {
