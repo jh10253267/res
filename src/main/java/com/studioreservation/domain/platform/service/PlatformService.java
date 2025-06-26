@@ -33,7 +33,7 @@ public class PlatformService {
         repository.deleteById(cd);
     }
 
-    public void editPlatform(PlatformReqDTO reqDTO, Long cd) {
+    public void updatePlatform(PlatformReqDTO reqDTO, Long cd) {
         Platform platform = repository.findById(cd).orElseThrow();
         platform.update(reqDTO);
     }
