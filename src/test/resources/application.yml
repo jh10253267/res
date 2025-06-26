@@ -13,13 +13,15 @@ spring:
         format_sql: true
     show-sql: true
 
-ncp:
-  object-storage:
-    endpoint: http://www.example.com
-    region: testtest
-    access-key: testestest
-    secret-key: testtestestesttest
-    bucket-name: testestestest
+cloud:
+  aws:
+    region:
+      static: Teste
+    credentials:
+      access-key: testestest
+      secret-key: testestest
+    s3:
+      bucket: testestestest
 
 base62:
   charset: 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz

@@ -22,13 +22,15 @@ sms:
     key: ${SMS_KEY}
     secret: ${SMS_SECRET}
 
-ncp:
-  object-storage:
-    endpoint: ${END_POINT}
-    region: ${OBJECT_REGION}
-    access-key: ${OBJECT_ACCESS}
-    secret-key: ${OBJECT_SECRET}
-    bucket-name: ${BUCKET_NAME}
+cloud:
+  aws:
+    region:
+      static: ${OBJECT_REGION}
+    credentials:
+      access-key: ${OBJECT_ACCESS}
+      secret-key: ${OBJECT_SECRET}
+    s3:
+      bucket: ${BUCKET_NAME}
 
 jwt:
   secret:

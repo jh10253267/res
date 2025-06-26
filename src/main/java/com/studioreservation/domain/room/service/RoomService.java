@@ -21,7 +21,7 @@ public class RoomService {
 
 	public List<RoomResponseDTO> getAllRoom() {
 		return repository.findAllByUseYnTrueOrderByCdDesc()
-			.stream().map(entity -> mapper.toDTO(entity))
+			.stream().map(mapper::toDTO)
 			.toList();
 	}
 
@@ -30,15 +30,20 @@ public class RoomService {
 	}
 
 	public RoomResponseDTO createRoom (RoomRequestDTO roomRequestDTO){
-		repository.save(mapper.toEntity(roomRequestDTO));
-		return null;
+		Room room = repository.save(mapper.toEntity(roomRequestDTO));
+
+		return mapper.toDTO(room);
 	}
 
 	@Transactional
-	public RoomResponseDTO editRoomInfo(Long roomCd, RoomRequestDTO roomRequestDTO) {
+	public RoomResponseDTO updateRoomInfo(Long roomCd, RoomRequestDTO roomRequestDTO) {
 		Room room = repository.findById(roomCd).orElseThrow();
 		room.updateEntity(roomRequestDTO);
 
 		return mapper.toDTO(room);
+	}
+
+	public void deleteRoomInfo(Long roomCd) {
+		repository.deleteById(roomCd);
 	}
 }

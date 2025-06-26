@@ -1,4 +1,4 @@
-name: Docker CI/CD to NCP
+name: Docker CI/CD to EC2
 
 on:
   push:
@@ -35,18 +35,15 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cat <<EOF > /root/app/.env
+            cat <<EOF > /home/${{ secrets.USERNAME }}/app/.env
             DB_USER=${{ secrets.DB_USER }}
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
             DB_URL=${{ secrets.DB_URL }}
-            SCHEMA_NAME=${{ secrets.SCHEMA_NAME }}
-            BASE_62=${{ secrets.BASE_62 }}
             JWT_SECRET=${{ secrets.JWT_SECRET }}
             SMS_KEY=${{ secrets.SMS_KEY }}
             SMS_SECRET=${{ secrets.SMS_SECRET }}
             SMS_SENDER=${{ secrets.SMS_SENDER }}
             BUCKET_NAME=${{ secrets.BUCKET_NAME }}
-            END_POINT=${{ secrets.END_POINT }}
             OBJECT_ACCESS=${{ secrets.OBJECT_ACCESS }}
             OBJECT_REGION=${{ secrets.OBJECT_REGION }}
             OBJECT_SECRET=${{ secrets.OBJECT_SECRET }}
@@ -57,6 +54,6 @@ jobs:
             docker rm ${{ secrets.DOCKERHUB_APP }} || true
             docker run -d \
               --name ${{ secrets.DOCKERHUB_APP }} \
-              --env-file /root/app/.env \
+              --env-file /home/${{ secrets.USERNAME }}/app/.env \
               -p 8080:8080 \
               ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_APP }}:latest
