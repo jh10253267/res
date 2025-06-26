@@ -14,10 +14,10 @@ public class RoomResponseDTO {
 	private String name;
 
 	@Schema(description = "시간당 가격", example = "시간당 가격")
-	private String hrPrice;
+	private int hrPrice;
 
 	@Schema(description = "일별 가격", example = "일별 가격")
-	private String dayPrice;
+	private int dayPrice;
 
 	@Schema(description = "최소 대여 시간", example = "최소 대여 시간")
 	private int minTm;
