@@ -24,7 +24,7 @@ public class RoomAdminController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/{roomCd}")
+    @PutMapping("/{roomCd}")
     @Operation(summary = "방 정보 수정", description = "방 정보 수정")
     public APIResponse<?> editRoomInfo(@PathVariable("roomCd") Long roomCd,
                                        @RequestBody RoomRequestDTO roomRequestDTO) {
