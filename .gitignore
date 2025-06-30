@@ -35,3 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Google Calendar ###
+credentials.json
+/tokens/
+
