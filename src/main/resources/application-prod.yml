@@ -29,6 +29,12 @@ cloud:
     s3:
       bucket: ${BUCKET_NAME}
 
+google:
+  calendar:
+    attendee-email: ${ATTENDEE_EMAIL}
+    calendar-id: ${CALENDAR_ID}
+    application-name: ${APPLICATION_NAME}
+
 jwt:
   secret:
     key: ${JWT_SECRET}
