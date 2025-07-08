@@ -2,6 +2,8 @@ package com.studioreservation.global.request;
 
 import java.sql.Timestamp;
 
+import com.studioreservation.global.request.enums.ReservationSortType;
+import com.studioreservation.global.request.enums.SortDirection;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -34,10 +36,6 @@ public class PageRequestDTO {
 	@Builder.Default
 	private boolean desc = true;
 
-	@Schema(description = "정렬 기준", example = "정렬 기준")
-	@Builder.Default
-	private String sortBy = "createdAt";
-
 	@Schema(type = "string", example = "예약 시작 시각", description = "예약 시작 시각")
 	private Timestamp strtDt;
 
@@ -50,10 +48,17 @@ public class PageRequestDTO {
 	@Schema(type = "string", example = "핸드폰 번호로 조회", description = "핸드폰 번호로 조회")
 	private String phone;
 
-	public Pageable getPageable(String props) {
+	@Schema(type = "string", example = "sortBy", description = "sortBy")
+	@Builder.Default
+	private ReservationSortType sortBy = ReservationSortType.CREATEDAT;
+
+	@Schema(type = "string", example = "sortDir", description = "sortDir")
+	@Builder.Default
+	private SortDirection sortDir = SortDirection.DESC;
+
+	public Pageable getPageable() {
 		if(size != Integer.MAX_VALUE) {
-			Sort sort = desc ? Sort.by(props).descending() : Sort.by(props).ascending();
-			return PageRequest.of(this.page - 1, this.size, sort);
+			return PageRequest.of(this.page - 1, this.size);
 		}
 
 		return Pageable.unpaged();

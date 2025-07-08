@@ -1,31 +1,26 @@
 package com.studioreservation.domain.reservation.repository.custom.impl;
 
-import static com.studioreservation.domain.reservation.entity.QReservationHistory.*;
-
-import java.sql.Timestamp;
-import java.util.List;
-
-import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.studioreservation.domain.reservation.dto.ReservationResponseDTO;
 import com.studioreservation.domain.reservation.dto.ReservationStateResponse;
 import com.studioreservation.domain.reservation.dto.ReservedTimeResDTO;
 import com.studioreservation.domain.reservation.dto.StateCountDTO;
 import com.studioreservation.domain.reservation.enums.ReservationState;
+import com.studioreservation.domain.reservation.repository.custom.ReservationRepositoryCustom;
+import com.studioreservation.global.request.PageRequestDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.studioreservation.domain.reservation.dto.ReservationResponseDTO;
-import com.studioreservation.domain.reservation.repository.custom.ReservationRepositoryCustom;
-import com.studioreservation.global.request.PageRequestDTO;
+import java.sql.Timestamp;
+import java.util.List;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
+import static com.studioreservation.domain.reservation.entity.QReservationHistory.reservationHistory;
 
 @RequiredArgsConstructor
 public class ReservationRepositoryCustomImpl implements ReservationRepositoryCustom {
@@ -33,8 +28,10 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
 
     @Override
     public Page<ReservationResponseDTO> findPagedEntities(PageRequestDTO requestDTO) {
-        Pageable pageable = requestDTO.getPageable(requestDTO.getSortBy());
-        OrderSpecifier<?> orderSpecifier = createOrderSpecifier(pageable);
+        Pageable pageable = requestDTO.getPageable();
+        OrderSpecifier<?> orderSpecifier = new OrderSpecifier<>(
+                requestDTO.getSortDir().getQuerydslOrder(),
+                requestDTO.getSortBy().getPath());
 
         JPAQuery<ReservationResponseDTO> query = jpaQueryFactory
                 .select(
@@ -64,15 +61,12 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
                 .where(
                         betweenStrtDtAndEndDt(requestDTO.getStrtDt(), requestDTO.getEndDt()),
                         eqRoomCd(requestDTO.getRoomCd()),
-                        eqPhone(requestDTO.getPhone()));
+                        eqPhone(requestDTO.getPhone()))
+                .orderBy(orderSpecifier);
 
         if (pageable.isPaged()) {
             query.offset(pageable.getOffset())
                     .limit(pageable.getPageSize());
-        }
-
-        if (orderSpecifier != null) {
-            query.orderBy(orderSpecifier);
         }
 
         List<ReservationResponseDTO> content = query.fetch();
@@ -127,12 +121,14 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
                 .groupBy(reservationHistory.state)
                 .fetch();
 
-        long total = jpaQueryFactory
+        Long totalCount = jpaQueryFactory
                 .select(reservationHistory.count())
                 .from(reservationHistory)
                 .fetchOne();
 
-        return new ReservationStateResponse(total, result);
+        long safeCount = totalCount != null ? totalCount : 0L;
+
+        return new ReservationStateResponse(safeCount, result);
     }
 
     private BooleanExpression eqRoomCd(Long roomCd) {
@@ -165,17 +161,4 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
             return null;
         }
     }
-
-
-    private OrderSpecifier<?> createOrderSpecifier(Pageable pageable) {
-        if (!pageable.getSort().isSorted()) {
-            return null;
-        }
-
-        Sort.Order order = pageable.getSort().iterator().next();
-        PathBuilder pathBuilder = new PathBuilder(reservationHistory.getType(), reservationHistory.getMetadata());
-
-        return new OrderSpecifier(order.isAscending() ? Order.ASC : Order.DESC, pathBuilder.get(order.getProperty()));
-    }
-
 }
