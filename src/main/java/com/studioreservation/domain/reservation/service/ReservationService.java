@@ -1,12 +1,16 @@
 package com.studioreservation.domain.reservation.service;
 
+import com.studioreservation.domain.featuretoggle.service.FeatureToggleService;
 import com.studioreservation.domain.reservation.dto.*;
 import com.studioreservation.domain.reservation.entity.ReservationHistory;
 import com.studioreservation.domain.reservation.mapper.ReservationMapper;
 import com.studioreservation.domain.reservation.repository.ReservationRepository;
 import com.studioreservation.domain.reservation.util.Base32CodeGenerator;
 import com.studioreservation.domain.room.entity.Room;
+import com.studioreservation.domain.room.enums.RoomType;
 import com.studioreservation.domain.room.repository.RoomRepository;
+import com.studioreservation.global.exception.ErrorCode;
+import com.studioreservation.global.exception.StudioException;
 import com.studioreservation.global.request.PageRequestDTO;
 import com.studioreservation.global.response.PageResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +24,11 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ReservationService {
+	private final FeatureToggleService featureToggleService;
 	private final ReservationRepository repository;
 	private final RoomRepository roomRepository;
 	private final ReservationMapper mapper;
-	private final Base32CodeGenerator codeGenerator;
 	private static final int MAX_RETRY = 5;
-
 
 	public PageResponseDTO<ReservationResponseDTO> getAllReservation(PageRequestDTO requestDTO) {
 		Page<ReservationResponseDTO> result = repository.findPagedEntities(requestDTO);
@@ -45,8 +48,21 @@ public class ReservationService {
 		return mapper.toDTO(repository.findReservationHistory(phone, resvCd));
 	}
 
-	@Transactional
 	public ReservationResponseDTO reserve(Long roomCd, ReservationRequestDTO reservationRequestDTO) {
+		Room room = roomRepository.findById(roomCd).orElseThrow();
+		if(room.getRoomType() == RoomType.SELF) {
+			checkFeatureEnabled();
+		}
+		return getReservationResponseDTO(roomCd, reservationRequestDTO);
+	}
+
+	private void checkFeatureEnabled() {
+		if(!featureToggleService.isFeatureEnabled("selfPhoto")) {
+			throw new StudioException(ErrorCode.FEATURE_DISABLED);
+		}
+	}
+
+	private ReservationResponseDTO getReservationResponseDTO(Long roomCd, ReservationRequestDTO reservationRequestDTO) {
 		ReservationHistory reservationHistory = mapper.toEntity(reservationRequestDTO);
 		Room room = roomRepository.findSingleEntity(roomCd);
 		reservationHistory.setRoom(room);
@@ -85,7 +101,7 @@ public class ReservationService {
 		String code;
 
 		do {
-			code = codeGenerator.generateCodeWithDate(date);
+			code = Base32CodeGenerator.generateCodeWithDate(date);
 			attempts++;
 			if (attempts > MAX_RETRY) {
 				throw new RuntimeException("예약 코드 중복으로 인해 생성 실패: 재시도 초과");

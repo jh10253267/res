@@ -1,12 +1,10 @@
 package com.studioreservation.domain.room.entity;
 
 import com.studioreservation.domain.room.dto.RoomRequestDTO;
+import com.studioreservation.domain.room.enums.RoomType;
 import com.studioreservation.global.BaseEntity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +22,7 @@ public class Room extends BaseEntity {
 
 	private String name;
 
-	private int hrPrice;
+	private int halfHrPrice;
 
 	private int dayPrice;
 
@@ -38,12 +36,15 @@ public class Room extends BaseEntity {
 
 	private boolean useYn;
 
+	@Enumerated(EnumType.STRING)
+	private RoomType roomType;
+
 	public void updateEntity(RoomRequestDTO requestDTO) {
 		if (requestDTO.getName() != null) {
 			this.name = requestDTO.getName();
 		}
-		if (requestDTO.getHrPrice() != null) {
-			this.hrPrice = requestDTO.getHrPrice();
+		if (requestDTO.getHalfHrPrice() != null) {
+			this.halfHrPrice = requestDTO.getHalfHrPrice();
 		}
 		if (requestDTO.getDayPrice() != null) {
 			this.dayPrice = requestDTO.getDayPrice();

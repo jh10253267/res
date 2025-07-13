@@ -24,7 +24,7 @@ public class ReservationAdminController {
     }
 
     @PutMapping
-    @Operation(summary = "예약 상태 변경", description = "현재 요청 구조 피드백 필요")
+    @Operation(summary = "예약 상태 변경", description = "예약 상태 변")
     public APIResponse<?> changeState(@RequestBody ReservationChangeRequestDTO reservationChangeRequestDTO,
                                       @RequestParam("phone") String phone,
                                       @RequestParam("resvCd") String resvCd) {

@@ -121,9 +121,7 @@ public class ReservationHistory extends BaseEntity {
 			discountRate += DEFAULT_DISCOUNT_RATE;
 		}
 
-		double halfPrice = room.getHrPrice() * 0.5;
-
-		this.totalAmount = calculateTotal(halfPrice,
+		this.totalAmount = calculateTotal(room.getHalfHrPrice(),
 				duration,
 				extraPay,
 				discountRate);
@@ -138,7 +136,7 @@ public class ReservationHistory extends BaseEntity {
 		return (1 - discountRate);
 	}
 
-	private int calculateTotal(double halfPrice, int duration, int extraPay, double discountRate) {
+	private int calculateTotal(int halfPrice, int duration, int extraPay, double discountRate) {
 		return (int) (((halfPrice * duration) + extraPay) * calculateDiscount(discountRate));
 	}
 
