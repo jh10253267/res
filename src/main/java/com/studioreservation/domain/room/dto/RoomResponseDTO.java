@@ -1,5 +1,6 @@
 package com.studioreservation.domain.room.dto;
 
+import com.studioreservation.domain.room.enums.RoomType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -30,5 +31,8 @@ public class RoomResponseDTO {
 
 	@Schema(description = "방 설명", example = "방 설명")
 	private String description;
+
+	@Schema(description = "방 타입", example = "방 타입")
+	private RoomType roomType;
 
 }
