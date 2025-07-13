@@ -13,5 +13,4 @@ public enum ReservationSortType {
     STRTDT(QReservationHistory.reservationHistory.strtDt);
 
     private final Expression<? extends Comparable> path;
-
 }

@@ -21,25 +21,24 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
-	private final UserService userService;
+	private final UserService service;
 
 	@GetMapping("/healthCheck")
 	public String healthCheck() {
 		return "OK";
 	}
-
 	@Operation(summary = "회원가입", description = "사용자 회원가입 API")
 	@PostMapping("/signup")
 	public APIResponse<?> signup(@RequestBody SignupRequestDTO signupRequestDTO) {
-		userService.signup(signupRequestDTO);
+		service.signup(signupRequestDTO);
 
 		return APIResponse.success();
 	}
 
 	@Operation(summary = "로그인", description = "사용자 로그인 API")
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "로그인 성공"),
-		@ApiResponse(responseCode = "401", description = "인증 실패")
+			@ApiResponse(responseCode = "200", description = "로그인 성공"),
+			@ApiResponse(responseCode = "401", description = "인증 실패")
 	})
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequest) {
