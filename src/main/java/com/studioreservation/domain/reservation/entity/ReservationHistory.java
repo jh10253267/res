@@ -80,6 +80,10 @@ public class ReservationHistory extends BaseEntity {
 	@ManyToOne
 	private Platform platform;
 
+	private int commission;
+
+	private int income;
+
 	private static final double DEFAULT_DISCOUNT_RATE = 0.2;
 	private static final int EXTRA_PAY_PER_PERSON = 5000;
 	private static final int EVENING_HOUR = 18;
@@ -125,6 +129,7 @@ public class ReservationHistory extends BaseEntity {
 				duration,
 				extraPay,
 				discountRate);
+
 	}
 
 	private boolean isEvening(Timestamp resvDuration) {
