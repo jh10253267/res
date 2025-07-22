@@ -54,7 +54,9 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
                                 reservationHistory.requestCont,
                                 reservationHistory.policyConfirmed,
                                 reservationHistory.resvCd,
-                                reservationHistory.totalAmount
+                                reservationHistory.totalAmount,
+                                reservationHistory.commission,
+                                reservationHistory.income
                         )
                 )
                 .from(reservationHistory)
