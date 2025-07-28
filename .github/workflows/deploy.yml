@@ -50,7 +50,7 @@ jobs:
             OBJECT_REGION=${{ secrets.OBJECT_REGION }}
             OBJECT_SECRET=${{ secrets.OBJECT_SECRET }}
             CALENDAR_ID=${{ secrets.CALENDAR_ID }}
-            APPLICATION_NAME=${{s ecrets.APPLICATION_NAME }}
+            APPLICATION_NAME=${{ secrets.APPLICATION_NAME }}
             ATTENDEE_EMAIL=${{ secrets.ATTENDEE_EMAIL }}
             SERVICE_ACCOUNT_KEY_FILE=${{ secrets.SERVICE_ACCOUNT_KEY_FILE }}
             EOF
