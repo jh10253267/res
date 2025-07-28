@@ -3,6 +3,7 @@ package com.studioreservation.domain.reservation.entity;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+import com.studioreservation.domain.calendar.entity.CalendarMetaData;
 import com.studioreservation.domain.platform.entity.Platform;
 import com.studioreservation.domain.reservation.dto.ReservationChangeRequestDTO;
 import com.studioreservation.domain.reservation.enums.PayTyp;
@@ -84,6 +85,9 @@ public class ReservationHistory extends BaseEntity {
 
 	private int income;
 
+	@ManyToOne
+	private CalendarMetaData metaData;
+
 	private static final double DEFAULT_DISCOUNT_RATE = 0.2;
 	private static final int EXTRA_PAY_PER_PERSON = 5000;
 	private static final int EVENING_HOUR = 18;
@@ -106,6 +110,7 @@ public class ReservationHistory extends BaseEntity {
 	}
 
 	private int calculateDurationHours() {
+		//사용 시간 계산
 		long durationMillis = endDt.getTime() - strtDt.getTime(); // 밀리초 차이
 		long unitMillis = 30 * 60 * 1000;
 		long durationHalfHours = (long) Math.ceil((double) durationMillis / unitMillis);

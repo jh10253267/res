@@ -46,7 +46,7 @@ public class ShootingRequestService {
                 .map(mapper::toDTO);
 
         return PageResponseDTO.<ShootingReqResponseDTO>withAll()
-                .data(result.getContent())
+                .dtoList(result.getContent())
                 .pageRequestDTO(requestDTO)
                 .total(result.getTotalElements())
                 .build();
@@ -72,7 +72,7 @@ public class ShootingRequestService {
                 .map(mapper::toDTO);
 
         return PageResponseDTO.<ShootingReqResponseDTO>withAll()
-                .data(result.getContent())
+                .dtoList(result.getContent())
                 .pageRequestDTO(requestDTO)
                 .total(result.getTotalElements())
                 .build();
