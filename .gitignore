@@ -14,8 +14,8 @@ build/
 .springBeans
 .sts4-cache
 bin/
-!**/src/main/**/bin/
 !**/src/test/**/bin/
+!**/src/main/**/bin/
 
 ### IntelliJ IDEA ###
 .idea
@@ -39,4 +39,4 @@ out/
 ### Google Calendar ###
 credentials.json
 /tokens/
-
+/src/main/resources/service-account.json
