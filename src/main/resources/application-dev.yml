@@ -34,9 +34,10 @@ cloud:
 
 google:
   calendar:
-    attendee-email: ${ATTENDEE_EMAIL}
     calendar-id: ${CALENDAR_ID}
     application-name: ${APPLICATION_NAME}
+    attendee-email: ${ATTENDEE_EMAIL}
+    service-account-key-file: ${SERVICE_ACCOUNT_KEY_FILE}
 
 jwt:
   secret:
