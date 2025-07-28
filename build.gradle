@@ -50,14 +50,12 @@ dependencies {
     // Mapstruct
     implementation 'org.mapstruct:mapstruct:1.6.3'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+    implementation 'com.google.code.gson:gson:2.12.1'
 
     // Database
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'com.h2database:h2:2.3.232'
-
-    // Mapper
-    implementation 'com.google.code.gson:gson:2.12.1'
 
     // JWT
     compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
@@ -98,6 +96,9 @@ sourceSets {
             srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
         }
     }
+}
+configurations.all {
+    exclude group: 'commons-logging', module: 'commons-logging'
 }
 
 compileJava.dependsOn('clean')
