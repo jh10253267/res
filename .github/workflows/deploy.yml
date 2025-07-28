@@ -7,6 +7,8 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      SERVICE_ACCOUNT_KEY_BASE64: ${{ secrets.SERVICE_ACCOUNT_KEY_BASE64 }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -47,6 +49,10 @@ jobs:
             OBJECT_ACCESS=${{ secrets.OBJECT_ACCESS }}
             OBJECT_REGION=${{ secrets.OBJECT_REGION }}
             OBJECT_SECRET=${{ secrets.OBJECT_SECRET }}
+            CALENDAR_ID=${secrets.CALENDAR_ID}
+            APPLICATION_NAME=${secrets.APPLICATION_NAME}
+            ATTENDEE_EMAIL=${secrets.ATTENDEE_EMAIL}
+            SERVICE_ACCOUNT_KEY_FILE=${secrets.SERVICE_ACCOUNT_KEY_FILE}
             EOF
             
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_APP }}:latest

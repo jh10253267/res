@@ -34,7 +34,7 @@ google:
     calendar-id: ${CALENDAR_ID}
     application-name: ${APPLICATION_NAME}
     attendee-email: ${ATTENDEE_EMAIL}
-    service-account-key-file: ${SERVICE_ACCOUNT_KEY_FILE}
+    service-account-key-base64: ${SERVICE_ACCOUNT_KEY_BASE64}
 
 jwt:
   secret:

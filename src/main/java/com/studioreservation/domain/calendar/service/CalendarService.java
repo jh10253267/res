@@ -17,7 +17,10 @@ import com.studioreservation.global.response.PageResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Base64;
 import java.util.Collections;
 
 @Service
@@ -31,8 +34,18 @@ public class CalendarService {
         this.props = props;
         this.repository = repository;
 
+        String base64Key = props.getServiceAccountKeyBase64();
+        InputStream keyStream;
+
+        if (base64Key != null && !base64Key.isEmpty()) {
+            byte[] decodedKey = Base64.getDecoder().decode(base64Key.trim());
+            keyStream = new ByteArrayInputStream(decodedKey);
+        } else {
+            keyStream = new FileInputStream("src/main/resources/service-account.json");
+        }
+
         GoogleCredentials credentials = GoogleCredentials
-                .fromStream(new FileInputStream(props.getServiceAccountKeyFile()))
+                .fromStream(keyStream)
                 .createScoped(Collections.singletonList("https://www.googleapis.com/auth/calendar"));
 
         calendarClient = new Calendar.Builder(

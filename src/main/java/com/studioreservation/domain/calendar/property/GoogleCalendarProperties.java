@@ -14,5 +14,5 @@ public class GoogleCalendarProperties {
     private String calendarId;
     private String applicationName;
     private String attendeeEmail;
-    private String serviceAccountKeyFile;
+    private String serviceAccountKeyBase64;
 }
