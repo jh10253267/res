@@ -27,10 +27,10 @@ public class PageResponseDTO<E> {
 	@Schema(description = "한 화면에 페이지 10개씩 보여주기 위함", example = "다음 페이지 그룹이 있는지")
 	private boolean next;
 	@Schema(description = "응답 데이터", example = "응답 데이터")
-	private List<E> data;
+	private List<E> dtoList;
 
 	@Builder(builderMethodName = "withAll")
-	public PageResponseDTO(PageRequestDTO pageRequestDTO, List<E> data, long total) {
+	public PageResponseDTO(PageRequestDTO pageRequestDTO, List<E> dtoList, long total) {
 		if(total <= 0) {
 			return;
 		}
@@ -38,7 +38,7 @@ public class PageResponseDTO<E> {
 		this.page = pageRequestDTO.getPage();
 		this.size = pageRequestDTO.getSize();
 		this.total = total;
-		this.data = data;
+		this.dtoList = dtoList;
 
 		this.end = (int)Math.ceil((this.page / 10.0)) * 10;
 		this.start = this.end - 9;

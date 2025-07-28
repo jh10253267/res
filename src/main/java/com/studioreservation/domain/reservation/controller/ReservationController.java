@@ -21,7 +21,7 @@ public class ReservationController {
 	@PostMapping("/{roomCd}")
 	@Operation(summary = "예약하기", description = "예약하기")
 	public APIResponse<?> reserve(@PathVariable("roomCd") Long roomCd,
-								  @RequestBody ReservationRequestDTO reservationRequestDTO) {
+								  @RequestBody ReservationRequestDTO reservationRequestDTO) throws Exception {
 		ReservationResponseDTO responseDTO = service.reserve(roomCd, reservationRequestDTO);
 //		Message message = new Message();
 //		message.setFrom(smsProperties.getSender());
