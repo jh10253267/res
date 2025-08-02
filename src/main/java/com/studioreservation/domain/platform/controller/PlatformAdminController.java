@@ -16,7 +16,13 @@ import org.springframework.web.bind.annotation.*;
 public class PlatformAdminController {
     private final PlatformService service;
 
-    @PreAuthorize("hasRole('ADMIN')")
+
+    @Operation(summary = "플랫폼 조회", description = "픞랫폼 조회")
+    @GetMapping
+    public APIResponse<?> getAllPlatform() {
+        return APIResponse.success(service.getAllPlatform());
+    }
+
     @Operation(summary = "플랫폼 수정", description = "픞랫폼 수정")
     @PutMapping("/{cd}")
     public APIResponse<?> updatePlatform(@RequestBody PlatformReqDTO platformReqDTO,
@@ -26,7 +32,6 @@ public class PlatformAdminController {
         return APIResponse.success();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "플랫폼 생성", description = "픞랫폼 생성")
     @PostMapping
     public APIResponse<?> makePlatform(@RequestBody PlatformReqDTO platformReqDTO) {
