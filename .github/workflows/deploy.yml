@@ -52,7 +52,7 @@ jobs:
             CALENDAR_ID=${{ secrets.CALENDAR_ID }}
             APPLICATION_NAME=${{ secrets.APPLICATION_NAME }}
             ATTENDEE_EMAIL=${{ secrets.ATTENDEE_EMAIL }}
-            SERVICE_ACCOUNT_KEY_BASE64=${{ secrets.SERVICE_ACCOUNT_KEY_FILE }}
+            SERVICE_ACCOUNT_KEY_BASE64=${{ secrets.SERVICE_ACCOUNT_KEY_BASE64 }}
             EOF
             
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_APP }}:latest
