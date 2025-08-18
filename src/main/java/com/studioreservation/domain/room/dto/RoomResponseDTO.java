@@ -6,6 +6,8 @@ import lombok.*;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class RoomResponseDTO {
 	@Schema(description = "방 식별 번호", example = "방 식별 번호")
