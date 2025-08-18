@@ -20,7 +20,11 @@ public enum ErrorCode {
 	// 방 관련
 	NO_SUCH_ROOM(HttpStatus.NOT_FOUND, "해당하는 방이 없습니다."),
 	// 카테고리 관련
-	NO_SUCH_PURPOSE(HttpStatus.NOT_FOUND, "해당하는 촬영목적이 없습니다.")
+	NO_SUCH_PURPOSE(HttpStatus.NOT_FOUND, "해당하는 촬영목적이 없습니다."),
+	// 기능 토글
+	FEATURE_DISABLED(HttpStatus.BAD_REQUEST, "현재 사용할 수 없습니다."),
+	// 플랫폼 관련
+	NO_SUCH_PLATFORM(HttpStatus.NOT_FOUND, "일치하는 플랫폼이 없습니다.")
 	;
 
 	private final HttpStatus status;

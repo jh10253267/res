@@ -53,7 +53,7 @@ public class ReservationChangeRequestDTO {
 	@Schema(description = "사용 목적", example = "사용 목적")
 	private String proposal;
 
-	@Schema(description = "잘 모르겠음...", example = "잘 모르겠음...")
+	@Schema(description = "요청 사항", example = "요청 사항")
 	private String requestCont;
 
 	@Schema(description = "약관 동의 여부", example = "약관 동의 여부")
@@ -61,4 +61,7 @@ public class ReservationChangeRequestDTO {
 
 	@Schema(description = "관리자 메모", example = "관리자 메모")
 	private String memo;
+
+	@Schema(description = "플랫폼 아이디", example = "플랫폼 아이디")
+	private Long platformCd;
 }

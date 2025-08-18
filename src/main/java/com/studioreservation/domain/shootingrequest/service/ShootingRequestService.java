@@ -42,11 +42,11 @@ public class ShootingRequestService {
 
     public PageResponseDTO<ShootingReqResponseDTO> getAllShootingRequests(PageRequestDTO requestDTO) {
         Page<ShootingReqResponseDTO> result = repository
-                .findAll(requestDTO.getPageable(requestDTO.getSortBy()))
+                .findAll(requestDTO.getPageable())
                 .map(mapper::toDTO);
 
         return PageResponseDTO.<ShootingReqResponseDTO>withAll()
-                .data(result.getContent())
+                .dtoList(result.getContent())
                 .pageRequestDTO(requestDTO)
                 .total(result.getTotalElements())
                 .build();
@@ -68,11 +68,11 @@ public class ShootingRequestService {
         }
 
         Page<ShootingReqResponseDTO> result = repository
-                .findAll(spec, requestDTO.getPageable(requestDTO.getSortBy()))
+                .findAll(spec, requestDTO.getPageable())
                 .map(mapper::toDTO);
 
         return PageResponseDTO.<ShootingReqResponseDTO>withAll()
-                .data(result.getContent())
+                .dtoList(result.getContent())
                 .pageRequestDTO(requestDTO)
                 .total(result.getTotalElements())
                 .build();

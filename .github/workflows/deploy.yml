@@ -1,4 +1,4 @@
-name: Docker CI/CD to NCP
+name: Docker CI/CD to EC2
 
 on:
   push:
@@ -7,6 +7,8 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      SERVICE_ACCOUNT_KEY_BASE64: ${{ secrets.SERVICE_ACCOUNT_KEY_BASE64 }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -35,28 +37,29 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cat <<EOF > /root/app/.env
+            cat <<EOF > /home/ec2-user/app/.env
             DB_USER=${{ secrets.DB_USER }}
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
             DB_URL=${{ secrets.DB_URL }}
-            SCHEMA_NAME=${{ secrets.SCHEMA_NAME }}
-            BASE_62=${{ secrets.BASE_62 }}
             JWT_SECRET=${{ secrets.JWT_SECRET }}
             SMS_KEY=${{ secrets.SMS_KEY }}
             SMS_SECRET=${{ secrets.SMS_SECRET }}
             SMS_SENDER=${{ secrets.SMS_SENDER }}
             BUCKET_NAME=${{ secrets.BUCKET_NAME }}
-            END_POINT=${{ secrets.END_POINT }}
             OBJECT_ACCESS=${{ secrets.OBJECT_ACCESS }}
             OBJECT_REGION=${{ secrets.OBJECT_REGION }}
             OBJECT_SECRET=${{ secrets.OBJECT_SECRET }}
+            CALENDAR_ID=${{ secrets.CALENDAR_ID }}
+            APPLICATION_NAME=${{ secrets.APPLICATION_NAME }}
+            ATTENDEE_EMAIL=${{ secrets.ATTENDEE_EMAIL }}
+            SERVICE_ACCOUNT_KEY_BASE64=${{ secrets.SERVICE_ACCOUNT_KEY_BASE64 }}
             EOF
-  
+            
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_APP }}:latest
             docker stop ${{ secrets.DOCKERHUB_APP }} || true
             docker rm ${{ secrets.DOCKERHUB_APP }} || true
             docker run -d \
               --name ${{ secrets.DOCKERHUB_APP }} \
-              --env-file /root/app/.env \
+              --env-file /home/ec2-user/app/.env \
               -p 8080:8080 \
               ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_APP }}:latest

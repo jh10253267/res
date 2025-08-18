@@ -13,13 +13,15 @@ spring:
         format_sql: true
     show-sql: true
 
-ncp:
-  object-storage:
-    endpoint: http://www.example.com
-    region: testtest
-    access-key: testestest
-    secret-key: testtestestesttest
-    bucket-name: testestestest
+cloud:
+  aws:
+    region:
+      static: Teste
+    credentials:
+      access-key: testestest
+      secret-key: testestest
+    s3:
+      bucket: testestestest
 
 base62:
   charset: 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
@@ -29,6 +31,13 @@ sms:
     key: TESTKEYTESTKEYTE
     secret: TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
   sender: 01011111111
+
+google:
+  calendar:
+    calendar-id: ${CALENDAR_ID}
+    application-name: ${APPLICATION_NAME}
+    attendee-email: ${ATTENDEE_EMAIL}
+    service-account-key-base64: ${SERVICE_ACCOUNT_KEY_BASE64}
 
 jwt:
   secret:

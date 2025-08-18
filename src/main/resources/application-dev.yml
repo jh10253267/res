@@ -22,13 +22,22 @@ sms:
     key: ${SMS_KEY}
     secret: ${SMS_SECRET}
 
-ncp:
-  object-storage:
-    endpoint: ${END_POINT}
-    region: ${OBJECT_REGION}
-    access-key: ${OBJECT_ACCESS}
-    secret-key: ${OBJECT_SECRET}
-    bucket-name: ${BUCKET_NAME}
+cloud:
+  aws:
+    region:
+      static: ${OBJECT_REGION}
+    credentials:
+      access-key: ${OBJECT_ACCESS}
+      secret-key: ${OBJECT_SECRET}
+    s3:
+      bucket: ${BUCKET_NAME}
+
+google:
+  calendar:
+    calendar-id: ${CALENDAR_ID}
+    application-name: ${APPLICATION_NAME}
+    attendee-email: ${ATTENDEE_EMAIL}
+    service-account-key-base64: ${SERVICE_ACCOUNT_KEY_BASE64}
 
 jwt:
   secret:
