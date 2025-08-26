@@ -11,7 +11,7 @@ import spock.lang.Subject
 
 class RoomServiceTest extends Specification {
     @Subject
-    private RoomService roomService
+    private RoomService sut
 
     private RoomRepository roomRepository = Mock()
     private RoomMapper roomMapper = Mock()
@@ -21,7 +21,7 @@ class RoomServiceTest extends Specification {
     private RoomResponseDTO responseDTO
 
     def setup() {
-        roomService = new RoomService(roomRepository, roomMapper)
+        sut = new RoomService(roomRepository, roomMapper)
         roomList = [
                 Room.builder()
                         .cd(1L)
@@ -37,8 +37,8 @@ class RoomServiceTest extends Specification {
 
         requestDTO = RoomRequestDTO.builder()
                 .capacity(2)
-                .name("A")
-                .description("A 룸")
+                .name("B")
+                .description("B 룸")
                 .dayPrice(44000)
                 .halfHrPrice(22000)
                 .roomType(RoomType.NORMAL)
@@ -46,8 +46,8 @@ class RoomServiceTest extends Specification {
 
         responseDTO = RoomResponseDTO.builder()
                 .capacity(2)
-                .name("A")
-                .description("A 룸")
+                .name("B")
+                .description("B 룸")
                 .dayPrice(44000)
                 .halfHrPrice(22000)
                 .roomType(RoomType.NORMAL)
@@ -59,10 +59,10 @@ class RoomServiceTest extends Specification {
         roomRepository.findAllByUseYnTrueOrderByCdDesc() >> roomList
 
         when:
-        List<RoomResponseDTO> result = roomService.getAllRoom()
+        List<RoomResponseDTO> result = sut.getAllRoom()
 
         then:
-        result.size() == 2
+        result.size() == 1
     }
 
     def "Get Room"() {
@@ -79,7 +79,7 @@ class RoomServiceTest extends Specification {
                 .build()
 
         when:
-        def result = roomService.getRoom(1L)
+        def result = sut.getRoom(1L)
 
         then:
         result.getName() == "A"
@@ -92,9 +92,33 @@ class RoomServiceTest extends Specification {
         roomMapper.toDTO(roomList[0]) >> responseDTO
 
         when:
-        def roomResponseDTO = roomService.createRoom(requestDTO)
+        def roomResponseDTO = sut.createRoom(requestDTO)
 
         then:
         roomResponseDTO.getName() == "A"
+    }
+
+    def "UpdateRoomInfo"() {
+        given:
+        Long roomCd = 1L
+        roomRepository.findSingleEntity(roomCd) >> roomList[0]
+        roomMapper.toDTO(roomList[0]) >> responseDTO
+
+        when:
+        def responseDTO = sut.updateRoomInfo(roomCd, requestDTO)
+
+        then:
+        responseDTO.getName() == "B"
+    }
+
+    def "DeleteRoomInfo" () {
+        given:
+        Long roomCd = 1L
+
+        when:
+        sut.deleteRoomInfo(roomCd)
+
+        then:
+        1*roomRepository.deleteById(roomCd)
     }
 }
