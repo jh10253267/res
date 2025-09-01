@@ -8,11 +8,16 @@ import com.studioreservation.domain.reservation.enums.PayTyp;
 import com.studioreservation.global.formatter.TimestampDeserializer;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class ReservationRequestDTO {
 	@Schema(description = "예약자 명", example = "예약자 명")
 	private String userNm;
@@ -35,6 +40,13 @@ public class ReservationRequestDTO {
 	@JsonDeserialize(using = TimestampDeserializer.class)
 	@Schema(type = "string", example = "예약 종료 시각", description = "예약 종료 시각")
 	private Timestamp endDt;
+
+	@Schema(description = "이메일", example = "이메일")
+	@NotBlank(message = "이메일을 입력해주세요.")
+	@Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$",
+			message = "이메일 형식이 올바르지 않습니다.")
+	@Size(min = 7, max = 50)
+	private String email;
 
 	@Schema(description = "주차권 필요 여부", example = "주차권 필요 여부")
 	private boolean useParking;

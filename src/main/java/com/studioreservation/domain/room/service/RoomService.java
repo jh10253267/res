@@ -20,7 +20,7 @@ public class RoomService {
 	private final RoomMapper mapper;
 
 	public List<RoomResponseDTO> getAllRoom() {
-		return repository.findAllByUseYnTrueOrderByCdDesc()
+		return repository.findAllByUseYnTrueOrderByCdAsc()
 			.stream().map(mapper::toDTO)
 			.toList();
 	}

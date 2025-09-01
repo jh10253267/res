@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Room extends BaseEntity {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long cd;
 
 	private String name;
@@ -63,6 +62,9 @@ public class Room extends BaseEntity {
 		}
 		if(requestDTO.getUseYn() != null) {
 			this.useYn = requestDTO.getUseYn();
+		}
+		if(requestDTO.getCd() != null) {
+			this.cd = requestDTO.getCd();
 		}
 	}
 }

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -71,7 +72,7 @@ public class ReservationService {
         ReservationHistory reservationHistory = mapper.toEntity(reservationRequestDTO);
         reservationHistory.setRoom(room);
 
-        String resvCd = generateUniqueReservationCode(LocalDate.now());
+        String resvCd = generateUniqueReservationCode(LocalDateTime.now());
         reservationHistory.calculateTotalAmount(room);
         reservationHistory.setResvCd(resvCd);
 
@@ -110,12 +111,12 @@ public class ReservationService {
                 reservedTimeReqDTO.getEndDt());
     }
 
-    private String generateUniqueReservationCode(LocalDate date) {
+    private String generateUniqueReservationCode(LocalDateTime localDateTime) {
         int attempts = 0;
         String code;
 
         do {
-            code = Base32CodeGenerator.generateCodeWithDate(date);
+            code = Base32CodeGenerator.generateCodeWithDate(localDateTime);
             attempts++;
             if (attempts > MAX_RETRY) {
                 throw new RuntimeException("예약 코드 중복으로 인해 생성 실패: 재시도 초과");

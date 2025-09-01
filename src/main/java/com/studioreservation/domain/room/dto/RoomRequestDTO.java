@@ -10,6 +10,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomRequestDTO {
+	@Schema(description = "방 번호", example = "방 번호")
+	private Long cd;
+
 	@Schema(description = "방 이름", example = "방 이름")
 	private String name;
 
