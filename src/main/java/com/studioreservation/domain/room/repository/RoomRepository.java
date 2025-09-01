@@ -22,4 +22,6 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 				new StudioException(ErrorCode.NO_SUCH_ROOM));
 	}
 	List<Room> findAllByUseYnTrueOrderByCdDesc();
+
+	List<Room> findAllByUseYnTrueOrderByCdAsc();
 }
