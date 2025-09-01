@@ -11,15 +11,7 @@ import com.studioreservation.domain.reservation.enums.ReservationState;
 import com.studioreservation.domain.room.entity.Room;
 import com.studioreservation.global.BaseEntity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -84,6 +76,9 @@ public class ReservationHistory extends BaseEntity {
 	private int commission;
 
 	private int income;
+
+	@Column(length = 50)
+	private String email;
 
 	@ManyToOne
 	private CalendarMetaData metaData;
