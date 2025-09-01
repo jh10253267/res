@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
@@ -15,10 +16,8 @@ public class Base32CodeGenerator {
 
     private static final Random random = new Random();
 
-    public static String generateCodeWithDate(LocalDate localDate) {
-
-
-        String dateStr = localDate.format(DateTimeFormatter.ofPattern("yyMMdd"));
+    public static String generateCodeWithDate(LocalDateTime localDatetime) {
+        String dateStr = localDatetime.format(DateTimeFormatter.ofPattern("yyMMdd"));
         long dateNumber = Long.parseLong(dateStr);
 
         String datePart = base32Encode(dateNumber);
