@@ -37,7 +37,7 @@ public class RoomService {
 
 	@Transactional
 	public RoomResponseDTO updateRoomInfo(Long roomCd, RoomRequestDTO roomRequestDTO) {
-		Room room = repository.findById(roomCd).orElseThrow();
+		Room room = repository.findSingleEntity(roomCd);
 		room.updateEntity(roomRequestDTO);
 
 		return mapper.toDTO(room);

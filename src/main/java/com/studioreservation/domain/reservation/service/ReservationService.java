@@ -21,7 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -53,12 +53,12 @@ public class ReservationService {
     }
 
     public ReservationResponseDTO reserve(Long roomCd, ReservationRequestDTO reservationRequestDTO) {
-        Room room = roomRepository.findById(roomCd).orElseThrow();
+        Room room = roomRepository.findSingleEntity(roomCd);
         if (room.getRoomType() == RoomType.SELF) {
             checkFeatureEnabled();
         }
 
-        return getReservationResponseDTO(roomCd, reservationRequestDTO);
+        return createReservationResponseDTO(room, reservationRequestDTO);
     }
 
     private void checkFeatureEnabled() {
@@ -67,15 +67,15 @@ public class ReservationService {
         }
     }
 
-    private ReservationResponseDTO getReservationResponseDTO(Long roomCd, ReservationRequestDTO reservationRequestDTO) {
+    private ReservationResponseDTO createReservationResponseDTO(Room room, ReservationRequestDTO reservationRequestDTO) {
         ReservationHistory reservationHistory = mapper.toEntity(reservationRequestDTO);
-        Room room = roomRepository.findSingleEntity(roomCd);
         reservationHistory.setRoom(room);
-        repository.save(reservationHistory);
 
-        String resvCd = generateUniqueReservationCode(reservationHistory.getCreatedAt());
+        String resvCd = generateUniqueReservationCode(LocalDate.now());
         reservationHistory.calculateTotalAmount(room);
         reservationHistory.setResvCd(resvCd);
+
+        repository.save(reservationHistory);
 
         return mapper.toDTO(reservationHistory);
     }
@@ -110,7 +110,7 @@ public class ReservationService {
                 reservedTimeReqDTO.getEndDt());
     }
 
-    private String generateUniqueReservationCode(Timestamp date) {
+    private String generateUniqueReservationCode(LocalDate date) {
         int attempts = 0;
         String code;
 

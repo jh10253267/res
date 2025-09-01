@@ -2,13 +2,13 @@ package com.studioreservation.domain.room.dto;
 
 import com.studioreservation.domain.room.enums.RoomType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class RoomRequestDTO {
 	@Schema(description = "방 이름", example = "방 이름")
 	private String name;
