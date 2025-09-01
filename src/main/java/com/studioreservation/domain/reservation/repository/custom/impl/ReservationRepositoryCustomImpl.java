@@ -88,7 +88,7 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
     }
 
     @Override
-    public List<ReservedTimeResDTO> findReservedTime(Timestamp strtDt, Timestamp endDt) {
+    public List<ReservedTimeResDTO> findReservedTime(Timestamp strtDt, Timestamp endDt, Long roomCd) {
         return jpaQueryFactory
                 .select(
                         Projections.constructor(
@@ -97,7 +97,8 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
                                 reservationHistory.endDt
                         )).from(reservationHistory)
                 .where(betweenStrtDtAndEndDt(strtDt, endDt),
-                        reservationHistory.state.eq(ReservationState.CONFIRMED))
+                        reservationHistory.state.eq(ReservationState.CONFIRMED),
+                        eqRoomCd(roomCd))
                 .orderBy(reservationHistory.strtDt.asc())
                 .fetch();
     }
