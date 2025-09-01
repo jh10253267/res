@@ -46,7 +46,9 @@ public class ReservationService {
     }
 
     public List<ReservedTimeResDTO> getReservedTimes(ReservedTimeReqDTO reservedTimeReqDTO) {
-        return repository.findReservedTime(reservedTimeReqDTO.getStrtDt(), reservedTimeReqDTO.getEndDt());
+        return repository.findReservedTime(reservedTimeReqDTO.getStrtDt(),
+                reservedTimeReqDTO.getEndDt(),
+                reservedTimeReqDTO.getRoomCd());
     }
 
     public ReservationResponseDTO getReservation(String phone, String resvCd) {

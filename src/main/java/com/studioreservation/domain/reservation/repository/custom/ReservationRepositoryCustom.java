@@ -14,7 +14,7 @@ import java.util.List;
 public interface ReservationRepositoryCustom {
 	Page<ReservationResponseDTO> findPagedEntities(PageRequestDTO requestDTO);
 
-	List<ReservedTimeResDTO> findReservedTime(Timestamp strtDt, Timestamp endDt);
+	List<ReservedTimeResDTO> findReservedTime(Timestamp strtDt, Timestamp endDt, Long roomCd);
 
 	Integer sumTotalAmount(Timestamp strtDt, Timestamp endDt);
 

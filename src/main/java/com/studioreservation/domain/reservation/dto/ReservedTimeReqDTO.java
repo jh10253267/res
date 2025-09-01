@@ -15,6 +15,9 @@ import java.sql.Timestamp;
 @Setter
 @NoArgsConstructor
 public class ReservedTimeReqDTO {
+    @Schema(type = "string", example = "예약 시작 시각", description = "예약 시작 시각")
+    private Long roomCd;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss")
     @JsonDeserialize(using = TimestampDeserializer.class)
     @Schema(type = "string", example = "예약 시작 시각", description = "예약 시작 시각")
