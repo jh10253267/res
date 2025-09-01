@@ -15,12 +15,10 @@ public class Base32CodeGenerator {
 
     private static final Random random = new Random();
 
-    public static String generateCodeWithDate(Timestamp timestamp) {
-        LocalDate date = timestamp.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
+    public static String generateCodeWithDate(LocalDate localDate) {
 
-        String dateStr = date.format(DateTimeFormatter.ofPattern("yyMMdd"));
+
+        String dateStr = localDate.format(DateTimeFormatter.ofPattern("yyMMdd"));
         long dateNumber = Long.parseLong(dateStr);
 
         String datePart = base32Encode(dateNumber);
