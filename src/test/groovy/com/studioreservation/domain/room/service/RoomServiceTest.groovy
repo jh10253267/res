@@ -18,7 +18,9 @@ class RoomServiceTest extends Specification {
 
     private List<Room> roomList
     private RoomRequestDTO requestDTO
+    private RoomRequestDTO updateRequestDTO
     private RoomResponseDTO responseDTO
+    private RoomResponseDTO updateResponseDTO
 
     def setup() {
         sut = new RoomService(roomRepository, roomMapper)
@@ -32,10 +34,30 @@ class RoomServiceTest extends Specification {
                         .halfHrPrice(22000)
                         .roomType(RoomType.NORMAL)
                         .useYn(true)
+                        .build(),
+
+                Room.builder()
+                        .cd(1L)
+                        .capacity(2)
+                        .name("B")
+                        .description("B 룸")
+                        .dayPrice(44000)
+                        .halfHrPrice(22000)
+                        .roomType(RoomType.NORMAL)
+                        .useYn(true)
                         .build()
         ]
 
         requestDTO = RoomRequestDTO.builder()
+                .capacity(2)
+                .name("A")
+                .description("A 룸")
+                .dayPrice(44000)
+                .halfHrPrice(22000)
+                .roomType(RoomType.NORMAL)
+                .build()
+
+        updateRequestDTO = RoomRequestDTO.builder()
                 .capacity(2)
                 .name("B")
                 .description("B 룸")
@@ -45,6 +67,14 @@ class RoomServiceTest extends Specification {
                 .build()
 
         responseDTO = RoomResponseDTO.builder()
+                .capacity(2)
+                .name("A")
+                .description("A 룸")
+                .dayPrice(44000)
+                .halfHrPrice(22000)
+                .roomType(RoomType.NORMAL)
+                .build()
+        updateResponseDTO = RoomResponseDTO.builder()
                 .capacity(2)
                 .name("B")
                 .description("B 룸")
@@ -56,13 +86,13 @@ class RoomServiceTest extends Specification {
 
     def "Get Rooms"() {
         given:
-        roomRepository.findAllByUseYnTrueOrderByCdDesc() >> roomList
+        roomRepository.findAllByUseYnTrueOrderByCdAsc() >> roomList
 
         when:
         List<RoomResponseDTO> result = sut.getAllRoom()
 
         then:
-        result.size() == 1
+        result.size() == 2
     }
 
     def "Get Room"() {
@@ -101,11 +131,12 @@ class RoomServiceTest extends Specification {
     def "UpdateRoomInfo"() {
         given:
         Long roomCd = 1L
-        roomRepository.findSingleEntity(roomCd) >> roomList[0]
-        roomMapper.toDTO(roomList[0]) >> responseDTO
+        def room = roomList[0]
+        roomRepository.findSingleEntity(roomCd) >> room
+        roomMapper.toDTO(room) >> updateResponseDTO
 
         when:
-        def responseDTO = sut.updateRoomInfo(roomCd, requestDTO)
+        def responseDTO = sut.updateRoomInfo(roomCd, updateRequestDTO)
 
         then:
         responseDTO.getName() == "B"
