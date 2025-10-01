@@ -47,7 +47,8 @@ public class CustomSecurityConfig {
             config.setAllowedHeaders(Collections.singletonList("*"));
             config.setAllowedMethods(Collections.singletonList("*"));
             config.setAllowedOriginPatterns(Arrays.asList(
-                    "http://localhost:3000" // local
+                    "http://localhost:3000",
+                    "http://localhost:3001"
             ));
             config.setAllowCredentials(true);
             config.setMaxAge(CORS_MAX_AGE_SEC);
