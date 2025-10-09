@@ -1,10 +1,12 @@
 package com.studioreservation.domain.reservation.dto;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.studioreservation.domain.reservation.enums.PayTyp;
+import com.studioreservation.domain.studiofile.dto.StudioFileDTO;
 import com.studioreservation.global.formatter.TimestampDeserializer;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -66,4 +68,6 @@ public class ReservationRequestDTO {
 	@Schema(description = "약관 동의 여부", example = "약관 동의 여부")
 	private boolean policyConfirmed;
 
+    @Schema(example = "파일 이름")
+    private List<StudioFileDTO> fileNames;
 }

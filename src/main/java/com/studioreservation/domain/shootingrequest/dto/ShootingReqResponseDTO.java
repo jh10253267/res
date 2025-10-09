@@ -24,6 +24,12 @@ public class ShootingReqResponseDTO {
 	@Schema(description = "총량", example = "총량")
 	private String quantity;
 
+    private String username;
+
+    private String phone;
+
+    private String email;
+
 	private String description;
 
 	private String refLink;

@@ -35,10 +35,10 @@ public class ReservationService {
     private final CalendarService calendarService;
     private static final int MAX_RETRY = 5;
 
-    public PageResponseDTO<ReservationResponseDTO> getAllReservation(PageRequestDTO requestDTO) {
-        Page<ReservationResponseDTO> result = repository.findPagedEntities(requestDTO);
+    public PageResponseDTO<ReservationAdminResponseDTO> getAllReservation(PageRequestDTO requestDTO) {
+        Page<ReservationAdminResponseDTO> result = repository.findPagedEntities(requestDTO);
 
-        return PageResponseDTO.<ReservationResponseDTO>withAll()
+        return PageResponseDTO.<ReservationAdminResponseDTO>withAll()
                 .dtoList(result.getContent())
                 .pageRequestDTO(requestDTO)
                 .total(result.getTotalElements())

@@ -1,5 +1,6 @@
 package com.studioreservation.domain.studiofile.entity;
 
+import com.studioreservation.domain.reservation.entity.ReservationHistory;
 import org.hibernate.validator.constraints.Length;
 
 import com.studioreservation.domain.shootingrequest.entity.ShootingRequest;
@@ -30,6 +31,9 @@ public class StudioFile extends BaseEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	private ShootingRequest shootingRequest;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ReservationHistory reservationHistory;
 
 	public void changeRequest(ShootingRequest shootingRequest) {
 		this.shootingRequest = shootingRequest;

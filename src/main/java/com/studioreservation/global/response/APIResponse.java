@@ -20,4 +20,8 @@ public class APIResponse<T> {
 	public static APIResponse<Void> error(String resultCode) {
 		return new APIResponse<Void>(resultCode, null);
 	}
+
+    public static <T> APIResponse<T> error(T result) {
+        return new APIResponse<T>("", result);
+    }
 }
