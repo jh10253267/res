@@ -1,7 +1,6 @@
 package com.studioreservation.domain.apiuser.controller;
 
 import com.studioreservation.domain.apiuser.dto.RefreshTokenDTO;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 
 import com.studioreservation.domain.apiuser.dto.SignupRequestDTO;
@@ -20,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
-public class UserController {
+public class UserAdminController {
 	private final UserService service;
 
 	@GetMapping("/healthCheck")
