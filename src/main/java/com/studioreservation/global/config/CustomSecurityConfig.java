@@ -48,7 +48,9 @@ public class CustomSecurityConfig {
             config.setAllowedMethods(Collections.singletonList("*"));
             config.setAllowedOriginPatterns(Arrays.asList(
                     "http://localhost:3000",
-                    "http://localhost:3001"
+                    "http://localhost:3001",
+                    "https://singlit.vercel.app",
+                    "https://.singlitstudio.co.kr"
             ));
             config.setAllowCredentials(true);
             config.setMaxAge(CORS_MAX_AGE_SEC);
