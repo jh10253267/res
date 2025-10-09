@@ -50,7 +50,7 @@ public class CustomSecurityConfig {
                     "http://localhost:3000",
                     "http://localhost:3001",
                     "https://singlit.vercel.app",
-                    "https://.singlitstudio.co.kr",
+                    "https://singlitstudio.co.kr",
                     "https://singlit-admin.vercel.app"
             ));
             config.setAllowCredentials(true);
