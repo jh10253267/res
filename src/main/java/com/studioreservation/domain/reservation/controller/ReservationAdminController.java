@@ -27,7 +27,7 @@ public class ReservationAdminController {
     }
 
     @PutMapping
-    @Operation(summary = "예약 상태 변경", description = "예약 상태 변")
+    @Operation(summary = "예약 상태 변경", description = "예약 상태 변경")
     public APIResponse<?> changeState(@RequestBody ReservationChangeRequestDTO reservationChangeRequestDTO,
                                       @RequestParam("phone") String phone,
                                       @RequestParam("resvCd") String resvCd) throws Exception {

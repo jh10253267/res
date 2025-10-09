@@ -5,10 +5,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.studioreservation.domain.reservation.dto.ReservationResponseDTO;
-import com.studioreservation.domain.reservation.dto.ReservationStateResponse;
-import com.studioreservation.domain.reservation.dto.ReservedTimeResDTO;
-import com.studioreservation.domain.reservation.dto.StateCountDTO;
+import com.studioreservation.domain.reservation.dto.*;
 import com.studioreservation.domain.reservation.enums.ReservationState;
 import com.studioreservation.domain.reservation.repository.custom.ReservationRepositoryCustom;
 import com.studioreservation.global.request.PageRequestDTO;
@@ -27,16 +24,16 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<ReservationResponseDTO> findPagedEntities(PageRequestDTO requestDTO) {
+    public Page<ReservationAdminResponseDTO> findPagedEntities(PageRequestDTO requestDTO) {
         Pageable pageable = requestDTO.getPageable();
         OrderSpecifier<?> orderSpecifier = new OrderSpecifier<>(
                 requestDTO.getSortDir().getQuerydslOrder(),
                 requestDTO.getSortBy().getPath());
 
-        JPAQuery<ReservationResponseDTO> query = jpaQueryFactory
+        JPAQuery<ReservationAdminResponseDTO> query = jpaQueryFactory
                 .select(
                         Projections.constructor(
-                                ReservationResponseDTO.class,
+                                ReservationAdminResponseDTO.class,
                                 reservationHistory.sn,
                                 reservationHistory.room.cd,
                                 reservationHistory.userNm,
@@ -56,7 +53,8 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
                                 reservationHistory.resvCd,
                                 reservationHistory.totalAmount,
                                 reservationHistory.commission,
-                                reservationHistory.income
+                                reservationHistory.income,
+                                reservationHistory.memo
                         )
                 )
                 .from(reservationHistory)
@@ -71,7 +69,7 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
                     .limit(pageable.getPageSize());
         }
 
-        List<ReservationResponseDTO> content = query.fetch();
+        List<ReservationAdminResponseDTO> content = query.fetch();
 
 
         Long totalCount = jpaQueryFactory
