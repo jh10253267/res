@@ -26,6 +26,12 @@ public class ShootingRequest extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private ShootingTyp shootingTyp;
 
+    private String username;
+
+    private String phone;
+
+    private String email;
+
 	private Timestamp strtDt;
 
 	private String quantity;
@@ -45,13 +51,18 @@ public class ShootingRequest extends BaseEntity {
 
 	@ManyToOne
 	@Setter
-	Purpose purpose;
+    private Purpose purpose;
 
 	public static ShootingRequest buildStudioRequest(ShootingRequestDTO requestDTO, Purpose purpose) {
 		ShootingRequest shootingRequest = ShootingRequest.builder()
 				.shootingTyp(requestDTO.getShootingTyp())
 				.description(requestDTO.getDescription())
+                .username(requestDTO.getUsername())
+                .phone(requestDTO.getPhone())
+                .email(requestDTO.getEmail())
 				.purpose(purpose)
+                .strtDt(requestDTO.getStrtDt())
+                .quantity(requestDTO.getQuantity())
 				.policyConfirmed(requestDTO.isPolicyConfirmed())
 				.newsConfirmed(requestDTO.isNewsConfirmed())
 				.build();
