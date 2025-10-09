@@ -2,6 +2,7 @@ package com.studioreservation.global.request;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.studioreservation.global.request.enums.ReservationSortType;
 import com.studioreservation.global.request.enums.SortDirection;
 import org.springframework.data.domain.PageRequest;
@@ -32,10 +33,6 @@ public class PageRequestDTO {
 	@Builder.Default
 	private int size = Integer.MAX_VALUE;
 
-	@Schema(description = "내림차순 여부", example = "내림차순 여부")
-	@Builder.Default
-	private boolean desc = true;
-
 	@Schema(type = "string", example = "예약 시작 시각", description = "예약 시작 시각")
 	private Timestamp strtDt;
 
@@ -56,6 +53,7 @@ public class PageRequestDTO {
 	@Builder.Default
 	private SortDirection sortDir = SortDirection.DESC;
 
+    @JsonIgnore
 	public Pageable getPageable() {
 		if(size != Integer.MAX_VALUE) {
 			return PageRequest.of(this.page - 1, this.size);
