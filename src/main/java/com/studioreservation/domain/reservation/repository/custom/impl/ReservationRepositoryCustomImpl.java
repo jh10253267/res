@@ -66,7 +66,7 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
                         eqPhone(requestDTO.getPhone()))
                 .orderBy(orderSpecifier);
 
-        if (pageable.isPaged()) {
+        if (pageable.isPaged() && pageable.getOffset() > 0) {
             query.offset(pageable.getOffset())
                     .limit(pageable.getPageSize());
         }
