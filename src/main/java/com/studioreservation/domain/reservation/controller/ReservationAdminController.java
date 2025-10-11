@@ -2,6 +2,7 @@ package com.studioreservation.domain.reservation.controller;
 
 import com.studioreservation.domain.reservation.dto.ReservationAmoutDTO;
 import com.studioreservation.domain.reservation.dto.ReservationChangeRequestDTO;
+import com.studioreservation.domain.reservation.dto.ReservationStateRequestDTO;
 import com.studioreservation.domain.reservation.dto.ReservedTimeReqDTO;
 import com.studioreservation.domain.reservation.service.ReservationService;
 import com.studioreservation.global.request.PageRequestDTO;
@@ -32,6 +33,14 @@ public class ReservationAdminController {
                                       @RequestParam("phone") String phone,
                                       @RequestParam("resvCd") String resvCd) throws Exception {
         return APIResponse.success(service.updateReservation(reservationChangeRequestDTO, phone, resvCd));
+    }
+
+    @PutMapping("/states")
+    @Operation(summary = "예약 정보 변경", description = "예약 정보 변경")
+    public APIResponse<?> updateReservation(@RequestBody ReservationStateRequestDTO reservationStateRequestDTO,
+                                      @RequestParam("phone") String phone,
+                                      @RequestParam("resvCd") String resvCd) throws Exception {
+        return APIResponse.success(service.updateState(reservationStateRequestDTO, phone, resvCd));
     }
 
     @GetMapping("/amounts")

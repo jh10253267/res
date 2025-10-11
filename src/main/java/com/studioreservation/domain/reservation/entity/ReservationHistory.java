@@ -10,6 +10,7 @@ import com.studioreservation.domain.platform.entity.Platform;
 import com.studioreservation.domain.purpose.entity.Purpose;
 import com.studioreservation.domain.reservation.dto.ReservationChangeRequestDTO;
 import com.studioreservation.domain.reservation.dto.ReservationRequestDTO;
+import com.studioreservation.domain.reservation.dto.ReservationStateRequestDTO;
 import com.studioreservation.domain.reservation.enums.PayTyp;
 import com.studioreservation.domain.reservation.enums.ReservationState;
 import com.studioreservation.domain.room.entity.Room;
@@ -102,7 +103,6 @@ public class ReservationHistory extends BaseEntity {
         if (dto.getUserNm() != null) this.userNm = dto.getUserNm();
         if (dto.getPhone() != null) this.phone = dto.getPhone();
         if (dto.getPayTyp() != null) this.payTyp = dto.getPayTyp();
-        if (dto.getState() != null) this.state = dto.getState();
         if (dto.getUserCnt() != null) this.userCnt = dto.getUserCnt();
         if (dto.getStrtDt() != null) this.strtDt = dto.getStrtDt();
         if (dto.getEndDt() != null) this.endDt = dto.getEndDt();
@@ -113,6 +113,10 @@ public class ReservationHistory extends BaseEntity {
         if (dto.getRequestCont() != null) this.requestCont = dto.getRequestCont();
         if (dto.getPolicyConfirmed() != null) this.policyConfirmed = dto.getPolicyConfirmed();
         if (dto.getMemo() != null) this.memo = dto.getMemo();
+    }
+
+    public void updateState(ReservationState state) {
+        this.state = state;
     }
 
     private int calculateDurationHours() {
