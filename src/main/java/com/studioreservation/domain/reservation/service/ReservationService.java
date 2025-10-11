@@ -91,6 +91,17 @@ public class ReservationService {
                 .findReservationHistory(phone, resvCd);
         reservationHistory.updateReservation(requestDTO);
 
+        return mapper.toDTO(reservationHistory);
+    }
+
+    @Transactional
+    public ReservationResponseDTO updateState(ReservationStateRequestDTO requestDTO,
+                                                    String phone,
+                                                    String resvCd) throws Exception {
+        ReservationHistory reservationHistory = repository
+                .findReservationHistory(phone, resvCd);
+        reservationHistory.updateState(requestDTO.getReservationState());
+
         if (reservationHistory.getState().equals(ReservationState.CONFIRMED)) {
             String title = reservationHistory.getRoom().getTitle() + "_" +
                     maskingUserNm(reservationHistory.getUserNm());
