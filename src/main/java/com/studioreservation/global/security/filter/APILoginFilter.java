@@ -22,9 +22,10 @@ public class APILoginFilter extends AbstractAuthenticationProcessingFilter {
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws
 			AuthenticationException {
-
+        log.info("login attempt");
 		if (request.getMethod().equalsIgnoreCase("GET")) {
-			return null;
+            log.info("Method not allowed");
+            return null;
 		}
 
 		Map<String, String> loginData = parseRequestJSON(request);
