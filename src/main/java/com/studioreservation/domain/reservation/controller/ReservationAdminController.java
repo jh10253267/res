@@ -10,9 +10,11 @@ import com.studioreservation.global.response.APIResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,8 +47,8 @@ public class ReservationAdminController {
 
     @GetMapping("/amounts")
     @Operation(summary = "수입", description = "수입")
-    public APIResponse<?> getAllAmount(ReservationAmoutDTO amountDTO) {
-        return APIResponse.success(service.getTotalAmount(amountDTO));
+    public APIResponse<?> getAllAmount(@RequestParam @DateTimeFormat(pattern = "yyyyMMdd") LocalDate targetDate) {
+        return APIResponse.success(service.getTotalAmount(targetDate));
     }
 
     @GetMapping("/statistics/count")

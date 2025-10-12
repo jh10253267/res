@@ -18,7 +18,7 @@ import java.util.List;
 public class ReservationScheduler {
     private final ReservationRepository reservationRepository;
     // 5분마다 수행
-    @Scheduled(cron = "*/30 * * * * *")
+    @Scheduled(cron = "0 0/30 * * * *")
     public void updateExpiredReservations() {
         log.info("----------------------스케쥴링 시작----------------------");
 

@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -120,9 +121,12 @@ public class ReservationService {
         return mapper.toDTO(reservationHistory);
     }
 
-    public Integer getTotalAmount(ReservationAmoutDTO amountDTO) {
-        return repository.sumTotalAmount(amountDTO.getStrtDt(),
-                amountDTO.getEndDt());
+    public Integer getTotalAmount(LocalDate targetDate) {
+        Timestamp start = Timestamp.valueOf(targetDate.atStartOfDay());
+        Timestamp end = Timestamp.valueOf(targetDate.plusDays(1).atStartOfDay());
+
+        Integer revenue = repository.getTotalRevenueForDate(ReservationState.COMPLETED, start, end);
+        return revenue != null ? revenue : 0;
     }
 
     public ReservationStateResponse getCountOfReservations(ReservedTimeReqDTO reservedTimeReqDTO) {
