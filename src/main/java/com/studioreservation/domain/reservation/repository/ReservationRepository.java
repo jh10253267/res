@@ -1,11 +1,14 @@
 package com.studioreservation.domain.reservation.repository;
 
 import com.studioreservation.domain.reservation.entity.ReservationHistory;
+import com.studioreservation.domain.reservation.enums.ReservationState;
 import com.studioreservation.domain.reservation.repository.custom.ReservationRepositoryCustom;
 import com.studioreservation.global.exception.ErrorCode;
 import com.studioreservation.global.exception.StudioException;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<ReservationHistory, Long>, ReservationRepositoryCustom {
@@ -18,4 +21,6 @@ public interface ReservationRepository extends JpaRepository<ReservationHistory,
 	}
 
 	boolean existsByResvCd(String resvCd);
+
+    List<ReservationHistory> findByEndDtBeforeAndState(LocalDateTime endDt, ReservationState state);
 }

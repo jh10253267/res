@@ -29,6 +29,7 @@ import lombok.Setter;
 @Entity
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReservationHistory extends BaseEntity {
