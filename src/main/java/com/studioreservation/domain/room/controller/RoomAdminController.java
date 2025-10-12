@@ -17,8 +17,15 @@ public class RoomAdminController {
     private final RoomService service;
 
     @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping
+    @Operation(summary = "모든 방 조회", description = "모든 방 조회")
+    public APIResponse<?> getAllRooms() {
+        return APIResponse.success(service.getAllRoomsForAdmin());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    @Operation(summary = "방 생성", description = "추후 관리자 전용 api로 변경할 예정")
+    @Operation(summary = "방 생성", description = "방 생성")
     public APIResponse<?> makeRoom(@RequestBody RoomRequestDTO roomRequestDTO) {
         return APIResponse.success(service.createRoom(roomRequestDTO));
     }

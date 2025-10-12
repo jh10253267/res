@@ -21,7 +21,6 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 		return findRoomByName(roomName).orElseThrow(() ->
 				new StudioException(ErrorCode.NO_SUCH_ROOM));
 	}
-	List<Room> findAllByUseYnTrueOrderByCdDesc();
-
+    List<Room> findAllByOrderByCdAsc();
 	List<Room> findAllByUseYnTrueOrderByCdAsc();
 }
