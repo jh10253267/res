@@ -2,6 +2,7 @@ package com.studioreservation.domain.room.service;
 
 import java.util.List;
 
+import com.studioreservation.domain.room.dto.RoomAdminResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,9 +26,9 @@ public class RoomService {
 			.toList();
 	}
 
-    public List<RoomResponseDTO> getAllRoomsForAdmin() {
+    public List<RoomAdminResponseDTO> getAllRoomsForAdmin() {
         return repository.findAllByOrderByCdAsc()
-                .stream().map(mapper::toDTO)
+                .stream().map(mapper::toAdminDTO)
                 .toList();
     }
 
