@@ -89,6 +89,9 @@ public class ReservationHistory extends BaseEntity {
     @Column(length = 50)
     private String email;
 
+    @Builder.Default
+    private boolean paymentCompleted = false;
+
     @ManyToOne
     private CalendarMetaData metaData;
 
