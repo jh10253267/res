@@ -53,4 +53,11 @@ public class ReservationAdminController {
     public APIResponse<?>  getCountOfResevation(ReservedTimeReqDTO reservedTimeReqDTO) {
         return APIResponse.success(service.getCountOfReservations(reservedTimeReqDTO));
     }
+
+    @PostMapping("paymentCompleted")
+    public APIResponse<?> paymentCompleted(@RequestParam("phone") String phone,
+                                           @RequestParam("resvCd") String resvCd) {
+        service.paymentCompleted(phone, resvCd);
+        return APIResponse.success();
+    }
 }
