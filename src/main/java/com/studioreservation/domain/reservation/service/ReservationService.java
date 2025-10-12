@@ -70,6 +70,12 @@ public class ReservationService {
         }
     }
 
+    @Transactional
+    public void paymentCompleted(String phone, String resvCd) {
+        ReservationHistory reservationHistory = repository.findReservationHistory(phone, resvCd);
+        reservationHistory.setPaymentCompleted(true);
+    }
+
     private ReservationResponseDTO createReservationResponseDTO(Room room, ReservationRequestDTO reservationRequestDTO) {
         ReservationHistory reservationHistory = mapper.toEntity(reservationRequestDTO);
         reservationHistory.setRoom(room);
