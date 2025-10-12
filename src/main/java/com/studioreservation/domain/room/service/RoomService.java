@@ -25,6 +25,12 @@ public class RoomService {
 			.toList();
 	}
 
+    public List<RoomResponseDTO> getAllRoomsForAdmin() {
+        return repository.findAllByOrderByCdAsc()
+                .stream().map(mapper::toDTO)
+                .toList();
+    }
+
 	public RoomResponseDTO getRoom(Long roomCd) {
 		return mapper.toDTO(repository.findSingleEntity(roomCd));
 	}
