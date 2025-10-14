@@ -27,11 +27,16 @@ public interface ReservationRepository extends JpaRepository<ReservationHistory,
 
     List<ReservationHistory> findByEndDtBeforeAndState(LocalDateTime endDt, ReservationState state);
 
-    @Query("SELECT SUM(r.totalAmount) FROM ReservationHistory r " +
-            "WHERE r.state = :state AND r.strtDt >= :start AND r.strtDt < :end")
-    Integer getTotalRevenueForDate(
-            @Param("state") ReservationState state,
-            @Param("start") Timestamp start,
-            @Param("end") Timestamp end
+    @Query(value = "SELECT DATE(strt_dt) AS sales_date, SUM(total_amount) AS daily_total " +
+            "FROM reservation_history " +
+            "WHERE strt_dt >= :startDt AND strt_dt < :endDt " +
+            "  AND state = :state " +
+            "GROUP BY DATE(strt_dt) " +
+            "ORDER BY DATE(strt_dt)",
+            nativeQuery = true)
+    List<Object[]> findDailyRevenueNative(
+            @Param("startDt") Timestamp startDt,
+            @Param("endDt") Timestamp endDt,
+            @Param("state") String state
     );
 }
