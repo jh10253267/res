@@ -1,9 +1,6 @@
 package com.studioreservation.domain.reservation.controller;
 
-import com.studioreservation.domain.reservation.dto.ReservationAmoutDTO;
-import com.studioreservation.domain.reservation.dto.ReservationChangeRequestDTO;
-import com.studioreservation.domain.reservation.dto.ReservationStateRequestDTO;
-import com.studioreservation.domain.reservation.dto.ReservedTimeReqDTO;
+import com.studioreservation.domain.reservation.dto.*;
 import com.studioreservation.domain.reservation.service.ReservationService;
 import com.studioreservation.global.request.PageRequestDTO;
 import com.studioreservation.global.response.APIResponse;
@@ -47,8 +44,8 @@ public class ReservationAdminController {
 
     @GetMapping("/amounts")
     @Operation(summary = "수입", description = "수입")
-    public APIResponse<?> getAllAmount(@RequestParam @DateTimeFormat(pattern = "yyyyMMdd") LocalDate targetDate) {
-        return APIResponse.success(service.getTotalAmount(targetDate));
+    public APIResponse<?> getAllAmount(ReservedTimeResDTO reservedTimeResDTO) {
+        return APIResponse.success(service.getTotalAmount(reservedTimeResDTO.getStrtDt(), reservedTimeResDTO.getEndDt()));
     }
 
     @GetMapping("/statistics/count")

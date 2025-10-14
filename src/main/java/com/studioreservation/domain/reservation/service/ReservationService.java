@@ -2,6 +2,7 @@ package com.studioreservation.domain.reservation.service;
 
 import com.google.api.client.util.DateTime;
 import com.studioreservation.domain.calendar.service.CalendarService;
+import com.studioreservation.domain.dailyrevenue.dto.DailyRevenueDTO;
 import com.studioreservation.domain.featuretoggle.service.FeatureToggleService;
 import com.studioreservation.domain.reservation.dto.*;
 import com.studioreservation.domain.reservation.entity.ReservationHistory;
@@ -21,10 +22,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -103,8 +107,8 @@ public class ReservationService {
 
     @Transactional
     public ReservationResponseDTO updateState(ReservationStateRequestDTO requestDTO,
-                                                    String phone,
-                                                    String resvCd) throws Exception {
+                                              String phone,
+                                              String resvCd) throws Exception {
         ReservationHistory reservationHistory = repository
                 .findReservationHistory(phone, resvCd);
         reservationHistory.updateState(requestDTO.getReservationState());
@@ -121,12 +125,15 @@ public class ReservationService {
         return mapper.toDTO(reservationHistory);
     }
 
-    public Integer getTotalAmount(LocalDate targetDate) {
-        Timestamp start = Timestamp.valueOf(targetDate.atStartOfDay());
-        Timestamp end = Timestamp.valueOf(targetDate.plusDays(1).atStartOfDay());
+    public List<DailyRevenueDTO> getTotalAmount(Timestamp start, Timestamp end) {
+        List<Object[]> results = repository.findDailyRevenueNative(start, end, "CONFIRMED");
 
-        Integer revenue = repository.getTotalRevenueForDate(ReservationState.COMPLETED, start, end);
-        return revenue != null ? revenue : 0;
+        return results.stream()
+                .map(row -> new DailyRevenueDTO(
+                        (Date) row[0],
+                        (BigDecimal) row[1]
+                ))
+                .collect(Collectors.toList());
     }
 
     public ReservationStateResponse getCountOfReservations(ReservedTimeReqDTO reservedTimeReqDTO) {
