@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -125,8 +124,8 @@ public class ReservationService {
         return mapper.toDTO(reservationHistory);
     }
 
-    public List<DailyRevenueDTO> getTotalAmount(Timestamp start, Timestamp end) {
-        List<Object[]> results = repository.findDailyRevenueNative(start, end, "CONFIRMED");
+    public List<DailyRevenueDTO> getTotalRevenue(Timestamp start, Timestamp end) {
+        List<Object[]> results = repository.findDailyRevenueNative(start, end);
 
         return results.stream()
                 .map(row -> new DailyRevenueDTO(
@@ -134,6 +133,10 @@ public class ReservationService {
                         (BigDecimal) row[1]
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public BigDecimal getTotal(Timestamp start, Timestamp end) {
+        return repository.getTotalRevenue(start, end);
     }
 
     public ReservationStateResponse getCountOfReservations(ReservedTimeReqDTO reservedTimeReqDTO) {
