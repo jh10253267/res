@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,13 +31,20 @@ public interface ReservationRepository extends JpaRepository<ReservationHistory,
     @Query(value = "SELECT DATE(strt_dt) AS sales_date, SUM(total_amount) AS daily_total " +
             "FROM reservation_history " +
             "WHERE strt_dt >= :startDt AND strt_dt < :endDt " +
-            "  AND state = :state " +
+            "  AND state in ('confirmed', 'completed')" +
             "GROUP BY DATE(strt_dt) " +
             "ORDER BY DATE(strt_dt)",
             nativeQuery = true)
     List<Object[]> findDailyRevenueNative(
             @Param("startDt") Timestamp startDt,
-            @Param("endDt") Timestamp endDt,
-            @Param("state") String state
-    );
+            @Param("endDt") Timestamp endDt);
+
+
+    @Query(value = "SELECT SUM(total_amount) AS total_revenue " +
+            "FROM reservation_history " +
+            "WHERE strt_dt >= :startDt AND strt_dt < :endDt " +
+            "  AND state in ('confirmed', 'completed') ",
+            nativeQuery = true)
+    BigDecimal getTotalRevenue(@Param("startDt") Timestamp startDt,
+                               @Param("endDt") Timestamp endDt);
 }

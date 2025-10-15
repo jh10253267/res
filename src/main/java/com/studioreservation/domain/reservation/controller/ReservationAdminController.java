@@ -1,5 +1,6 @@
 package com.studioreservation.domain.reservation.controller;
 
+import com.studioreservation.domain.dailyrevenue.dto.DailyRevenueDTO;
 import com.studioreservation.domain.reservation.dto.*;
 import com.studioreservation.domain.reservation.service.ReservationService;
 import com.studioreservation.global.request.PageRequestDTO;
@@ -7,11 +8,12 @@ import com.studioreservation.global.response.APIResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class ReservationAdminController {
     }
 
     @PutMapping
-    @Operation(summary = "예약 상태 변경", description = "예약 상태 변경")
+    @Operation(summary = "예약 정보 변경", description = "예약 정보 변경")
     public APIResponse<?> changeState(@RequestBody ReservationChangeRequestDTO reservationChangeRequestDTO,
                                       @RequestParam("phone") String phone,
                                       @RequestParam("resvCd") String resvCd) throws Exception {
@@ -35,7 +37,7 @@ public class ReservationAdminController {
     }
 
     @PutMapping("/states")
-    @Operation(summary = "예약 정보 변경", description = "예약 정보 변경")
+    @Operation(summary = "예약 상태 변경", description = "예약 상태 변경")
     public APIResponse<?> updateReservation(@RequestBody ReservationStateRequestDTO reservationStateRequestDTO,
                                       @RequestParam("phone") String phone,
                                       @RequestParam("resvCd") String resvCd) throws Exception {
@@ -45,7 +47,12 @@ public class ReservationAdminController {
     @GetMapping("/amounts")
     @Operation(summary = "수입", description = "수입")
     public APIResponse<?> getAllAmount(ReservedTimeResDTO reservedTimeResDTO) {
-        return APIResponse.success(service.getTotalAmount(reservedTimeResDTO.getStrtDt(), reservedTimeResDTO.getEndDt()));
+        Map<String, Object> map= new HashMap<>();
+        List<DailyRevenueDTO> result = service.getTotalRevenue(reservedTimeResDTO.getStrtDt(), reservedTimeResDTO.getEndDt());
+        BigDecimal totalRevenue = service.getTotal(reservedTimeResDTO.getStrtDt(), reservedTimeResDTO.getEndDt());
+        map.put("totalRevenue", totalRevenue);
+        map.put("dailyTotals", result);
+        return APIResponse.success(map);
     }
 
     @GetMapping("/statistics/count")
