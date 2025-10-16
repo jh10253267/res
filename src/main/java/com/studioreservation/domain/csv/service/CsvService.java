@@ -63,7 +63,7 @@ public class CsvService {
                         .platform(platformMap.get(Long.parseLong(line[15])))
                         .commission(Integer.parseInt(line[16]))
                         .income(Integer.parseInt(line[17]))
-                        .totalAmount(Integer.parseInt(line[18]))
+                        .totalRevenue(Integer.parseInt(line[18]))
                         .build();
                 reservationHistories.add(reservationHistory);
             }

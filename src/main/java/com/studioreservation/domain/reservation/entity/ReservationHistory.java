@@ -7,15 +7,11 @@ import java.util.Set;
 
 import com.studioreservation.domain.calendar.entity.CalendarMetaData;
 import com.studioreservation.domain.platform.entity.Platform;
-import com.studioreservation.domain.purpose.entity.Purpose;
 import com.studioreservation.domain.reservation.dto.ReservationChangeRequestDTO;
 import com.studioreservation.domain.reservation.dto.ReservationRequestDTO;
-import com.studioreservation.domain.reservation.dto.ReservationStateRequestDTO;
 import com.studioreservation.domain.reservation.enums.PayTyp;
 import com.studioreservation.domain.reservation.enums.ReservationState;
 import com.studioreservation.domain.room.entity.Room;
-import com.studioreservation.domain.shootingrequest.dto.ShootingRequestDTO;
-import com.studioreservation.domain.shootingrequest.entity.ShootingRequest;
 import com.studioreservation.domain.studiofile.entity.StudioFile;
 import com.studioreservation.global.BaseEntity;
 
@@ -69,7 +65,7 @@ public class ReservationHistory extends BaseEntity {
     private String memo = "";
 
     @Setter
-    private Integer totalAmount;
+    private Integer totalRevenue;
 
     @Setter
     @Column(unique = true)
@@ -117,6 +113,7 @@ public class ReservationHistory extends BaseEntity {
         if (dto.getRequestCont() != null) this.requestCont = dto.getRequestCont();
         if (dto.getPolicyConfirmed() != null) this.policyConfirmed = dto.getPolicyConfirmed();
         if (dto.getMemo() != null) this.memo = dto.getMemo();
+        if (dto.getTotalRevenue() != null) this.totalRevenue = dto.getTotalRevenue();
     }
 
     public void updateState(ReservationState state) {
@@ -144,7 +141,7 @@ public class ReservationHistory extends BaseEntity {
             discountRate += DEFAULT_DISCOUNT_RATE;
         }
 
-        this.totalAmount = calculateTotal(room.getHalfHrPrice(),
+        this.totalRevenue = calculateTotal(room.getHalfHrPrice(),
                 duration,
                 extraPay,
                 discountRate);

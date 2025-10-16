@@ -74,7 +74,7 @@ public class ReservationResponseDTO {
 	private String resvCd;
 
 	@Schema(description = "총 금액", example = "총 금액")
-	private int totalAmount;
+	private int totalRevenue;
 
 	@Schema(description = "수수료", example = "수수료")
 	private int commission;
