@@ -44,7 +44,7 @@ public class ReservationAdminController {
         return APIResponse.success(service.updateState(reservationStateRequestDTO, phone, resvCd));
     }
 
-    @GetMapping("/amounts")
+    @GetMapping("/revenues")
     @Operation(summary = "수입", description = "수입")
     public APIResponse<?> getAllAmount(ReservedTimeResDTO reservedTimeResDTO) {
         Map<String, Object> map= new HashMap<>();
