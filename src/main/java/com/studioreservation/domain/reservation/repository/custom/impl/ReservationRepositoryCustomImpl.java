@@ -51,7 +51,7 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
                                 reservationHistory.requestCont,
                                 reservationHistory.policyConfirmed,
                                 reservationHistory.resvCd,
-                                reservationHistory.totalAmount,
+                                reservationHistory.totalRevenue,
                                 reservationHistory.commission,
                                 reservationHistory.income,
                                 reservationHistory.memo
@@ -104,7 +104,7 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
     @Override
     public Integer sumTotalAmount(Timestamp strtDt, Timestamp endDt) {
         return jpaQueryFactory
-                .select(reservationHistory.totalAmount.sum())
+                .select(reservationHistory.totalRevenue.sum())
                 .from(reservationHistory)
                 .where(betweenStrtDtAndEndDt(strtDt, endDt))
                 .fetchOne();

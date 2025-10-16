@@ -67,6 +67,11 @@ public class ReservationService {
 
         return createReservationResponseDTO(room, reservationRequestDTO);
     }
+    public void adminReserve(ReservationChangeRequestDTO requestDTO) {
+        ReservationHistory reservationHistory = mapper.toEntity(requestDTO);
+        reservationHistory.setRoom(roomRepository.findSingleEntity(requestDTO.getRoomCd()));
+        repository.save(reservationHistory);
+    }
 
     private void checkFeatureEnabled() {
         if (!featureToggleService.isFeatureEnabled("selfPhoto")) {

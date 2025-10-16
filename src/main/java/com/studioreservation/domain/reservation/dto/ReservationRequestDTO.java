@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.studioreservation.domain.reservation.enums.PayTyp;
+import com.studioreservation.domain.reservation.enums.ReservationState;
 import com.studioreservation.domain.studiofile.dto.StudioFileDTO;
 import com.studioreservation.global.formatter.TimestampDeserializer;
 
@@ -70,4 +71,7 @@ public class ReservationRequestDTO {
 
     @Schema(example = "파일 이름")
     private List<StudioFileDTO> fileNames;
+
+    private ReservationState state;
+    private String memo;
 }

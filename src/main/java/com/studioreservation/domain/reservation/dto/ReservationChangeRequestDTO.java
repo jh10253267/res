@@ -61,4 +61,10 @@ public class ReservationChangeRequestDTO {
 
 	@Schema(description = "플랫폼 아이디", example = "플랫폼 아이디")
 	private Long platformCd;
+
+    private Integer totalRevenue;
+    private Long roomCd;
+    private ReservationState reservationState;
+    private String email;
+    private String resvCd;
 }

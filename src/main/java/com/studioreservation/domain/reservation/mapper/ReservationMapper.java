@@ -1,5 +1,6 @@
 package com.studioreservation.domain.reservation.mapper;
 
+import com.studioreservation.domain.reservation.dto.ReservationChangeRequestDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -17,4 +18,5 @@ public interface ReservationMapper {
 	@Mapping(source="room.cd", target="roomCd")
 	@Mapping(source="createdAt", target="regDt")
 	ReservationResponseDTO toDTO(ReservationHistory reservationHistory);
+    ReservationHistory toEntity(ReservationChangeRequestDTO reservationChangeRequestDTO);
 }
