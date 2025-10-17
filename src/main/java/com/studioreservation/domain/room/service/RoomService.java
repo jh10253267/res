@@ -21,13 +21,13 @@ public class RoomService {
 	private final RoomMapper mapper;
 
 	public List<RoomResponseDTO> getAllRoom() {
-		return repository.findAllByUseYnTrueOrderByCdAsc()
+		return repository.findAllByUseYnTrueOrderByOrderIndexAsc()
 			.stream().map(mapper::toDTO)
 			.toList();
 	}
 
     public List<RoomAdminResponseDTO> getAllRoomsForAdmin() {
-        return repository.findAllByOrderByCdAsc()
+        return repository.findAllByOrderByOrderIndexAsc()
                 .stream().map(mapper::toAdminDTO)
                 .toList();
     }
