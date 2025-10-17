@@ -36,4 +36,7 @@ public class RoomResponseDTO {
 
 	@Schema(description = "방 타입", example = "방 타입")
 	private RoomType roomType;
+
+    private Integer orderIndex;
+
 }

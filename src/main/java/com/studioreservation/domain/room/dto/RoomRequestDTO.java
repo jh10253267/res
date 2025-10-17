@@ -10,10 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomRequestDTO {
-	@Schema(description = "방 번호", example = "방 번호")
-	private Long cd;
-
-	@Schema(description = "방 이름", example = "방 이름")
+    @Schema(description = "방 이름", example = "방 이름")
 	private String name;
 
 	@Schema(description = "30분당 가격", example = "30분당 가격")
@@ -39,5 +36,8 @@ public class RoomRequestDTO {
 
 	@Schema(description = "방 타입", example = "SELF")
 	private RoomType roomType;
+
+    @Schema(description = "방 순서", example = "방 순서")
+    private Integer orderIndex;
 }
 

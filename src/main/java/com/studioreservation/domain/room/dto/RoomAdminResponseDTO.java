@@ -39,4 +39,7 @@ public class RoomAdminResponseDTO {
 
     @Schema(description = "예약 가능 여부", example = "예약 가능 여부")
     private boolean useYn;
+
+    @Schema(description = "정렬 순서", example = "정렬 순서")
+    private Integer orderIndex;
 }
