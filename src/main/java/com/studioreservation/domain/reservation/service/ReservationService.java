@@ -61,9 +61,6 @@ public class ReservationService {
 
     public ReservationResponseDTO reserve(Long roomCd, ReservationRequestDTO reservationRequestDTO) {
         Room room = roomRepository.findSingleEntity(roomCd);
-        if (room.getRoomType() == RoomType.SELF) {
-            checkFeatureEnabled();
-        }
 
         return createReservationResponseDTO(room, reservationRequestDTO);
     }
@@ -90,7 +87,7 @@ public class ReservationService {
         reservationHistory.setRoom(room);
 
         String resvCd = generateUniqueReservationCode(LocalDateTime.now());
-        reservationHistory.calculateTotalAmount(room);
+//        reservationHistory.calculateTotalAmount(room);
         reservationHistory.setResvCd(resvCd);
 
         repository.save(reservationHistory);

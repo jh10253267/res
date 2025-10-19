@@ -8,19 +8,13 @@ import com.studioreservation.global.exception.StudioException;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.studioreservation.domain.room.entity.Room;
+import org.springframework.data.jpa.repository.Query;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
-	Optional<Room> findRoomByName(String roomName);
-	void deleteRoomByName(String roomName);
-	default Room findSingleEntity(Long cd) {
+    default Room findSingleEntity(Long cd) {
 		return findById(cd).orElseThrow(() ->
 				new StudioException(ErrorCode.NO_SUCH_ROOM));
 	}
 
-	default Room findSingleEntityByName(String roomName) {
-		return findRoomByName(roomName).orElseThrow(() ->
-				new StudioException(ErrorCode.NO_SUCH_ROOM));
-	}
-    List<Room> findAllByOrderByOrderIndexAsc();
-	List<Room> findAllByUseYnTrueOrderByOrderIndexAsc();
-}
+    @Query("SELECT r FROM Room r JOIN FETCH r.roomInfos")
+    List<Room> findAllByOrderByOrderIndexAsc();}

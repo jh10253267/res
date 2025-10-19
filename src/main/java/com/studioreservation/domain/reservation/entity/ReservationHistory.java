@@ -1,5 +1,6 @@
 package com.studioreservation.domain.reservation.entity;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -95,9 +96,8 @@ public class ReservationHistory extends BaseEntity {
     @Builder.Default
     private Set<StudioFile> imageSet = new HashSet<>();
 
-    private static final double DEFAULT_DISCOUNT_RATE = 0.2;
-    private static final int EXTRA_PAY_PER_PERSON = 5000;
-    private static final int EVENING_HOUR = 18;
+
+// --------------------- 생성 및 업데이트-------------------
 
     public void updateReservation(ReservationChangeRequestDTO dto) {
         if (dto.getUserNm() != null) this.userNm = dto.getUserNm();
@@ -118,57 +118,6 @@ public class ReservationHistory extends BaseEntity {
 
     public void updateState(ReservationState state) {
         this.state = state;
-    }
-
-    private int calculateDurationHours() {
-        //사용 시간 계산
-        long durationMillis = endDt.getTime() - strtDt.getTime(); // 밀리초 차이
-        long unitMillis = 30 * 60 * 1000;
-        long durationHalfHours = (long) Math.ceil((double) durationMillis / unitMillis);
-
-        return (int) (durationHalfHours);
-    }
-
-
-    public void calculateTotalAmount(Room room) {
-        int duration = calculateDurationHours();
-        int extraPay = applyExtraPay(room, this.userCnt);
-        double discountRate = 0.0;
-
-        if (isEvening(this.strtDt)) {
-            discountRate += DEFAULT_DISCOUNT_RATE;
-        } else if (duration >= 8) {
-            discountRate += DEFAULT_DISCOUNT_RATE;
-        }
-
-        this.totalRevenue = calculateTotal(room.getHalfHrPrice(),
-                duration,
-                extraPay,
-                discountRate);
-
-    }
-
-    private boolean isEvening(Timestamp resvDuration) {
-        LocalDateTime time = resvDuration.toLocalDateTime();
-        return time.getHour() >= EVENING_HOUR;
-    }
-
-    private double calculateDiscount(double discountRate) {
-        return (1 - discountRate);
-    }
-
-    private int calculateTotal(int halfPrice, int duration, int extraPay, double discountRate) {
-        return (int) (((halfPrice * duration) + extraPay) * calculateDiscount(discountRate));
-    }
-
-    private int applyExtraPay(Room room, int userCnt) {
-        int extraPay = 0;
-        // 만약 방의 수용 가능 인원보다 예약 희망 인원이 많다면
-        if (room.getCapacity() < userCnt) {
-            extraPay = (userCnt - room.getCapacity()) * EXTRA_PAY_PER_PERSON;
-        }
-
-        return extraPay;
     }
 
     public static ReservationHistory buildReservationHistory(ReservationRequestDTO requestDTO, Room room, Platform platform) {
@@ -212,4 +161,11 @@ public class ReservationHistory extends BaseEntity {
             this.imageSet.clear();
         });
     }
+
+    //-------------------------비즈니스 규칙 ----------------------
+    private static final double DEFAULT_DISCOUNT_RATE = 0.2;
+    private static final int EXTRA_PAY_PER_PERSON = 5000;
+    private static final int EVENING_HOUR = 18;
+
+
 }

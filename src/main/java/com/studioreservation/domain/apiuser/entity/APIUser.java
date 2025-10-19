@@ -2,10 +2,7 @@ package com.studioreservation.domain.apiuser.entity;
 
 import com.studioreservation.domain.apiuser.enums.UserRoleEnum;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "API_USER")
 public class APIUser {
 	@Id
 	private String username;
