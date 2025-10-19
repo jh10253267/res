@@ -6,5 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum RoomType {
-    NORMAL, SELF
+    STUDIO,
+    SELF,
+    PARTY
 }

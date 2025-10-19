@@ -1,8 +1,12 @@
 package com.studioreservation.domain.room.dto;
 
 import com.studioreservation.domain.room.enums.RoomType;
+import com.studioreservation.domain.roominfo.dto.RoomInfoResponseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+
+import java.util.Collections;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,15 +20,6 @@ public class RoomResponseDTO {
 	@Schema(description = "방 이름", example = "방 이름")
 	private String name;
 
-	@Schema(description = "30분당 가격", example = "30분당 가격")
-	private int halfHrPrice;
-
-	@Schema(description = "일별 가격", example = "일별 가격")
-	private int dayPrice;
-
-	@Schema(description = "최소 대여 시간", example = "최소 대여 시간")
-	private int minTm;
-
 	@Schema(description = "수용 가능 인원", example = "수용 가능 인원")
 	private int capacity;
 
@@ -34,9 +29,6 @@ public class RoomResponseDTO {
 	@Schema(description = "방 설명", example = "방 설명")
 	private String description;
 
-	@Schema(description = "방 타입", example = "방 타입")
-	private RoomType roomType;
-
+    @Schema(description = "방 순서", example = "방 순서")
     private Integer orderIndex;
-
 }

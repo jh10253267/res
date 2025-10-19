@@ -26,8 +26,9 @@ public class RoomAdminController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @Operation(summary = "방 생성", description = "방 생성")
-    public APIResponse<?> makeRoom(@RequestBody RoomRequestDTO roomRequestDTO) {
-        return APIResponse.success(service.createRoom(roomRequestDTO));
+    public APIResponse<?> createRoom(@RequestBody RoomRequestDTO roomRequestDTO) {
+        service.createRoom(roomRequestDTO);
+        return APIResponse.success();
     }
 
     @PreAuthorize("hasRole('ADMIN')")

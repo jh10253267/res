@@ -3,6 +3,9 @@ package com.studioreservation.domain.room.service;
 import java.util.List;
 
 import com.studioreservation.domain.room.dto.RoomAdminResponseDTO;
+import com.studioreservation.domain.roominfo.entity.RoomInfo;
+import com.studioreservation.domain.roominfo.mapper.RoomInfoMapper;
+import com.studioreservation.domain.roominfo.repository.RoomInfoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,27 +22,27 @@ import lombok.RequiredArgsConstructor;
 public class RoomService {
 	private final RoomRepository repository;
 	private final RoomMapper mapper;
+    private final RoomInfoMapper infoMapper;
+    private final RoomInfoRepository  roomInfoRepository;
 
 	public List<RoomResponseDTO> getAllRoom() {
-		return repository.findAllByUseYnTrueOrderByOrderIndexAsc()
+		return repository.findAllByOrderByOrderIndexAsc()
 			.stream().map(mapper::toDTO)
 			.toList();
 	}
 
     public List<RoomAdminResponseDTO> getAllRoomsForAdmin() {
-        return repository.findAllByOrderByOrderIndexAsc()
-                .stream().map(mapper::toAdminDTO)
-                .toList();
+        List<Room> rooms = repository.findAllByOrderByOrderIndexAsc();
+        return mapper.toAdminDTOs(rooms);
     }
 
 	public RoomResponseDTO getRoom(Long roomCd) {
 		return mapper.toDTO(repository.findSingleEntity(roomCd));
 	}
 
-	public RoomResponseDTO createRoom (RoomRequestDTO roomRequestDTO){
+	public void createRoom (RoomRequestDTO roomRequestDTO){
 		Room room = repository.save(mapper.toEntity(roomRequestDTO));
-
-		return mapper.toDTO(room);
+        repository.save(room);
 	}
 
 	@Transactional
