@@ -1,5 +1,6 @@
 package com.studioreservation.domain.room.dto;
 
+import com.studioreservation.domain.room.entity.Room;
 import com.studioreservation.domain.room.enums.RoomType;
 import com.studioreservation.domain.roominfo.dto.RoomInfoResponseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,4 +32,17 @@ public class RoomResponseDTO {
 
     @Schema(description = "방 순서", example = "방 순서")
     private Integer orderIndex;
+
+    private List<RoomInfoResponseDTO> roomInfos;
+
+    public static RoomResponseDTO fromEntity(Room room) {
+       return RoomResponseDTO.builder()
+                .cd(room.getCd())
+                .capacity(room.getCapacity())
+                .name(room.getName())
+                .title(room.getTitle())
+                .description(room.getDescription())
+                .orderIndex(room.getOrderIndex())
+                .build();
+    }
 }
