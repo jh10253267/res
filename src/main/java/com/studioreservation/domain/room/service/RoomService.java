@@ -1,6 +1,7 @@
 package com.studioreservation.domain.room.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.studioreservation.domain.room.dto.RoomAdminResponseDTO;
 import com.studioreservation.domain.roominfo.entity.RoomInfo;
@@ -26,9 +27,16 @@ public class RoomService {
     private final RoomInfoRepository  roomInfoRepository;
 
 	public List<RoomResponseDTO> getAllRoom() {
-		return repository.findAllByOrderByOrderIndexAsc()
-			.stream().map(mapper::toDTO)
-			.toList();
+        List<Room> rooms = repository.findAllByOrderByOrderIndexAsc();
+
+        rooms.forEach(room -> {
+            List<RoomInfo> filteredInfos = room.getRoomInfos().stream()
+                    .filter(RoomInfo::isUseYn)
+                    .toList();
+            room.setRoomInfos(filteredInfos);
+        });
+
+        return mapper.toDTOs(rooms);
 	}
 
     public List<RoomAdminResponseDTO> getAllRoomsForAdmin() {

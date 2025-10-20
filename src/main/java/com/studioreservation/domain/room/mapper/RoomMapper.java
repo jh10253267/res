@@ -16,10 +16,17 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface RoomMapper {
     RoomInfoResponseDTO roomInfoToDTO(RoomInfo roomInfo);
+
     @Mapping(target = "roomInfos", source = "roomInfos")
     RoomAdminResponseDTO toAdminDTO(Room room);
+
+    @Mapping(target = "roomInfos", source = "roomInfos")
     RoomResponseDTO toDTO(Room room);
+
     List<RoomAdminResponseDTO> toAdminDTOs(List<Room> rooms);
+
+    List<RoomResponseDTO> toDTOs(List<Room> rooms);
+
 
     Room toEntity(RoomRequestDTO roomRequestDTO);
 }
