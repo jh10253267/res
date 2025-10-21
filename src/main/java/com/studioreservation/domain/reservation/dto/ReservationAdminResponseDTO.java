@@ -79,5 +79,8 @@ public class ReservationAdminResponseDTO {
 
     @Schema(description = "메모", example = "메모")
     private String memo;
+
+    @Schema(description = "플랫폼 번호", example = "플랫폼 번호")
+    private long platformCd;
 }
 
