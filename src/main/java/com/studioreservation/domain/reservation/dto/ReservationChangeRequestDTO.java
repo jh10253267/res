@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Getter
@@ -62,7 +63,7 @@ public class ReservationChangeRequestDTO {
 	@Schema(description = "플랫폼 아이디", example = "플랫폼 아이디")
 	private Long platformCd;
 
-    private Integer totalRevenue;
+    private BigDecimal totalRevenue;
     private Long roomCd;
     private ReservationState reservationState;
     private String email;

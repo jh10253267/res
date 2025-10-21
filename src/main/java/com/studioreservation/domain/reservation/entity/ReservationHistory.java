@@ -13,6 +13,7 @@ import com.studioreservation.domain.reservation.dto.ReservationRequestDTO;
 import com.studioreservation.domain.reservation.enums.PayTyp;
 import com.studioreservation.domain.reservation.enums.ReservationState;
 import com.studioreservation.domain.room.entity.Room;
+import com.studioreservation.domain.roominfo.entity.RoomInfo;
 import com.studioreservation.domain.studiofile.entity.StudioFile;
 import com.studioreservation.global.BaseEntity;
 
@@ -66,7 +67,7 @@ public class ReservationHistory extends BaseEntity {
     private String memo = "";
 
     @Setter
-    private Integer totalRevenue;
+    private BigDecimal totalRevenue;
 
     @Setter
     @Column(unique = true)
@@ -74,7 +75,7 @@ public class ReservationHistory extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Setter
-    private Room room;
+    private RoomInfo roomInfo;
 
     @ManyToOne
     private Platform platform;
@@ -120,7 +121,7 @@ public class ReservationHistory extends BaseEntity {
         this.state = state;
     }
 
-    public static ReservationHistory buildReservationHistory(ReservationRequestDTO requestDTO, Room room, Platform platform) {
+    public static ReservationHistory buildReservationHistory(ReservationRequestDTO requestDTO, RoomInfo roomInfo, Platform platform) {
         ReservationHistory reservation = ReservationHistory.builder()
                 .userNm(requestDTO.getUserNm())          // DTO.username → userNm
                 .phone(requestDTO.getPhone())
@@ -129,7 +130,7 @@ public class ReservationHistory extends BaseEntity {
                 .strtDt(requestDTO.getStrtDt())
                 .userCnt(requestDTO.getUserCnt())
                 .policyConfirmed(requestDTO.isPolicyConfirmed())
-                .room(room)
+                .roomInfo(roomInfo)
                 .platform(platform)
                 .build();
 

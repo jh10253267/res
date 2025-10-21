@@ -36,20 +36,10 @@ public class Room extends BaseEntity {
     List<RoomInfo> roomInfos = new ArrayList<>();
 
 	public void updateEntity(RoomRequestDTO requestDTO) {
-		if (requestDTO.getName() != null) {
-			this.name = requestDTO.getName();
-		}
-		if (requestDTO.getCapacity() != null) {
-			this.capacity = requestDTO.getCapacity();
-		}
-		if (requestDTO.getTitle() != null) {
-			this.title = requestDTO.getTitle();
-		}
-		if (requestDTO.getDescription() != null) {
-			this.description = requestDTO.getDescription();
-		}
-        if(requestDTO.getOrderIndex() != null) {
-            this.orderIndex = requestDTO.getOrderIndex();
-        }
+        this.name = requestDTO.getName();
+        this.title = requestDTO.getTitle();
+        this.description = requestDTO.getDescription();
+        this.capacity = requestDTO.getCapacity();
+        this.orderIndex = requestDTO.getOrderIndex();
 	}
 }

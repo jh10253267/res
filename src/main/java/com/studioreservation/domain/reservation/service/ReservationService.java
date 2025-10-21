@@ -4,6 +4,8 @@ import com.google.api.client.util.DateTime;
 import com.studioreservation.domain.calendar.service.CalendarService;
 import com.studioreservation.domain.dailyrevenue.dto.DailyRevenueDTO;
 import com.studioreservation.domain.featuretoggle.service.FeatureToggleService;
+import com.studioreservation.domain.platform.entity.Platform;
+import com.studioreservation.domain.platform.repository.PlatformRepository;
 import com.studioreservation.domain.reservation.dto.*;
 import com.studioreservation.domain.reservation.entity.ReservationHistory;
 import com.studioreservation.domain.reservation.enums.ReservationState;
@@ -13,6 +15,9 @@ import com.studioreservation.domain.reservation.util.Base32CodeGenerator;
 import com.studioreservation.domain.room.entity.Room;
 import com.studioreservation.domain.room.enums.RoomType;
 import com.studioreservation.domain.room.repository.RoomRepository;
+import com.studioreservation.domain.room.service.RoomService;
+import com.studioreservation.domain.roominfo.entity.RoomInfo;
+import com.studioreservation.domain.roominfo.repository.RoomInfoRepository;
 import com.studioreservation.global.exception.ErrorCode;
 import com.studioreservation.global.exception.StudioException;
 import com.studioreservation.global.request.PageRequestDTO;
@@ -35,8 +40,10 @@ public class ReservationService {
     private final FeatureToggleService featureToggleService;
     private final ReservationRepository repository;
     private final RoomRepository roomRepository;
+    private final RoomInfoRepository roomInfoRepository;
     private final ReservationMapper mapper;
     private final CalendarService calendarService;
+    private final PlatformRepository platformRepository;
     private static final int MAX_RETRY = 5;
 
     public PageResponseDTO<ReservationAdminResponseDTO> getAllReservation(PageRequestDTO requestDTO) {
@@ -59,14 +66,14 @@ public class ReservationService {
         return mapper.toDTO(repository.findReservationHistory(phone, resvCd));
     }
 
-    public ReservationResponseDTO reserve(Long roomCd, ReservationRequestDTO reservationRequestDTO) {
-        Room room = roomRepository.findSingleEntity(roomCd);
+    public ReservationResponseDTO reserve(Long roomInfoCd, ReservationRequestDTO reservationRequestDTO) {
+        RoomInfo roomInfo = roomInfoRepository.findSingleEntity(roomInfoCd);
 
-        return createReservationResponseDTO(room, reservationRequestDTO);
+        return createReservationResponseDTO(roomInfo, reservationRequestDTO);
     }
     public void adminReserve(ReservationChangeRequestDTO requestDTO) {
         ReservationHistory reservationHistory = mapper.toEntity(requestDTO);
-        reservationHistory.setRoom(roomRepository.findSingleEntity(requestDTO.getRoomCd()));
+        reservationHistory.setRoomInfo(roomInfoRepository.findSingleEntity(requestDTO.getRoomCd()));
         repository.save(reservationHistory);
     }
 
@@ -82,9 +89,11 @@ public class ReservationService {
         reservationHistory.setPaymentCompleted(true);
     }
 
-    private ReservationResponseDTO createReservationResponseDTO(Room room, ReservationRequestDTO reservationRequestDTO) {
+    private ReservationResponseDTO createReservationResponseDTO(RoomInfo roomInfo, ReservationRequestDTO reservationRequestDTO) {
         ReservationHistory reservationHistory = mapper.toEntity(reservationRequestDTO);
-        reservationHistory.setRoom(room);
+        Platform platform = platformRepository.findSingleEntity(1L);
+        reservationHistory.setRoomInfo(roomInfo);
+        reservationHistory.setPlatform(platform);
 
         String resvCd = generateUniqueReservationCode(LocalDateTime.now());
 //        reservationHistory.calculateTotalAmount(room);
@@ -114,14 +123,14 @@ public class ReservationService {
                 .findReservationHistory(phone, resvCd);
         reservationHistory.updateState(requestDTO.getReservationState());
 
-        if (reservationHistory.getState().equals(ReservationState.CONFIRMED)) {
-            String title = reservationHistory.getRoom().getTitle() + "_" +
-                    maskingUserNm(reservationHistory.getUserNm());
-
-            calendarService.addEvent(title,
-                    new DateTime(reservationHistory.getStrtDt()),
-                    new DateTime(reservationHistory.getEndDt()));
-        }
+//        if (reservationHistory.getState().equals(ReservationState.CONFIRMED)) {
+//            String title = reservationHistory.getRoom().getTitle() + "_" +
+//                    maskingUserNm(reservationHistory.getUserNm());
+//
+//            calendarService.addEvent(title,
+//                    new DateTime(reservationHistory.getStrtDt()),
+//                    new DateTime(reservationHistory.getEndDt()));
+//        }
 
         return mapper.toDTO(reservationHistory);
     }
