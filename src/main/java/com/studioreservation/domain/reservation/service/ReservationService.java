@@ -76,6 +76,8 @@ public class ReservationService {
     public void adminReserve(ReservationChangeRequestDTO requestDTO) {
         ReservationHistory reservationHistory = mapper.toEntity(requestDTO);
         reservationHistory.setRoomInfo(roomInfoRepository.findSingleEntity(requestDTO.getRoomCd()));
+        reservationHistory.setPlatform(platformRepository.findSingleEntity(requestDTO.getPlatformCd()));
+
         repository.save(reservationHistory);
     }
 
