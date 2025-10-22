@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoomInfoResponseDTO {
+public class RoomInfoAdminResponseDTO {
     @Schema(description = "방 식별 번호", example = "방 식별 번호")
     private Long cd;
 
@@ -25,11 +25,19 @@ public class RoomInfoResponseDTO {
     @Schema(description = "수용 가능 인원", example = "수용 가능 인원")
     private int capacity;
 
+    @Schema(description = "방 호칭", example = "방 호칭")
+    private String title;
+
     @Schema(description = "방 설명", example = "방 설명")
     private String description;
 
     @Schema(description = "방 타입", example = "방 타입")
     private RoomType roomType;
 
+    @Schema(description = "정렬 순서", example = "정렬 순서")
     private Integer orderIndex;
+
+    @Schema(description = "예약 가능 여부", example = "예약 가능 여부")
+    private Boolean useYn;
 }
+

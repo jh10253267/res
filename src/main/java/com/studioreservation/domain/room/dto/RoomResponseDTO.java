@@ -33,16 +33,6 @@ public class RoomResponseDTO {
     @Schema(description = "방 순서", example = "방 순서")
     private Integer orderIndex;
 
+    @Schema(description = "하위 방 정보", example = "하위 방 정보")
     private List<RoomInfoResponseDTO> roomInfos;
-
-    public static RoomResponseDTO fromEntity(Room room) {
-       return RoomResponseDTO.builder()
-                .cd(room.getCd())
-                .capacity(room.getCapacity())
-                .name(room.getName())
-                .title(room.getTitle())
-                .description(room.getDescription())
-                .orderIndex(room.getOrderIndex())
-                .build();
-    }
 }

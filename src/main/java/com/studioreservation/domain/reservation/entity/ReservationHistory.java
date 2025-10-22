@@ -1,11 +1,5 @@
 package com.studioreservation.domain.reservation.entity;
 
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.studioreservation.domain.calendar.entity.CalendarMetaData;
 import com.studioreservation.domain.platform.entity.Platform;
 import com.studioreservation.domain.reservation.dto.ReservationChangeRequestDTO;
@@ -13,15 +7,16 @@ import com.studioreservation.domain.reservation.dto.ReservationRequestDTO;
 import com.studioreservation.domain.reservation.enums.PayTyp;
 import com.studioreservation.domain.reservation.enums.ReservationState;
 import com.studioreservation.domain.room.entity.Room;
+import com.studioreservation.domain.roominfo.entity.RoomInfo;
 import com.studioreservation.domain.studiofile.entity.StudioFile;
 import com.studioreservation.global.BaseEntity;
-
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -66,7 +61,7 @@ public class ReservationHistory extends BaseEntity {
     private String memo = "";
 
     @Setter
-    private Integer totalRevenue;
+    private BigDecimal totalRevenue;
 
     @Setter
     @Column(unique = true)
@@ -74,14 +69,14 @@ public class ReservationHistory extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Setter
-    private Room room;
+    private RoomInfo roomInfo;
 
     @ManyToOne
     private Platform platform;
 
-    private int commission;
+    private BigDecimal commission;
 
-    private int income;
+    private BigDecimal income;
 
     @Column(length = 50)
     private String email;
@@ -120,7 +115,7 @@ public class ReservationHistory extends BaseEntity {
         this.state = state;
     }
 
-    public static ReservationHistory buildReservationHistory(ReservationRequestDTO requestDTO, Room room, Platform platform) {
+    public static ReservationHistory buildReservationHistory(ReservationRequestDTO requestDTO, RoomInfo roomInfo, Platform platform) {
         ReservationHistory reservation = ReservationHistory.builder()
                 .userNm(requestDTO.getUserNm())          // DTO.username → userNm
                 .phone(requestDTO.getPhone())
@@ -129,7 +124,7 @@ public class ReservationHistory extends BaseEntity {
                 .strtDt(requestDTO.getStrtDt())
                 .userCnt(requestDTO.getUserCnt())
                 .policyConfirmed(requestDTO.isPolicyConfirmed())
-                .room(room)
+                .roomInfo(roomInfo)
                 .platform(platform)
                 .build();
 
@@ -163,9 +158,33 @@ public class ReservationHistory extends BaseEntity {
     }
 
     //-------------------------비즈니스 규칙 ----------------------
-    private static final double DEFAULT_DISCOUNT_RATE = 0.2;
-    private static final int EXTRA_PAY_PER_PERSON = 5000;
+    private static final BigDecimal DEFAULT_DISCOUNT_RATE = BigDecimal.ONE.subtract(BigDecimal.valueOf(0.2));
+    private static final BigDecimal EXTRA_PAY_PER_PERSON = BigDecimal.valueOf(5500);
     private static final int EVENING_HOUR = 18;
 
+    private int calculateDurationDurationUnit() {
+        long durationMillis = endDt.getTime() - strtDt.getTime();
+        long unitMillis = 30 * 60 * 1000;
+        long durationHalfHours = (long) Math.ceil((double) durationMillis / unitMillis);
 
+        return (int) (durationHalfHours);
+    }
+
+    public void calculateTotalRevenue() {
+        int halfHourDurationUnit = calculateDurationDurationUnit();
+        BigDecimal extraPay = applyExtraPay();
+        BigDecimal defaultRevenue = BigDecimal.valueOf(halfHourDurationUnit).multiply(roomInfo.getHalfHrPrice());
+        this.totalRevenue = defaultRevenue.add(extraPay).multiply(DEFAULT_DISCOUNT_RATE);
+    }
+
+    private BigDecimal applyExtraPay() {
+        BigDecimal extraPay = BigDecimal.ZERO;
+        // 만약 방의 수용 가능 인원보다 예약 희망 인원이 많다면
+        if(roomInfo.getRoom().getCapacity() < userCnt) {
+            int extraUserCnt = userCnt - roomInfo.getRoom().getCapacity();
+            extraPay = extraPay.multiply(BigDecimal.valueOf(extraUserCnt));
+        }
+
+        return extraPay;
+    }
 }

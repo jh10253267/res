@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
                         Projections.constructor(
                                 ReservationAdminResponseDTO.class,
                                 reservationHistory.sn,
-                                reservationHistory.room.cd,
+                                reservationHistory.roomInfo.cd,
                                 reservationHistory.userNm,
                                 reservationHistory.phone,
                                 reservationHistory.payTyp,
@@ -54,7 +55,8 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
                                 reservationHistory.totalRevenue,
                                 reservationHistory.commission,
                                 reservationHistory.income,
-                                reservationHistory.memo
+                                reservationHistory.memo,
+                                reservationHistory.platform.cd
                         )
                 )
                 .from(reservationHistory)
@@ -86,7 +88,8 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
     }
 
     @Override
-    public List<ReservedTimeResDTO> findReservedTime(Timestamp strtDt, Timestamp endDt, Long roomCd) {
+    public List<ReservedTimeResDTO>
+    findReservedTime(Timestamp strtDt, Timestamp endDt, Long roomCd) {
         return jpaQueryFactory
                 .select(
                         Projections.constructor(
@@ -102,7 +105,7 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
     }
 
     @Override
-    public Integer sumTotalAmount(Timestamp strtDt, Timestamp endDt) {
+    public BigDecimal sumTotalAmount(Timestamp strtDt, Timestamp endDt) {
         return jpaQueryFactory
                 .select(reservationHistory.totalRevenue.sum())
                 .from(reservationHistory)
@@ -137,7 +140,7 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
             return null;
         }
 
-        return reservationHistory.room.cd.eq(roomCd);
+        return reservationHistory.roomInfo.cd.eq(roomCd);
     }
 
     private BooleanExpression eqPhone(String phone) {

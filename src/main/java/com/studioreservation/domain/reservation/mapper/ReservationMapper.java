@@ -15,7 +15,7 @@ public interface ReservationMapper {
 
 	ReservationHistory toEntity(ReservationRequestDTO reservationRequestDTO);
 
-	@Mapping(source="room.cd", target="roomCd")
+	@Mapping(source="roomInfo.cd", target="roomInfoCd")
 	@Mapping(source="createdAt", target="regDt")
 	ReservationResponseDTO toDTO(ReservationHistory reservationHistory);
     ReservationHistory toEntity(ReservationChangeRequestDTO reservationChangeRequestDTO);

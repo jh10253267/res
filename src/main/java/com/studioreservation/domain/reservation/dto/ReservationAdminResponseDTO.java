@@ -6,6 +6,7 @@ import com.studioreservation.domain.reservation.enums.ReservationState;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Getter
@@ -18,7 +19,7 @@ public class ReservationAdminResponseDTO {
     private Long sn;
 
     @Schema(description = "예약한 스튜디오 번호", example = "예약한 스튜디오 번호")
-    private Long roomCd;
+    private Long roomInfoCd;
 
     @Schema(description = "예약한 이름", example = "예약한 이름")
     private String userNm;
@@ -69,15 +70,18 @@ public class ReservationAdminResponseDTO {
     private String resvCd;
 
     @Schema(description = "총 금액", example = "총 금액")
-    private int totalRevenue;
+    private BigDecimal totalRevenue;
 
     @Schema(description = "수수료", example = "수수료")
-    private int commission;
+    private BigDecimal commission;
 
     @Schema(description = "순수입", example = "순수입")
-    private int income;
+    private BigDecimal income;
 
     @Schema(description = "메모", example = "메모")
     private String memo;
+
+    @Schema(description = "플랫폼 번호", example = "플랫폼 번호")
+    private Long platformCd;
 }
 

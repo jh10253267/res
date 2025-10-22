@@ -23,7 +23,7 @@ public class ReservationResponseDTO {
 	private Long sn;
 
 	@Schema(description = "예약한 스튜디오 번호", example = "예약한 스튜디오 번호")
-	private Long roomCd;
+	private Long roomInfoCd;
 
 	@Schema(description = "예약한 이름", example = "예약한 이름")
 	private String userNm;

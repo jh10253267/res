@@ -1,5 +1,6 @@
 package com.studioreservation.domain.room.dto;
 
+import com.studioreservation.domain.roominfo.dto.RoomInfoAdminResponseDTO;
 import com.studioreservation.domain.roominfo.dto.RoomInfoResponseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -31,9 +32,6 @@ public class RoomAdminResponseDTO {
     @Schema(description = "방 순서", example = "방 순서")
     private Integer orderIndex;
 
-    @Schema(description = "예약 가능 여부", example = "예약 가능 여부")
-    private boolean useYn;
-
     @Schema(description = "방 순서", example = "방 순서")
-    private List<RoomInfoResponseDTO> roomInfos = new ArrayList<>();
+    private List<RoomInfoAdminResponseDTO> roomInfos = new ArrayList<>();
 }

@@ -17,10 +17,16 @@ public class RoomInfoAdminController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public APIResponse<?> createoomInfo(@RequestBody RoomInfoRequestDTO requestDTO) {
-        service.createRoomInfo(requestDTO);
+    public APIResponse<?> createRoomInfo(@RequestBody RoomInfoRequestDTO requestDTO) {
+        return APIResponse.success(service.createRoomInfo(requestDTO));
+    }
 
-        return APIResponse.success();
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{cd}")
+    public APIResponse<?> updateRoomInfo(
+            @PathVariable("cd") Long cd,
+            @RequestBody RoomInfoRequestDTO requestDTO) {
+        return APIResponse.success(service.updateRoomInfo(cd, requestDTO));
     }
 
 
