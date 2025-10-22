@@ -94,7 +94,7 @@ public class ReservationHistory extends BaseEntity {
 
 // --------------------- 생성 및 업데이트-------------------
 
-    public void updateReservation(ReservationChangeRequestDTO dto) {
+    public void updateReservation(ReservationChangeRequestDTO dto, Platform platform) {
         if (dto.getUserNm() != null) this.userNm = dto.getUserNm();
         if (dto.getPhone() != null) this.phone = dto.getPhone();
         if (dto.getPayTyp() != null) this.payTyp = dto.getPayTyp();
@@ -109,6 +109,7 @@ public class ReservationHistory extends BaseEntity {
         if (dto.getPolicyConfirmed() != null) this.policyConfirmed = dto.getPolicyConfirmed();
         if (dto.getMemo() != null) this.memo = dto.getMemo();
         if (dto.getTotalRevenue() != null) this.totalRevenue = dto.getTotalRevenue();
+        this.platform = platform;
     }
 
     public void updateState(ReservationState state) {
