@@ -113,8 +113,8 @@ public class ReservationService {
                                                     String resvCd) throws Exception {
         ReservationHistory reservationHistory = repository
                 .findReservationHistory(phone, resvCd);
-        reservationHistory.updateReservation(requestDTO);
-
+        Platform platform = platformRepository.findSingleEntity(requestDTO.getPlatformCd());
+        reservationHistory.updateReservation(requestDTO, platform);
         return mapper.toDTO(reservationHistory);
     }
 
