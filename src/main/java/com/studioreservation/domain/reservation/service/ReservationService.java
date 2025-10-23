@@ -22,6 +22,7 @@ import com.studioreservation.global.exception.ErrorCode;
 import com.studioreservation.global.exception.StudioException;
 import com.studioreservation.global.request.PageRequestDTO;
 import com.studioreservation.global.response.PageResponseDTO;
+import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ReservationService {
     private final FeatureToggleService featureToggleService;
     private final ReservationRepository repository;
@@ -98,7 +100,11 @@ public class ReservationService {
         Platform platform = platformRepository.findSingleEntity(1L);
         reservationHistory.setRoomInfo(roomInfo);
         reservationHistory.setPlatform(platform);
-        reservationHistory.calculateTotalRevenue();
+        if(reservationHistory.getRoomInfo().getRoomType().equals(RoomType.PARTY)) {
+            reservationHistory.calculateDiscountedPrice();
+        } else {
+            reservationHistory.calculateTotalRevenue();
+        }
         String resvCd = generateUniqueReservationCode(LocalDateTime.now());
         reservationHistory.setResvCd(resvCd);
 
