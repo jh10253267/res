@@ -25,7 +25,7 @@ public class ReservationAdminController {
     private final ReservationService service;
 
     @PostMapping
-    public APIResponse<?> createReservation(ReservationChangeRequestDTO requestDTO) {
+    public APIResponse<?> createReservation(@RequestBody ReservationChangeRequestDTO requestDTO) {
         log.info("createReservation platformId: {}", requestDTO.getPlatformCd());
         log.info("createReservation roomInfoCd: {}", requestDTO.getPlatformCd());
         service.adminReserve(requestDTO);
