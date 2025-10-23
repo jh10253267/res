@@ -64,7 +64,7 @@ public class ReservationChangeRequestDTO {
 	private Long platformCd;
 
     private BigDecimal totalRevenue;
-    private Long roomCd;
+    private Long roomInfoCd;
     private ReservationState reservationState;
     private String email;
     private String resvCd;

@@ -72,6 +72,7 @@ public class ReservationRequestDTO {
     @Schema(example = "파일 이름")
     private List<StudioFileDTO> fileNames;
 
-    private ReservationState state;
+    @Builder.Default
+    private ReservationState state =  ReservationState.WAITING;
     private String memo;
 }

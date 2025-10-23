@@ -8,6 +8,7 @@ import com.studioreservation.global.response.APIResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -19,11 +20,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 @SecurityRequirement(name = "Bearer Authentication")
 @RequestMapping("/api/admin/reservations")
+@Slf4j
 public class ReservationAdminController {
     private final ReservationService service;
 
     @PostMapping
-    public APIResponse<?> createReservation(ReservationChangeRequestDTO requestDTO) {
+    public APIResponse<?> createReservation(@RequestBody ReservationChangeRequestDTO requestDTO) {
+        log.info("createReservation platformId: {}", requestDTO.getPlatformCd());
+        log.info("createReservation roomInfoCd: {}", requestDTO.getPlatformCd());
         service.adminReserve(requestDTO);
         return APIResponse.success();
     }

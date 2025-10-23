@@ -6,7 +6,7 @@ import com.studioreservation.domain.reservation.dto.ReservationChangeRequestDTO;
 import com.studioreservation.domain.reservation.dto.ReservationRequestDTO;
 import com.studioreservation.domain.reservation.enums.PayTyp;
 import com.studioreservation.domain.reservation.enums.ReservationState;
-import com.studioreservation.domain.room.entity.Room;
+import com.studioreservation.domain.room.enums.RoomType;
 import com.studioreservation.domain.roominfo.entity.RoomInfo;
 import com.studioreservation.domain.studiofile.entity.StudioFile;
 import com.studioreservation.global.BaseEntity;
@@ -15,6 +15,8 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -93,8 +95,7 @@ public class ReservationHistory extends BaseEntity {
 
 
 // --------------------- 생성 및 업데이트-------------------
-
-    public void updateReservation(ReservationChangeRequestDTO dto) {
+    public void updateReservation(ReservationChangeRequestDTO dto, Platform platform) {
         if (dto.getUserNm() != null) this.userNm = dto.getUserNm();
         if (dto.getPhone() != null) this.phone = dto.getPhone();
         if (dto.getPayTyp() != null) this.payTyp = dto.getPayTyp();
@@ -109,6 +110,7 @@ public class ReservationHistory extends BaseEntity {
         if (dto.getPolicyConfirmed() != null) this.policyConfirmed = dto.getPolicyConfirmed();
         if (dto.getMemo() != null) this.memo = dto.getMemo();
         if (dto.getTotalRevenue() != null) this.totalRevenue = dto.getTotalRevenue();
+        this.platform = platform;
     }
 
     public void updateState(ReservationState state) {
@@ -160,21 +162,44 @@ public class ReservationHistory extends BaseEntity {
     //-------------------------비즈니스 규칙 ----------------------
     private static final BigDecimal DEFAULT_DISCOUNT_RATE = BigDecimal.ONE.subtract(BigDecimal.valueOf(0.2));
     private static final BigDecimal EXTRA_PAY_PER_PERSON = BigDecimal.valueOf(5500);
+    private static final BigDecimal NIGHT_DISCOUNT_PRICE_PER_HALF_HOUR = BigDecimal.valueOf(10000);   // 자정~9시 까지는 2만원
+    private static final BigDecimal EVENING_DISCOUNT_PRICE_PER_HALF_HOUR = BigDecimal.valueOf(15000); // 오후 6부터 자정까지는 3만원
     private static final int EVENING_HOUR = 18;
+    private static final int PARTY_ROOM_CD = 1;
+    private static final long UNIT_MILLiS = 30 * 60 * 1000;
 
-    private int calculateDurationDurationUnit() {
+    private int calculateDurationHalfUnit() {
         long durationMillis = endDt.getTime() - strtDt.getTime();
-        long unitMillis = 30 * 60 * 1000;
-        long durationHalfHours = (long) Math.ceil((double) durationMillis / unitMillis);
+        long durationHours = (long) Math.ceil((double) durationMillis / UNIT_MILLiS);
 
-        return (int) (durationHalfHours);
+        return (int) (durationHours);
     }
 
-    public void calculateTotalRevenue() {
-        int halfHourDurationUnit = calculateDurationDurationUnit();
-        BigDecimal extraPay = applyExtraPay();
-        BigDecimal defaultRevenue = BigDecimal.valueOf(halfHourDurationUnit).multiply(roomInfo.getHalfHrPrice());
-        this.totalRevenue = defaultRevenue.add(extraPay).multiply(DEFAULT_DISCOUNT_RATE);
+    public BigDecimal calculateDiscountedPrice() {
+        LocalDateTime start = this.strtDt.toLocalDateTime();
+        LocalDateTime end = this.endDt.toLocalDateTime();
+
+        BigDecimal total = BigDecimal.ZERO;
+
+        LocalDateTime current = start;
+        while (current.isBefore(end)) {
+            LocalDateTime nextHour = current.plusMinutes(30);
+            BigDecimal price = getDiscountRate(current.toLocalTime());
+            total = total.add(price);
+            current = nextHour;
+        }
+
+        return total;
+    }
+
+    private BigDecimal getDiscountRate(LocalTime time) {
+        if (time.isAfter(LocalTime.MIDNIGHT.minusSeconds(1)) && time.isBefore(LocalTime.of(9, 0))) {
+            return NIGHT_DISCOUNT_PRICE_PER_HALF_HOUR; // 50% 요금
+        }
+        if (time.isAfter(LocalTime.of(18, 0)) && time.isBefore(LocalTime.MIDNIGHT)) {
+            return EVENING_DISCOUNT_PRICE_PER_HALF_HOUR; // 30% 할인
+        }
+        return this.roomInfo.getHalfHrPrice();
     }
 
     private BigDecimal applyExtraPay() {
@@ -186,5 +211,12 @@ public class ReservationHistory extends BaseEntity {
         }
 
         return extraPay;
+    }
+
+    public void calculateTotalRevenue() {
+        int halfHourDurationUnit = calculateDurationHalfUnit(); // 4
+        BigDecimal extraPay = applyExtraPay();
+        BigDecimal defaultRevenue = BigDecimal.valueOf(halfHourDurationUnit).multiply(roomInfo.getHalfHrPrice()); // 88,000
+        this.totalRevenue = defaultRevenue.add(extraPay);
     }
 }

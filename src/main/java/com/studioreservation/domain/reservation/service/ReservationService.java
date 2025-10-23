@@ -22,6 +22,7 @@ import com.studioreservation.global.exception.ErrorCode;
 import com.studioreservation.global.exception.StudioException;
 import com.studioreservation.global.request.PageRequestDTO;
 import com.studioreservation.global.response.PageResponseDTO;
+import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ReservationService {
     private final FeatureToggleService featureToggleService;
     private final ReservationRepository repository;
@@ -75,7 +77,9 @@ public class ReservationService {
 
     public void adminReserve(ReservationChangeRequestDTO requestDTO) {
         ReservationHistory reservationHistory = mapper.toEntity(requestDTO);
-        reservationHistory.setRoomInfo(roomInfoRepository.findSingleEntity(requestDTO.getRoomCd()));
+        reservationHistory.setRoomInfo(roomInfoRepository.findSingleEntity(requestDTO.getRoomInfoCd()));
+        reservationHistory.setPlatform(platformRepository.findSingleEntity(requestDTO.getPlatformCd()));
+
         repository.save(reservationHistory);
     }
 
@@ -96,7 +100,11 @@ public class ReservationService {
         Platform platform = platformRepository.findSingleEntity(1L);
         reservationHistory.setRoomInfo(roomInfo);
         reservationHistory.setPlatform(platform);
-        reservationHistory.calculateTotalRevenue();
+        if(reservationHistory.getRoomInfo().getRoomType().equals(RoomType.PARTY)) {
+            reservationHistory.calculateDiscountedPrice();
+        } else {
+            reservationHistory.calculateTotalRevenue();
+        }
         String resvCd = generateUniqueReservationCode(LocalDateTime.now());
         reservationHistory.setResvCd(resvCd);
 
@@ -111,8 +119,8 @@ public class ReservationService {
                                                     String resvCd) throws Exception {
         ReservationHistory reservationHistory = repository
                 .findReservationHistory(phone, resvCd);
-        reservationHistory.updateReservation(requestDTO);
-
+        Platform platform = platformRepository.findSingleEntity(requestDTO.getPlatformCd());
+        reservationHistory.updateReservation(requestDTO, platform);
         return mapper.toDTO(reservationHistory);
     }
 
