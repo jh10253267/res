@@ -58,6 +58,10 @@ public class ReservationService {
                 .build();
     }
 
+    public void deleteReservation(Long reservationId) {
+        repository.deleteById(reservationId);
+    }
+
     public List<ReservedTimeResDTO> getReservedTimes(ReservedTimeReqDTO reservedTimeReqDTO) {
         return repository.findReservedTime(reservedTimeReqDTO.getStrtDt(),
                 reservedTimeReqDTO.getEndDt(),

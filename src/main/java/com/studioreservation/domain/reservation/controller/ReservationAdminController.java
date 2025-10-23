@@ -32,6 +32,12 @@ public class ReservationAdminController {
         return APIResponse.success();
     }
 
+    @DeleteMapping("/{sn}")
+    public APIResponse<?> deleteReservation(@PathVariable Long sn) {
+        service.deleteReservation(sn);
+        return APIResponse.success();
+    }
+
     @GetMapping
     @Operation(summary = "예약 조회", description = "예약 조회, 만약 페이징된 자료를 보고싶다면 size를 설정하면 됨")
     public APIResponse<?> getAllReservation(PageRequestDTO pageRequestDTO) {
