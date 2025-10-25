@@ -86,6 +86,11 @@ public class ReservationService {
         repository.save(reservationHistory);
     }
 
+    public void deleteReservation(String phone, String resvCd) {
+        ReservationHistory reservationHistory = repository.findReservationHistory(phone, resvCd);
+        repository.delete(reservationHistory);
+    }
+
     private void checkFeatureEnabled() {
         if (!featureToggleService.isFeatureEnabled("selfPhoto")) {
             throw new StudioException(ErrorCode.FEATURE_DISABLED);
