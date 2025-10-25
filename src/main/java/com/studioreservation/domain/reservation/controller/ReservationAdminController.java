@@ -54,6 +54,14 @@ public class ReservationAdminController {
         return APIResponse.success(service.updateState(reservationStateRequestDTO, phone, resvCd));
     }
 
+    @DeleteMapping()
+    @Operation(summary = "예약 삭제", description = "예약 삭제")
+    public APIResponse<?> deleteReservation(@RequestParam("phone") String phone,
+                                            @RequestParam("resvCd") String resvCd) throws Exception {
+        service.deleteReservation(phone, resvCd);
+        return APIResponse.success();
+    }
+
     @GetMapping("/revenues")
     @Operation(summary = "수입", description = "수입")
     public APIResponse<?> getAllAmount(ReservedTimeResDTO reservedTimeResDTO) {

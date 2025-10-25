@@ -86,7 +86,7 @@ public class ReservationHistory extends BaseEntity {
     @Builder.Default
     private boolean paymentCompleted = false;
 
-    @ManyToOne
+    @OneToOne(mappedBy = "reservationHistory")
     private CalendarMetaData metaData;
 
     @OneToMany(mappedBy = "reservationHistory", fetch = FetchType.LAZY)
