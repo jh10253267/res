@@ -1,6 +1,7 @@
 package com.studioreservation.domain.reservation.service;
 
 import com.google.api.client.util.DateTime;
+import com.studioreservation.domain.calendar.dto.CalendarRequestDTO;
 import com.studioreservation.domain.calendar.service.CalendarService;
 import com.studioreservation.domain.dailyrevenue.dto.DailyRevenueDTO;
 import com.studioreservation.domain.featuretoggle.service.FeatureToggleService;
@@ -79,6 +80,8 @@ public class ReservationService {
         ReservationHistory reservationHistory = mapper.toEntity(requestDTO);
         reservationHistory.setRoomInfo(roomInfoRepository.findSingleEntity(requestDTO.getRoomInfoCd()));
         reservationHistory.setPlatform(platformRepository.findSingleEntity(requestDTO.getPlatformCd()));
+        String resvCd = generateUniqueReservationCode(LocalDateTime.now());
+        reservationHistory.setResvCd(resvCd);
 
         repository.save(reservationHistory);
     }
@@ -133,12 +136,13 @@ public class ReservationService {
         reservationHistory.updateState(requestDTO.getReservationState());
 
 //        if (reservationHistory.getState().equals(ReservationState.CONFIRMED)) {
-//            String title = reservationHistory.getRoom().getTitle() + "_" +
+//            String title = reservationHistory.getRoomInfo().getRoom().getTitle() + "_" +
 //                    maskingUserNm(reservationHistory.getUserNm());
 //
-//            calendarService.addEvent(title,
+//            calendarService.addEvent(new CalendarRequestDTO(title,
 //                    new DateTime(reservationHistory.getStrtDt()),
-//                    new DateTime(reservationHistory.getEndDt()));
+//                    new DateTime(reservationHistory.getEndDt()),
+//                    reservationHistory));
 //        }
 
         return mapper.toDTO(reservationHistory);
