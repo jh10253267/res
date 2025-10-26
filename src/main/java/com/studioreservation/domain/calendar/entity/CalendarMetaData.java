@@ -1,10 +1,8 @@
 package com.studioreservation.domain.calendar.entity;
 
+import com.studioreservation.domain.reservation.entity.ReservationHistory;
 import com.studioreservation.global.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,4 +22,7 @@ public class CalendarMetaData extends BaseEntity {
     private String htmlLink;
     private String applicationName;
     private String attendeeEmail;
+    private String eventId;
+    @OneToOne
+    private ReservationHistory reservationHistory;
 }

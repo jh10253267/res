@@ -5,15 +5,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.studioreservation.domain.reservation.enums.ReservationState;
 import com.studioreservation.global.formatter.TimestampDeserializer;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Timestamp;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
+@AllArgsConstructor
 public class ReservedTimeReqDTO {
     @Schema(type = "long", example = "방 번호", description = "방 번호")
     private Long roomCd;

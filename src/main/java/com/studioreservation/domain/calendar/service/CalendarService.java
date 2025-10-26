@@ -2,13 +2,13 @@ package com.studioreservation.domain.calendar.service;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.studioreservation.domain.calendar.dto.CalendarMetaDTO;
+import com.studioreservation.domain.calendar.dto.CalendarRequestDTO;
 import com.studioreservation.domain.calendar.entity.CalendarMetaData;
 import com.studioreservation.domain.calendar.property.GoogleCalendarProperties;
 import com.studioreservation.domain.calendar.repository.CalendarRepository;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
 import java.util.Collections;
@@ -55,17 +56,27 @@ public class CalendarService {
         ).setApplicationName(props.getApplicationName()).build();
     }
 
-    public String addEvent(String title, DateTime startDateTime, DateTime endDateTime) throws Exception {
+    public PageResponseDTO<CalendarMetaDTO> getAllMetaData(PageRequestDTO requestDTO) {
+        Page<CalendarMetaDTO> result = repository.findPagedEntities(requestDTO);
+
+        return PageResponseDTO.<CalendarMetaDTO>withAll()
+                .dtoList(result.getContent())
+                .pageRequestDTO(requestDTO)
+                .total(result.getTotalElements())
+                .build();
+    }
+
+    public String addEvent(CalendarRequestDTO dto) throws Exception {
         Event event = new Event()
-                .setSummary(title)
+                .setSummary(dto.getTitle())
                 .setDescription("자동으로 등록된 일정입니다.");
 
         event.setStart(new EventDateTime()
-                .setDateTime(startDateTime)
+                .setDateTime(dto.getStartDateTime())
                 .setTimeZone("Asia/Seoul"));
 
         event.setEnd(new EventDateTime()
-                .setDateTime(endDateTime)
+                .setDateTime(dto.getEndDateTime())
                 .setTimeZone("Asia/Seoul"));
 
         Event createdEvent = calendarClient.events()
@@ -77,20 +88,39 @@ public class CalendarService {
                 .attendeeEmail(props.getAttendeeEmail())
                 .htmlLink(createdEvent.getHtmlLink())
                 .scheduleId(createdEvent.getId())
+                .eventId(createdEvent.getId())
                 .build();
 
         repository.save(metaData);
 
-        return createdEvent.getHtmlLink(); // 생성된 일정 링크 리턴
+        return createdEvent.getHtmlLink();
     }
 
-    public PageResponseDTO<CalendarMetaDTO> getAllMetaData(PageRequestDTO requestDTO) {
-        Page<CalendarMetaDTO> result = repository.findPagedEntities(requestDTO);
+    public void updateCalendar(CalendarRequestDTO calendarRequestDTO) throws IOException {
+        Long sn = calendarRequestDTO.getDto().getSn();
+        CalendarMetaData calendarMetaData = repository.findByReservationSn(sn);
+        String eventId = calendarMetaData.getEventId();
 
-        return PageResponseDTO.<CalendarMetaDTO>withAll()
-                .dtoList(result.getContent())
-                .pageRequestDTO(requestDTO)
-                .total(result.getTotalElements())
-                .build();
+        Event event = calendarClient.events()
+                .get(props.getCalendarId(), eventId)
+                .execute();
+        event.setStart(new EventDateTime()
+                .setDateTime(calendarRequestDTO.getStartDateTime())
+                .setTimeZone("Asia/Seoul"));
+        event.setEnd(new EventDateTime()
+                .setDateTime(calendarRequestDTO.getEndDateTime())
+                .setTimeZone("Asia/Seoul"));
+
+        calendarClient.events()
+                .update(props.getCalendarId(), eventId, event)
+                .execute();
     }
+
+    public void deleteCalendar(Long sn) throws IOException {
+        CalendarMetaData calendarMetaData =repository.findByReservationSn(sn);
+        String eventId = calendarMetaData.getEventId();
+
+        calendarClient.events().delete(props.getCalendarId(), eventId).execute();
+    }
+
 }

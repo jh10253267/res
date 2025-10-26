@@ -8,15 +8,17 @@ import com.studioreservation.domain.featuretoggle.service.FeatureToggleService;
 import com.studioreservation.domain.platform.entity.Platform;
 import com.studioreservation.domain.platform.repository.PlatformRepository;
 import com.studioreservation.domain.reservation.dto.*;
+import com.studioreservation.domain.reservation.event.ReservationConfirmedEvent;
 import com.studioreservation.domain.reservation.entity.ReservationHistory;
 import com.studioreservation.domain.reservation.enums.ReservationState;
+import com.studioreservation.domain.reservation.event.ReservationCanceledEvent;
+import com.studioreservation.domain.reservation.event.ReservationUpdatedEvent;
 import com.studioreservation.domain.reservation.mapper.ReservationMapper;
 import com.studioreservation.domain.reservation.repository.ReservationRepository;
 import com.studioreservation.domain.reservation.util.Base32CodeGenerator;
-import com.studioreservation.domain.room.entity.Room;
+import com.studioreservation.domain.reservation.util.MaskingUtil;
 import com.studioreservation.domain.room.enums.RoomType;
 import com.studioreservation.domain.room.repository.RoomRepository;
-import com.studioreservation.domain.room.service.RoomService;
 import com.studioreservation.domain.roominfo.entity.RoomInfo;
 import com.studioreservation.domain.roominfo.repository.RoomInfoRepository;
 import com.studioreservation.global.exception.ErrorCode;
@@ -25,6 +27,7 @@ import com.studioreservation.global.request.PageRequestDTO;
 import com.studioreservation.global.response.PageResponseDTO;
 import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +50,7 @@ public class ReservationService {
     private final ReservationMapper mapper;
     private final CalendarService calendarService;
     private final PlatformRepository platformRepository;
+    private final ApplicationEventPublisher eventPublisher;
     private static final int MAX_RETRY = 5;
 
     public PageResponseDTO<ReservationAdminResponseDTO> getAllReservation(PageRequestDTO requestDTO) {
@@ -108,11 +112,13 @@ public class ReservationService {
         Platform platform = platformRepository.findSingleEntity(1L);
         reservationHistory.setRoomInfo(roomInfo);
         reservationHistory.setPlatform(platform);
+
         if(reservationHistory.getRoomInfo().getRoomType().equals(RoomType.PARTY)) {
             reservationHistory.calculateDiscountedPrice();
         } else {
             reservationHistory.calculateTotalRevenue();
         }
+
         String resvCd = generateUniqueReservationCode(LocalDateTime.now());
         reservationHistory.setResvCd(resvCd);
 
@@ -129,28 +135,50 @@ public class ReservationService {
                 .findReservationHistory(phone, resvCd);
         Platform platform = platformRepository.findSingleEntity(requestDTO.getPlatformCd());
         reservationHistory.updateReservation(requestDTO, platform);
-        return mapper.toDTO(reservationHistory);
+
+        ReservationResponseDTO reservationResponseDTO = mapper.toDTO(reservationHistory);
+        String title = reservationHistory.getRoomInfo().getRoom().getTitle()
+                + "_" + MaskingUtil.maskingUserNm(reservationHistory.getUserNm());
+
+        CalendarRequestDTO calendarRequestDTO = CalendarRequestDTO.builder()
+                .title(title)
+                .startDateTime(new DateTime(reservationHistory.getStrtDt()))
+                .endDateTime(new DateTime(reservationHistory.getStrtDt()))
+                .dto(reservationResponseDTO)
+                .build();
+
+        eventPublisher.publishEvent(new ReservationUpdatedEvent(calendarRequestDTO));
+
+        return reservationResponseDTO;
     }
 
     @Transactional
     public ReservationResponseDTO updateState(ReservationStateRequestDTO requestDTO,
                                               String phone,
                                               String resvCd) throws Exception {
-        ReservationHistory reservationHistory = repository
-                .findReservationHistory(phone, resvCd);
+        ReservationHistory reservationHistory = repository.findReservationHistory(phone, resvCd);
         reservationHistory.updateState(requestDTO.getReservationState());
 
-//        if (reservationHistory.getState().equals(ReservationState.CONFIRMED)) {
-//            String title = reservationHistory.getRoomInfo().getRoom().getTitle() + "_" +
-//                    maskingUserNm(reservationHistory.getUserNm());
-//
-//            calendarService.addEvent(new CalendarRequestDTO(title,
-//                    new DateTime(reservationHistory.getStrtDt()),
-//                    new DateTime(reservationHistory.getEndDt()),
-//                    reservationHistory));
-//        }
+        ReservationResponseDTO dto = mapper.toDTO(reservationHistory);
 
-        return mapper.toDTO(reservationHistory);
+            // 상태가 CONFIRMED이면 이벤트 발행
+        if (reservationHistory.getState() == ReservationState.CONFIRMED) {
+            String title = reservationHistory.getRoomInfo().getRoom().getTitle()
+                    + "_" + MaskingUtil.maskingUserNm(reservationHistory.getUserNm());
+            CalendarRequestDTO calendarRequestDTO = CalendarRequestDTO.builder()
+                   .title(title)
+                   .startDateTime(new DateTime(reservationHistory.getStrtDt()))
+                   .endDateTime(new DateTime(reservationHistory.getStrtDt()))
+                   .dto(dto)
+                   .build();
+
+            eventPublisher.publishEvent(new ReservationConfirmedEvent(calendarRequestDTO));
+        } else if (reservationHistory.getState() == ReservationState.CANCELED) {
+            eventPublisher.publishEvent(new ReservationCanceledEvent(reservationHistory.getSn()));
+
+        }
+
+        return dto;
     }
 
     public List<DailyRevenueDTO> getTotalRevenue(Timestamp start, Timestamp end) {
@@ -186,23 +214,5 @@ public class ReservationService {
         } while (repository.existsByResvCd(code));
 
         return code;
-    }
-
-    private String maskingUserNm(String userNm) {
-        if(userNm == null || userNm.isEmpty()) {
-            return userNm;
-        }
-        int length = userNm.length();
-
-        if (length == 1) {
-            return userNm;
-        } else if (length == 2) {
-            return userNm.charAt(0) + "*";
-        } else {
-            int maskLength = length - 2;
-            return userNm.charAt(0)
-                    + "*".repeat(maskLength)
-                    + userNm.charAt(length - 1);
-        }
     }
 }

@@ -17,4 +17,5 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 	}
 
     @Query("SELECT r FROM Room r JOIN FETCH r.roomInfos")
-    List<Room> findAllByOrderByOrderIndexAsc();}
+    List<Room> findAllByOrderByOrderIndexAsc();
+}

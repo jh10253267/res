@@ -64,17 +64,19 @@ public class ReservationAdminController {
 
     @GetMapping("/revenues")
     @Operation(summary = "수입", description = "수입")
-    public APIResponse<?> getAllAmount(ReservedTimeResDTO reservedTimeResDTO) {
+    public APIResponse<?> getAllRevenue(ReservedTimeResDTO reservedTimeResDTO) {
         Map<String, Object> map= new HashMap<>();
         List<DailyRevenueDTO> result = service.getTotalRevenue(reservedTimeResDTO.getStrtDt(), reservedTimeResDTO.getEndDt());
         BigDecimal totalRevenue = service.getTotal(reservedTimeResDTO.getStrtDt(), reservedTimeResDTO.getEndDt());
+        totalRevenue = totalRevenue != null ? totalRevenue : BigDecimal.ZERO;
         map.put("totalRevenue", totalRevenue);
         map.put("dailyTotals", result);
+
         return APIResponse.success(map);
     }
 
     @GetMapping("/statistics/count")
-    public APIResponse<?>  getCountOfResevation(ReservedTimeReqDTO reservedTimeReqDTO) {
+    public APIResponse<?>  getCountOfReservation(ReservedTimeReqDTO reservedTimeReqDTO) {
         return APIResponse.success(service.getCountOfReservations(reservedTimeReqDTO));
     }
 

@@ -45,7 +45,7 @@ public class ReservationChangeRequestDTO {
 	@Schema(description = "세금 계산서 필요 여부", example = "세금 계산서 필요 여부")
 	private Boolean needTaxInvoce;
 
-	@Schema(description = "잘 모르겠음...", example = "잘 모르겠음...")
+	@Schema(description = "입금자", example = "입금자")
 	private String senderNm;
 
 	@Schema(description = "사용 목적", example = "사용 목적")
@@ -65,7 +65,7 @@ public class ReservationChangeRequestDTO {
 
     private BigDecimal totalRevenue;
     private Long roomInfoCd;
-    private ReservationState reservationState;
+    private ReservationState state;
     private String email;
     private String resvCd;
 }

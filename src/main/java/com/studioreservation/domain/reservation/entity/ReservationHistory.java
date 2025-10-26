@@ -6,7 +6,6 @@ import com.studioreservation.domain.reservation.dto.ReservationChangeRequestDTO;
 import com.studioreservation.domain.reservation.dto.ReservationRequestDTO;
 import com.studioreservation.domain.reservation.enums.PayTyp;
 import com.studioreservation.domain.reservation.enums.ReservationState;
-import com.studioreservation.domain.room.enums.RoomType;
 import com.studioreservation.domain.roominfo.entity.RoomInfo;
 import com.studioreservation.domain.studiofile.entity.StudioFile;
 import com.studioreservation.global.BaseEntity;
@@ -86,8 +85,8 @@ public class ReservationHistory extends BaseEntity {
     @Builder.Default
     private boolean paymentCompleted = false;
 
-    @OneToOne(mappedBy = "reservationHistory")
-    private CalendarMetaData metaData;
+    @OneToOne(mappedBy = "reservationHistory", cascade = CascadeType.REMOVE)
+    private CalendarMetaData calendarMetaData;
 
     @OneToMany(mappedBy = "reservationHistory", fetch = FetchType.LAZY)
     @Builder.Default

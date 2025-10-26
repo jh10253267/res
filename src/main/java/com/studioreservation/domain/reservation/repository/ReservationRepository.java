@@ -28,7 +28,7 @@ public interface ReservationRepository extends JpaRepository<ReservationHistory,
 
     List<ReservationHistory> findByEndDtBeforeAndState(LocalDateTime endDt, ReservationState state);
 
-    @Query(value = "SELECT DATE(strt_dt) AS sales_date, SUM(total_amount) AS daily_total " +
+    @Query(value = "SELECT DATE(strt_dt) AS sales_date, SUM(total_revenue) AS daily_total " +
             "FROM reservation_history " +
             "WHERE strt_dt >= :startDt AND strt_dt < :endDt " +
             "  AND state in ('confirmed', 'completed')" +
@@ -40,7 +40,7 @@ public interface ReservationRepository extends JpaRepository<ReservationHistory,
             @Param("endDt") Timestamp endDt);
 
 
-    @Query(value = "SELECT SUM(total_amount) AS total_revenue " +
+    @Query(value = "SELECT SUM(total_revenue)" +
             "FROM reservation_history " +
             "WHERE strt_dt >= :startDt AND strt_dt < :endDt " +
             "  AND state in ('confirmed', 'completed') ",

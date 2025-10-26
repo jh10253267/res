@@ -11,7 +11,6 @@ import java.sql.Timestamp;
 @Data
 @AllArgsConstructor
 public class ReservedTimeResDTO {
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss")
     @Schema(type = "string", example = "예약 시작 시각", description = "예약 시작 시각")
     private Timestamp strtDt;

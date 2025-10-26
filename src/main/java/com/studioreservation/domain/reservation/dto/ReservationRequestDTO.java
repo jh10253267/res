@@ -57,13 +57,13 @@ public class ReservationRequestDTO {
 	@Schema(description = "세금 계산서 필요 여부", example = "세금 계산서 필요 여부")
 	private boolean needTaxInvoce;
 
-	@Schema(description = "잘 모르겠음...", example = "잘 모르겠음...")
+	@Schema(description = "입금자", example = "입금자")
 	private String senderNm;
 
-	@Schema(description = "요처사항", example = "요청사항")
+	@Schema(description = "대여 목적", example = "대여 목적")
 	private String proposal;
 
-	@Schema(description = "잘 모르겠음...", example = "잘 모르겠음...")
+	@Schema(description = "요처사항", example = "요처사항")
 	private String requestCont;
 
 	@Schema(description = "약관 동의 여부", example = "약관 동의 여부")
