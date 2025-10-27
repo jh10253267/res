@@ -76,18 +76,22 @@ public class ReservationService {
     @Transactional
     public ReservationResponseDTO reserve(Long roomInfoCd, ReservationRequestDTO reservationRequestDTO) {
         RoomInfo roomInfo = roomInfoRepository.findSingleEntity(roomInfoCd);
+        ReservationHistory reservationHistory = mapper.toEntity(reservationRequestDTO);
+        reservationHistory.setState(ReservationState.WAITING);
 
-        return createReservationResponseDTO(roomInfo, reservationRequestDTO);
+        return createReservationResponseDTO(roomInfo, reservationHistory);
     }
 
-    public void adminReserve(ReservationChangeRequestDTO requestDTO) {
+    public ReservationResponseDTO adminReserve(ReservationChangeRequestDTO requestDTO) {
         ReservationHistory reservationHistory = mapper.toEntity(requestDTO);
+        RoomInfo roomInfo = roomInfoRepository.findSingleEntity(requestDTO.getRoomInfoCd());
         reservationHistory.setRoomInfo(roomInfoRepository.findSingleEntity(requestDTO.getRoomInfoCd()));
         reservationHistory.setPlatform(platformRepository.findSingleEntity(requestDTO.getPlatformCd()));
         String resvCd = generateUniqueReservationCode(LocalDateTime.now());
         reservationHistory.setResvCd(resvCd);
-
         repository.save(reservationHistory);
+
+        return createReservationResponseDTO(roomInfo, reservationHistory);
     }
 
     public void deleteReservation(String phone, String resvCd) {
@@ -107,13 +111,12 @@ public class ReservationService {
         reservationHistory.setPaymentCompleted(true);
     }
 
-    private ReservationResponseDTO createReservationResponseDTO(RoomInfo roomInfo, ReservationRequestDTO reservationRequestDTO) {
-        ReservationHistory reservationHistory = mapper.toEntity(reservationRequestDTO);
+    private ReservationResponseDTO createReservationResponseDTO(RoomInfo roomInfo, ReservationHistory reservationHistory) {
         Platform platform = platformRepository.findSingleEntity(1L);
         reservationHistory.setRoomInfo(roomInfo);
         reservationHistory.setPlatform(platform);
 
-        if(reservationHistory.getRoomInfo().getRoomType().equals(RoomType.PARTY)) {
+        if(reservationHistory.getRoomInfo().getRoom().getName().equals("A")) {
             reservationHistory.calculateDiscountedPrice();
         } else {
             reservationHistory.calculateTotalRevenue();

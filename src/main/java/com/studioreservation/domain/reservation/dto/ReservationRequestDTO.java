@@ -63,7 +63,7 @@ public class ReservationRequestDTO {
 	@Schema(description = "대여 목적", example = "대여 목적")
 	private String proposal;
 
-	@Schema(description = "요처사항", example = "요처사항")
+	@Schema(description = "요청사항", example = "요청사항")
 	private String requestCont;
 
 	@Schema(description = "약관 동의 여부", example = "약관 동의 여부")
@@ -71,8 +71,4 @@ public class ReservationRequestDTO {
 
     @Schema(example = "파일 이름")
     private List<StudioFileDTO> fileNames;
-
-    @Builder.Default
-    private ReservationState state =  ReservationState.WAITING;
-    private String memo;
 }
