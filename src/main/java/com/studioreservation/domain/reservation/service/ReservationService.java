@@ -82,6 +82,7 @@ public class ReservationService {
         return createReservationResponseDTO(roomInfo, reservationHistory);
     }
 
+    @Transactional
     public ReservationResponseDTO adminReserve(ReservationChangeRequestDTO requestDTO) {
         ReservationHistory reservationHistory = mapper.toEntity(requestDTO);
         RoomInfo roomInfo = roomInfoRepository.findSingleEntity(requestDTO.getRoomInfoCd());
@@ -89,7 +90,6 @@ public class ReservationService {
         reservationHistory.setPlatform(platformRepository.findSingleEntity(requestDTO.getPlatformCd()));
         String resvCd = generateUniqueReservationCode(LocalDateTime.now());
         reservationHistory.setResvCd(resvCd);
-        repository.save(reservationHistory);
 
         return createReservationResponseDTO(roomInfo, reservationHistory);
     }
