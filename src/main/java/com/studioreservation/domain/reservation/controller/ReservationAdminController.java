@@ -28,8 +28,8 @@ public class ReservationAdminController {
     public APIResponse<?> createReservation(@RequestBody ReservationChangeRequestDTO requestDTO) {
         log.info("createReservation platformId: {}", requestDTO.getPlatformCd());
         log.info("createReservation roomInfoCd: {}", requestDTO.getPlatformCd());
-        service.adminReserve(requestDTO);
-        return APIResponse.success();
+
+        return APIResponse.success(service.adminReserve(requestDTO));
     }
 
     @GetMapping

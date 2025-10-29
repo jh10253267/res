@@ -29,7 +29,7 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
 				"role", authentication.getAuthorities());
 
 		String accessToken = jwtUtil.generateToken(claim, 1);
-		String refreshToken = jwtUtil.generateToken(claim, 30);
+		String refreshToken = jwtUtil.generateToken(claim, 60);
 
 		Gson gson = new Gson();
 

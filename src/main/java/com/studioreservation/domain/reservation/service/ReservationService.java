@@ -91,6 +91,10 @@ public class ReservationService {
         String resvCd = generateUniqueReservationCode(LocalDateTime.now());
         reservationHistory.setResvCd(resvCd);
 
+        if(reservationHistory.getState() == ReservationState.CONFIRMED) {
+            eventPublisher.publishEvent(ReservationConfirmedEvent.class);
+        }
+
         return createReservationResponseDTO(roomInfo, reservationHistory);
     }
 

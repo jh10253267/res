@@ -58,7 +58,6 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
 			Integer exp = (Integer)refreshClaims.get("exp");
 
 			Date expTime = new Date(Instant.ofEpochMilli(exp).toEpochMilli() * 1000);
-
 			Date current = new Date(System.currentTimeMillis());
 
 			long gapTime = (expTime.getTime() - current.getTime());
@@ -69,8 +68,13 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
 			String refreshTokenValue = tokens.get("refreshToken");
 
 			if(gapTime < (1000* 60 * 60 * 24 * 3)) {
-				refreshTokenValue = jwtUtil.generateToken(Map.of("username", username), 1);
+                log.info("new RefreshToken required...  ");
+				refreshTokenValue = jwtUtil.generateToken(Map.of("username", username), 30);
 			}
+
+            log.info("RefreshToken generated...  ");
+            log.info("accessToken: " + accessToken);
+            log.info("refreshToken: " + refreshToken);
 
 			sendTokens(accessTokenValue, refreshTokenValue, response);
 
