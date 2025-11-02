@@ -90,6 +90,7 @@ public class ReservationService {
         reservationHistory.setPlatform(platformRepository.findSingleEntity(requestDTO.getPlatformCd()));
         String resvCd = generateUniqueReservationCode(LocalDateTime.now());
         reservationHistory.setResvCd(resvCd);
+        reservationHistory.setByAdmin(true);
 
         if(reservationHistory.getState() == ReservationState.CONFIRMED) {
             eventPublisher.publishEvent(ReservationConfirmedEvent.class);

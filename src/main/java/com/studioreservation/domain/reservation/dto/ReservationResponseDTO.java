@@ -82,5 +82,5 @@ public class ReservationResponseDTO {
 	@Schema(description = "순수입", example = "순수입")
 	private int income;
 
-    private String eventId;
+    private boolean byAdmin;
 }
