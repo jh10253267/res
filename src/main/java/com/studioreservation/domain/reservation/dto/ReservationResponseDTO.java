@@ -82,5 +82,6 @@ public class ReservationResponseDTO {
 	@Schema(description = "순수입", example = "순수입")
 	private int income;
 
+    @Schema(description = "관리자가 등록했는지 여부", example = "true")
     private boolean byAdmin;
 }

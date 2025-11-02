@@ -17,7 +17,6 @@ import com.studioreservation.domain.reservation.mapper.ReservationMapper;
 import com.studioreservation.domain.reservation.repository.ReservationRepository;
 import com.studioreservation.domain.reservation.util.Base32CodeGenerator;
 import com.studioreservation.domain.reservation.util.MaskingUtil;
-import com.studioreservation.domain.room.enums.RoomType;
 import com.studioreservation.domain.room.repository.RoomRepository;
 import com.studioreservation.domain.roominfo.entity.RoomInfo;
 import com.studioreservation.domain.roominfo.repository.RoomInfoRepository;
@@ -78,25 +77,23 @@ public class ReservationService {
         RoomInfo roomInfo = roomInfoRepository.findSingleEntity(roomInfoCd);
         ReservationHistory reservationHistory = mapper.toEntity(reservationRequestDTO);
         reservationHistory.setState(ReservationState.WAITING);
+        Platform platform = platformRepository.findSingleEntity(1L);
 
-        return createReservationResponseDTO(roomInfo, reservationHistory);
+        return createReservation(roomInfo, reservationHistory, platform);
     }
 
     @Transactional
     public ReservationResponseDTO adminReserve(ReservationChangeRequestDTO requestDTO) {
         ReservationHistory reservationHistory = mapper.toEntity(requestDTO);
         RoomInfo roomInfo = roomInfoRepository.findSingleEntity(requestDTO.getRoomInfoCd());
-        reservationHistory.setRoomInfo(roomInfoRepository.findSingleEntity(requestDTO.getRoomInfoCd()));
-        reservationHistory.setPlatform(platformRepository.findSingleEntity(requestDTO.getPlatformCd()));
-        String resvCd = generateUniqueReservationCode(LocalDateTime.now());
-        reservationHistory.setResvCd(resvCd);
+        Platform platform = platformRepository.findSingleEntity(requestDTO.getPlatformCd());
         reservationHistory.setByAdmin(true);
 
         if(reservationHistory.getState() == ReservationState.CONFIRMED) {
             eventPublisher.publishEvent(ReservationConfirmedEvent.class);
         }
 
-        return createReservationResponseDTO(roomInfo, reservationHistory);
+        return createReservation(roomInfo, reservationHistory, platform);
     }
 
     public void deleteReservation(String phone, String resvCd) {
@@ -116,8 +113,9 @@ public class ReservationService {
         reservationHistory.setPaymentCompleted(true);
     }
 
-    private ReservationResponseDTO createReservationResponseDTO(RoomInfo roomInfo, ReservationHistory reservationHistory) {
-        Platform platform = platformRepository.findSingleEntity(1L);
+    private ReservationResponseDTO createReservation(RoomInfo roomInfo,
+                                                     ReservationHistory reservationHistory,
+                                                     Platform platform) {
         reservationHistory.setRoomInfo(roomInfo);
         reservationHistory.setPlatform(platform);
 
