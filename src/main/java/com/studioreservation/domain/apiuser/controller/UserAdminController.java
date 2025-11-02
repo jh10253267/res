@@ -19,7 +19,7 @@ public class UserAdminController {
     @Operation(summary = "회원가입", description = "사용자 회원가입 API")
     @PostMapping("/signup")
     public APIResponse<?> signup(@RequestBody SignupRequestDTO signupRequestDTO) {
-        service.signup(signupRequestDTO);
+//        service.signup(signupRequestDTO);
 
         return APIResponse.success();
     }
