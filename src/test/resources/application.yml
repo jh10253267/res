@@ -34,12 +34,12 @@ sms:
 
 google:
   calendar:
-    calendar-id: ${CALENDAR_ID}
-    application-name: ${APPLICATION_NAME}
-    attendee-email: ${ATTENDEE_EMAIL}
-    service-account-key-base64: ${SERVICE_ACCOUNT_KEY_BASE64}
+    calendar-id: test
+    application-name: test
+    attendee-email: test@test.com
+    service-account-key-base64: 33b~OExIB6Td><!*LKHyqB5[kK:L9_Z&Ytx8#sWi2^PD7":RnprWA.3I`W-cw]K
   firebase:
-    firebase-service-account-key-base64: ${FIREBASE_SERVICE_ACCOUNT_KEY_BASE64}
+    firebase-service-account-key-base64: 33b~OExIB6Td><!*LKHyqB5[kK:L9_Z&Ytx8#sWi2^PD7":RnprWA.3I`W-cw]K
 
 jwt:
   secret:
