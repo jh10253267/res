@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SERVICE_ACCOUNT_KEY_BASE64: ${{ secrets.SERVICE_ACCOUNT_KEY_BASE64 }}
+      FIREBASE_SERVICE_ACCOUNT_KEY_BASE64: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_BASE64 }}
 
     steps:
       - name: Checkout
