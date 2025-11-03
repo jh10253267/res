@@ -85,6 +85,9 @@ public class ReservationHistory extends BaseEntity {
     @Builder.Default
     private boolean paymentCompleted = false;
 
+    @Builder.Default
+    private boolean byAdmin = false;
+
     @OneToOne(mappedBy = "reservationHistory", cascade = CascadeType.REMOVE)
     private CalendarMetaData calendarMetaData;
 
