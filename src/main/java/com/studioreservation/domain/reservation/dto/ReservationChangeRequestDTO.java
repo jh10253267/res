@@ -68,4 +68,5 @@ public class ReservationChangeRequestDTO {
     private ReservationState state;
     private String email;
     private String resvCd;
+    private boolean byAdmin;
 }
