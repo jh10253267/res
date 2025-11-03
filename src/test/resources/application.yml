@@ -38,6 +38,8 @@ google:
     application-name: ${APPLICATION_NAME}
     attendee-email: ${ATTENDEE_EMAIL}
     service-account-key-base64: ${SERVICE_ACCOUNT_KEY_BASE64}
+  firebase:
+    firebase-service-account-key-base64: ${FIREBASE_SERVICE_ACCOUNT_KEY_BASE64}
 
 jwt:
   secret:

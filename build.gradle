@@ -91,6 +91,9 @@ dependencies {
     testImplementation "org.spockframework:spock-core"
     testRuntimeOnly 'net.bytebuddy:byte-buddy:1.17.6'
 
+    // FCM
+    implementation 'com.google.firebase:firebase-admin:9.7.0'
+
     compileOnly 'org.springframework.boot:spring-boot-configuration-processor'
 
     annotationProcessor(
