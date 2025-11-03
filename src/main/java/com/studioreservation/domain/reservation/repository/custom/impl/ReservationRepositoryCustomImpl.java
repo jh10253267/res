@@ -56,7 +56,8 @@ public class ReservationRepositoryCustomImpl implements ReservationRepositoryCus
                                 reservationHistory.commission,
                                 reservationHistory.income,
                                 reservationHistory.memo,
-                                reservationHistory.platform.cd
+                                reservationHistory.platform.cd,
+                                reservationHistory.byAdmin
                         )
                 )
                 .from(reservationHistory)
