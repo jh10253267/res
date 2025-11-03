@@ -83,5 +83,8 @@ public class ReservationAdminResponseDTO {
 
     @Schema(description = "플랫폼 번호", example = "플랫폼 번호")
     private Long platformCd;
+
+    @Schema(description = "관리자가 직접 등록", example = "관리자가 직접 등록")
+    private boolean byAdmin;
 }
 
