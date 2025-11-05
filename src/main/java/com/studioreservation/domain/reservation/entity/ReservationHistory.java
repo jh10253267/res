@@ -162,64 +162,92 @@ public class ReservationHistory extends BaseEntity {
     }
 
     //-------------------------비즈니스 규칙 ----------------------
-    private static final BigDecimal DEFAULT_DISCOUNT_RATE = BigDecimal.ONE.subtract(BigDecimal.valueOf(0.2));
-    private static final BigDecimal EXTRA_PAY_PER_PERSON = BigDecimal.valueOf(5500);
-    private static final BigDecimal NIGHT_DISCOUNT_PRICE_PER_HALF_HOUR = BigDecimal.valueOf(10000);   // 자정~9시 까지는 2만원
-    private static final BigDecimal EVENING_DISCOUNT_PRICE_PER_HALF_HOUR = BigDecimal.valueOf(15000); // 오후 6부터 자정까지는 3만원
-    private static final int EVENING_HOUR = 18;
-    private static final int PARTY_ROOM_CD = 1;
-    private static final long UNIT_MILLiS = 30 * 60 * 1000;
+    private static final BigDecimal DEFAULT_DISCOUNT_RATE = BigDecimal.valueOf(0.8); // 20% 할인
+    private static final BigDecimal EXTRA_PAY_PER_PERSON_PER_HALF_HOUR = BigDecimal.valueOf(2500); // 인원 1명당 30분 추가요금
+    private static final BigDecimal NIGHT_PRICE_PER_HALF_HOUR = BigDecimal.valueOf(10000);   // 00:00~08:59
+    private static final BigDecimal EVENING_PRICE_PER_HALF_HOUR = BigDecimal.valueOf(15000); // 18:00~23:59
+    private static final long HALF_HOUR_MILLIS = 30 * 60 * 1000;
 
-    private int calculateDurationHalfUnit() {
-        long durationMillis = endDt.getTime() - strtDt.getTime();
-        long durationHours = (long) Math.ceil((double) durationMillis / UNIT_MILLiS);
-
-        return (int) (durationHours);
+    /**
+     * 전체 총액 계산 (A룸이면 할인, 그 외는 기본)
+     */
+    public void calculateTotalPrice() {
+        if (roomInfo.getRoom().isDiscountApplicable()) {
+            calculateDiscountedPrice();
+        } else {
+            calculateRegularPrice();
+        }
+        this.totalRevenue = this.totalRevenue.multiply(BigDecimal.valueOf(1.1));
     }
 
-    public void calculateDiscountedPrice() {
-        LocalDateTime start = this.strtDt.toLocalDateTime();
-        LocalDateTime end = this.endDt.toLocalDateTime();
+    /**
+     * 30분 단위 할인 적용 계산 (A타입 전용)
+     */
+    private void calculateDiscountedPrice() {
+        LocalDateTime start = strtDt.toLocalDateTime();
+        LocalDateTime end = endDt.toLocalDateTime();
 
         BigDecimal total = BigDecimal.ZERO;
-
         LocalDateTime current = start;
+
         while (current.isBefore(end)) {
-            LocalDateTime nextHour = current.plusMinutes(30);
-            BigDecimal price = getDiscountRate(current.toLocalTime());
+            LocalTime currentTime = current.toLocalTime();
+            BigDecimal price = getDiscountedPricePerHalfHour(currentTime);
             total = total.add(price);
-            current = nextHour;
+            current = current.plusMinutes(30);
         }
+
+        // 인원 초과 시 추가요금 포함
+        total = total.add(applyExtraPay());
 
         this.totalRevenue = total;
     }
 
-    private BigDecimal getDiscountRate(LocalTime time) {
+    /**
+     * 일반 룸 요금 계산 (시간대 상관없이 동일 요금)
+     */
+    private void calculateRegularPrice() {
+        int halfHourUnits = calculateHalfHourUnits();
+        BigDecimal basePrice = roomInfo.getHalfHrPrice().multiply(BigDecimal.valueOf(halfHourUnits));
+        BigDecimal total = basePrice.add(applyExtraPay());
+        this.totalRevenue = total;
+    }
+
+    /**
+     * 할인 시간대별 30분 요금 반환
+     */
+    private BigDecimal getDiscountedPricePerHalfHour(LocalTime time) {
         if (!time.isBefore(LocalTime.MIDNIGHT) && time.isBefore(LocalTime.of(9, 0))) {
-            return NIGHT_DISCOUNT_PRICE_PER_HALF_HOUR; // 00:00 ~ 08:59:59
+            return NIGHT_PRICE_PER_HALF_HOUR;
         }
-        if (!time.isBefore(LocalTime.of(18, 0)) && time.isBefore(LocalTime.MAX)) {
-            return EVENING_DISCOUNT_PRICE_PER_HALF_HOUR; // 18:00 ~ 23:59:59
+        if (!time.isBefore(LocalTime.of(18, 0))) {
+            return EVENING_PRICE_PER_HALF_HOUR;
         }
-        return this.roomInfo.getHalfHrPrice();
+        return roomInfo.getHalfHrPrice();
     }
 
+    /**
+     * 30분 단위로 총 이용 시간 계산
+     */
+    private int calculateHalfHourUnits() {
+        long durationMillis = endDt.getTime() - strtDt.getTime();
+        return (int) Math.ceil((double) durationMillis / HALF_HOUR_MILLIS);
+    }
 
+    /**
+     * 초과 인원에 따른 추가요금 계산 (30분 단위)
+     */
     private BigDecimal applyExtraPay() {
-        BigDecimal extraPay = BigDecimal.ZERO;
-        // 만약 방의 수용 가능 인원보다 예약 희망 인원이 많다면
-        if(roomInfo.getRoom().getCapacity() < userCnt) {
-            int extraUserCnt = userCnt - roomInfo.getRoom().getCapacity();
-            extraPay = extraPay.multiply(BigDecimal.valueOf(extraUserCnt));
+        int capacity = roomInfo.getRoom().getCapacity();
+        if (userCnt <= capacity) {
+            return BigDecimal.ZERO;
         }
 
-        return extraPay;
-    }
+        int extraUserCnt = userCnt - capacity;
+        int halfHourUnits = calculateHalfHourUnits();
 
-    public void calculateTotalRevenue() {
-        int halfHourDurationUnit = calculateDurationHalfUnit();
-        BigDecimal extraPay = applyExtraPay();
-        BigDecimal defaultRevenue = BigDecimal.valueOf(halfHourDurationUnit).multiply(roomInfo.getHalfHrPrice()); // 88,000
-        this.totalRevenue = defaultRevenue.add(extraPay);
+        return EXTRA_PAY_PER_PERSON_PER_HALF_HOUR
+                .multiply(BigDecimal.valueOf(extraUserCnt))
+                .multiply(BigDecimal.valueOf(halfHourUnits));
     }
 }

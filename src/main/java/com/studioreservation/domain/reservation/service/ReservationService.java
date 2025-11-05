@@ -118,12 +118,7 @@ public class ReservationService {
                                                      Platform platform) {
         reservationHistory.setRoomInfo(roomInfo);
         reservationHistory.setPlatform(platform);
-
-        if(reservationHistory.getRoomInfo().getRoom().getName().equals("A")) {
-            reservationHistory.calculateDiscountedPrice();
-        } else {
-            reservationHistory.calculateTotalRevenue();
-        }
+        reservationHistory.calculateTotalPrice();
 
         String resvCd = generateUniqueReservationCode(LocalDateTime.now());
         reservationHistory.setResvCd(resvCd);
