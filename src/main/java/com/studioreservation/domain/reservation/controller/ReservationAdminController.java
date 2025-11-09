@@ -80,10 +80,16 @@ public class ReservationAdminController {
         return APIResponse.success(service.getCountOfReservations(reservedTimeReqDTO));
     }
 
+    @GetMapping("/statistics/platforms")
+    public APIResponse<?>  getStatGroupByPlatform(ReservedTimeReqDTO reservedTimeReqDTO) {
+        return APIResponse.success(service.getStatGroupByPlatform(reservedTimeReqDTO));
+    }
+
     @PostMapping("paymentCompleted")
     public APIResponse<?> paymentCompleted(@RequestParam("phone") String phone,
                                            @RequestParam("resvCd") String resvCd) {
         service.paymentCompleted(phone, resvCd);
         return APIResponse.success();
     }
+
 }
