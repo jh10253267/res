@@ -16,12 +16,12 @@ import lombok.NoArgsConstructor;
 public class Platform {
     @Id
     private Long cd;
-    private String name;
+    private String platform;
     private String memo;
 
     public void update(PlatformReqDTO reqDTO) {
         this.cd = reqDTO.getCd();
-        this.name = reqDTO.getPlatform();
+        this.platform = reqDTO.getPlatform();
         this.memo = reqDTO.getMemo();
     }
 }
