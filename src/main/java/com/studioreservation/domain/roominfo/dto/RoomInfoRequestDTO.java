@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 @Data
 public class RoomInfoRequestDTO {
     private String description;
+    private String title;
     private BigDecimal halfHrPrice;
     private BigDecimal discountedHalfPrice;
     private BigDecimal extraPayPerPerson;

@@ -13,5 +13,6 @@ public class RoomInfoVO {
     private BigDecimal dayPrice;
     private String description;
     private int minTm;
+    private String title;
     private RoomType roomType;
 }

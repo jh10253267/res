@@ -32,6 +32,7 @@ public class Room extends BaseEntity {
 
     private Integer orderIndex;
 
+    @OrderBy("orderIndex ASC")
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     List<RoomInfo> roomInfos = new ArrayList<>();
 

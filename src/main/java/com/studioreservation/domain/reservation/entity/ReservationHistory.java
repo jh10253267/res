@@ -168,6 +168,8 @@ public class ReservationHistory extends BaseEntity {
     private static final BigDecimal EVENING_PRICE_PER_HALF_HOUR = BigDecimal.valueOf(15000); // 18:00~23:59
     private static final long HALF_HOUR_MILLIS = 30 * 60 * 1000;
 
+//    계산식에 9시간 이상 예약 시 전체 금액 10% 할인 적용
+
     /**
      * 전체 총액 계산 (A룸이면 할인, 그 외는 기본)
      */
@@ -177,7 +179,10 @@ public class ReservationHistory extends BaseEntity {
         } else {
             calculateRegularPrice();
         }
-        this.totalRevenue = this.totalRevenue.multiply(BigDecimal.valueOf(1.1));
+        int duration = calculateHalfHourUnits();
+        if(duration < 9) {
+            this.totalRevenue = this.totalRevenue.multiply(BigDecimal.valueOf(1.1));
+        }
     }
 
     /**
