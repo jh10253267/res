@@ -23,6 +23,7 @@ public class RoomInfo extends BaseEntity {
     private BigDecimal halfHrPrice;
     private BigDecimal discountedHalfPrice;
     private String description;
+    private String title;
     private int minTm;
     @ManyToOne
     private Room room;
@@ -35,6 +36,7 @@ public class RoomInfo extends BaseEntity {
     public void updateRoomInfo(RoomInfoRequestDTO requestDTO) {
         this.roomType = requestDTO.getRoomType();
         this.halfHrPrice = requestDTO.getHalfHrPrice();
+        this.title = requestDTO.getTitle();
         this.discountedHalfPrice = requestDTO.getDiscountedHalfPrice();
         this.description = requestDTO.getDescription();
         this.minTm = requestDTO.getMinTm();

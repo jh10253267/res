@@ -28,6 +28,9 @@ public class RoomInfoResponseDTO {
     @Schema(description = "방 설명", example = "방 설명")
     private String description;
 
+    @Schema(description = "방 설명", example = "방 설명")
+    private String title;
+
     @Schema(description = "방 타입", example = "방 타입")
     private RoomType roomType;
 
