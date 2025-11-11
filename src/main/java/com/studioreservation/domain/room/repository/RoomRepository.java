@@ -16,6 +16,6 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 				new StudioException(ErrorCode.NO_SUCH_ROOM));
 	}
 
-    @Query("SELECT r FROM Room r JOIN FETCH r.roomInfos")
+    @Query("SELECT r FROM Room r JOIN FETCH r.roomInfos ri ORDER BY r.orderIndex ASC")
     List<Room> findAllByOrderByOrderIndexAsc();
 }

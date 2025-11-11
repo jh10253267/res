@@ -21,8 +21,9 @@ public class RoomInfo extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cd;
     private BigDecimal halfHrPrice;
-    private BigDecimal dayPrice;
+    private BigDecimal discountedHalfPrice;
     private String description;
+    private String title;
     private int minTm;
     @ManyToOne
     private Room room;
@@ -35,7 +36,8 @@ public class RoomInfo extends BaseEntity {
     public void updateRoomInfo(RoomInfoRequestDTO requestDTO) {
         this.roomType = requestDTO.getRoomType();
         this.halfHrPrice = requestDTO.getHalfHrPrice();
-        this.dayPrice = requestDTO.getDayPrice();
+        this.title = requestDTO.getTitle();
+        this.discountedHalfPrice = requestDTO.getDiscountedHalfPrice();
         this.description = requestDTO.getDescription();
         this.minTm = requestDTO.getMinTm();
         this.orderIndex = requestDTO.getOrderIndex();

@@ -32,8 +32,13 @@ public class Room extends BaseEntity {
 
     private Integer orderIndex;
 
+    @OrderBy("orderIndex ASC")
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     List<RoomInfo> roomInfos = new ArrayList<>();
+
+    public boolean isDiscountApplicable() {
+        return "A".equalsIgnoreCase(name);
+    }
 
 	public void updateEntity(RoomRequestDTO requestDTO) {
         this.name = requestDTO.getName();

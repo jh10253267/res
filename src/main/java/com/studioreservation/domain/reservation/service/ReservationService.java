@@ -5,6 +5,7 @@ import com.studioreservation.domain.calendar.dto.CalendarRequestDTO;
 import com.studioreservation.domain.calendar.service.CalendarService;
 import com.studioreservation.domain.dailyrevenue.dto.DailyRevenueDTO;
 import com.studioreservation.domain.featuretoggle.service.FeatureToggleService;
+import com.studioreservation.domain.platform.dto.PlatformRevenueDTO;
 import com.studioreservation.domain.platform.entity.Platform;
 import com.studioreservation.domain.platform.repository.PlatformRepository;
 import com.studioreservation.domain.reservation.dto.*;
@@ -33,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -118,12 +120,7 @@ public class ReservationService {
                                                      Platform platform) {
         reservationHistory.setRoomInfo(roomInfo);
         reservationHistory.setPlatform(platform);
-
-        if(reservationHistory.getRoomInfo().getRoom().getName().equals("A")) {
-            reservationHistory.calculateDiscountedPrice();
-        } else {
-            reservationHistory.calculateTotalRevenue();
-        }
+        reservationHistory.calculateTotalPrice();
 
         String resvCd = generateUniqueReservationCode(LocalDateTime.now());
         reservationHistory.setResvCd(resvCd);
@@ -205,6 +202,10 @@ public class ReservationService {
     public ReservationStateResponse getCountOfReservations(ReservedTimeReqDTO reservedTimeReqDTO) {
         return repository.findCountByState(reservedTimeReqDTO.getStrtDt(),
                 reservedTimeReqDTO.getEndDt());
+    }
+
+    public List<PlatformRevenueDTO> getStatGroupByPlatform(ReservedTimeReqDTO reservedTimeReqDTO) {
+        return repository.findTotalRevenueByPlatformBetween(reservedTimeReqDTO.getStrtDt(), reservedTimeReqDTO.getEndDt());
     }
 
     private String generateUniqueReservationCode(LocalDateTime localDateTime) {

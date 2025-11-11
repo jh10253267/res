@@ -1,5 +1,6 @@
 package com.studioreservation.domain.reservation.repository;
 
+import com.studioreservation.domain.platform.dto.PlatformRevenueDTO;
 import com.studioreservation.domain.reservation.entity.ReservationHistory;
 import com.studioreservation.domain.reservation.enums.ReservationState;
 import com.studioreservation.domain.reservation.repository.custom.ReservationRepositoryCustom;
@@ -47,4 +48,21 @@ public interface ReservationRepository extends JpaRepository<ReservationHistory,
             nativeQuery = true)
     BigDecimal getTotalRevenue(@Param("startDt") Timestamp startDt,
                                @Param("endDt") Timestamp endDt);
+
+    @Query(value = """
+    SELECT p.platform as platform, SUM(r.total_revenue) AS totalRevenue, count(r.sn) as totalCount
+    FROM reservation_history r
+    JOIN platform p ON r.platform_cd = p.cd
+    WHERE r.strt_dt >= :startDate
+      AND r.end_dt <= :endDate
+    GROUP BY p.platform
+    """,
+            nativeQuery = true)
+    List<PlatformRevenueDTO> findTotalRevenueByPlatformBetween(
+            @Param("startDate") Timestamp startDate,
+            @Param("endDate") Timestamp endDate);
+
+
+
+
 }
