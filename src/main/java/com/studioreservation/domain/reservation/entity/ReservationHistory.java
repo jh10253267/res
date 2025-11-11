@@ -162,32 +162,18 @@ public class ReservationHistory extends BaseEntity {
     }
 
     //-------------------------비즈니스 규칙 ----------------------
-    private static final BigDecimal DEFAULT_DISCOUNT_RATE = BigDecimal.valueOf(0.8); // 20% 할인
     private static final BigDecimal EXTRA_PAY_PER_PERSON_PER_HALF_HOUR = BigDecimal.valueOf(2500); // 인원 1명당 30분 추가요금
-    private static final BigDecimal NIGHT_PRICE_PER_HALF_HOUR = BigDecimal.valueOf(10000);   // 00:00~08:59
-    private static final BigDecimal EVENING_PRICE_PER_HALF_HOUR = BigDecimal.valueOf(15000); // 18:00~23:59
     private static final long HALF_HOUR_MILLIS = 30 * 60 * 1000;
 
-//    계산식에 9시간 이상 예약 시 전체 금액 10% 할인 적용
-
-    /**
-     * 전체 총액 계산 (A룸이면 할인, 그 외는 기본)
-     */
     public void calculateTotalPrice() {
-        if (roomInfo.getRoom().isDiscountApplicable()) {
-            calculateDiscountedPrice();
-        } else {
-            calculateRegularPrice();
-        }
+        calculateDiscountedPrice();
+
         int duration = calculateHalfHourUnits();
         if(duration < 9) {
             this.totalRevenue = this.totalRevenue.multiply(BigDecimal.valueOf(1.1));
         }
     }
 
-    /**
-     * 30분 단위 할인 적용 계산 (A타입 전용)
-     */
     private void calculateDiscountedPrice() {
         LocalDateTime start = strtDt.toLocalDateTime();
         LocalDateTime end = endDt.toLocalDateTime();
@@ -208,27 +194,19 @@ public class ReservationHistory extends BaseEntity {
         this.totalRevenue = total;
     }
 
-    /**
-     * 일반 룸 요금 계산 (시간대 상관없이 동일 요금)
-     */
     private void calculateRegularPrice() {
         int halfHourUnits = calculateHalfHourUnits();
         BigDecimal basePrice = roomInfo.getHalfHrPrice().multiply(BigDecimal.valueOf(halfHourUnits));
-        BigDecimal total = basePrice.add(applyExtraPay());
-        this.totalRevenue = total;
+        this.totalRevenue = basePrice.add(applyExtraPay());
     }
 
-    /**
-     * 할인 시간대별 30분 요금 반환
-     */
     private BigDecimal getDiscountedPricePerHalfHour(LocalTime time) {
-        if (!time.isBefore(LocalTime.MIDNIGHT) && time.isBefore(LocalTime.of(9, 0))) {
-            return NIGHT_PRICE_PER_HALF_HOUR;
+        // 09:00 ~ 18:00 → 일반 요금
+        if (!time.isBefore(LocalTime.of(9, 0)) && time.isBefore(LocalTime.of(18, 0))) {
+            return roomInfo.getHalfHrPrice();
         }
-        if (!time.isBefore(LocalTime.of(18, 0))) {
-            return EVENING_PRICE_PER_HALF_HOUR;
-        }
-        return roomInfo.getHalfHrPrice();
+        // 나머지 시간대 → 할인 요금
+        return roomInfo.getDiscountedHalfPrice();
     }
 
     /**
