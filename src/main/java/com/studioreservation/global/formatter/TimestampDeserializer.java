@@ -32,9 +32,9 @@ public class TimestampDeserializer extends JsonDeserializer<Timestamp> {
 				ZonedDateTime zdt = ldt.atZone(seoulZone);
 				return Timestamp.from(zdt.toInstant());
 			} else if (text.length() == 8) {
-				LocalDate ld = LocalDate.parse(text, FORMAT_8);
-				ZonedDateTime zdt = ld.atStartOfDay(seoulZone);
-				return Timestamp.from(zdt.toInstant());
+                LocalDateTime ldt = LocalDateTime.parse(text, FORMAT_14);
+                ZonedDateTime seoulZdt = ldt.atZone(ZoneId.of("Asia/Seoul"));
+                return Timestamp.from(seoulZdt.toInstant());
 			}
 		} catch (DateTimeParseException e) {
 			throw ctxt.weirdStringException(text, Timestamp.class,
