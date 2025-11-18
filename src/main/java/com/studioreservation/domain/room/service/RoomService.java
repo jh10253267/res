@@ -48,9 +48,9 @@ public class RoomService {
 		return mapper.toDTO(repository.findSingleEntity(roomCd));
 	}
 
+    @Transactional
 	public void createRoom (RoomRequestDTO roomRequestDTO){
-		Room room = repository.save(mapper.toEntity(roomRequestDTO));
-        repository.save(room);
+		repository.save(mapper.toEntity(roomRequestDTO));
 	}
 
 	@Transactional
