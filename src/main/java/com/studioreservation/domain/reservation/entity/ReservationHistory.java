@@ -201,12 +201,6 @@ public class ReservationHistory extends BaseEntity {
     }
 
     private BigDecimal getDiscountedPricePerHalfHour(LocalTime time) {
-        boolean isNight = !time.isBefore(LocalTime.MIDNIGHT) && time.isBefore(LocalTime.of(9, 0));
-        boolean isEvening = !time.isBefore(LocalTime.of(18, 0));
-
-        if (isNight || isEvening) {
-            return roomInfo.getDiscountedHalfPrice();
-        }
         return roomInfo.getHalfHrPrice();
     }
 
