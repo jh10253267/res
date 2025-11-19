@@ -201,12 +201,13 @@ public class ReservationHistory extends BaseEntity {
     }
 
     private BigDecimal getDiscountedPricePerHalfHour(LocalTime time) {
-        // 09:00 ~ 18:00 → 일반 요금
-        if (!time.isBefore(LocalTime.of(9, 0)) && time.isBefore(LocalTime.of(18, 0))) {
-            return roomInfo.getHalfHrPrice();
+        boolean isNight = !time.isBefore(LocalTime.MIDNIGHT) && time.isBefore(LocalTime.of(9, 0));
+        boolean isEvening = !time.isBefore(LocalTime.of(18, 0));
+
+        if (isNight || isEvening) {
+            return roomInfo.getDiscountedHalfPrice();
         }
-        // 나머지 시간대 → 할인 요금
-        return roomInfo.getDiscountedHalfPrice();
+        return roomInfo.getHalfHrPrice();
     }
 
     /**
