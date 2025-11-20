@@ -34,5 +34,9 @@ public class RoomInfoResponseDTO {
     @Schema(description = "방 타입", example = "방 타입")
     private RoomType roomType;
 
+    @Schema(description = "정렬 순서", example = "정렬 순서")
     private Integer orderIndex;
+
+    @Schema(description = "정렬 순서", example = "정렬 순서")
+    private Long roomCd;
 }

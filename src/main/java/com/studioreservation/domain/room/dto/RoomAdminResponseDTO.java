@@ -32,6 +32,9 @@ public class RoomAdminResponseDTO {
     @Schema(description = "방 순서", example = "방 순서")
     private Integer orderIndex;
 
+    @Schema(description = "사용 여부", example = "사용 여부")
+    private boolean useYn;
+
     @Schema(description = "방 순서", example = "방 순서")
     private List<RoomInfoAdminResponseDTO> roomInfos = new ArrayList<>();
 }

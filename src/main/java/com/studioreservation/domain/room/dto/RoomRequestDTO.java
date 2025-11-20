@@ -24,5 +24,8 @@ public class RoomRequestDTO {
 
     @Schema(description = "방 순서", example = "방 순서")
     private Integer orderIndex;
+
+    @Schema(description = "사용 여부", example = "사용 여부")
+    private boolean useYn;
 }
 
